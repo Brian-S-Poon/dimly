@@ -1,17 +1,28 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
   <meta charset="utf-8">
-  <link rel="stylesheet" href="popup.css">
+  <title>Night Light</title>
+  <style>
+    body { font: 14px system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 12px; width: 240px; }
+    .row { display: flex; align-items: center; gap: 8px; }
+    input[type="range"] { flex: 1; }
+    .pill { padding: 2px 8px; border-radius: 999px; background: #eee; }
+    .muted { color: #666; margin-top: 8px; }
+    button { padding: 6px 10px; }
+  </style>
 </head>
 <body>
-  <label>
-    <input type="checkbox" id="toggle"> Night Light
-  </label>
-  <div id="slider-container">
-    <input type="range" id="brightness" min="0" max="80" value="40">
-    <span id="value">40%</span>
+  <div class="row">
+    <label for="level">Dim</label>
+    <input id="level" type="range" min="0" max="1" step="0.01" value="0.25">
+    <span id="pct" class="pill">25%</span>
   </div>
+  <div class="row" style="margin-top:10px;">
+    <button id="toggle">Toggle</button>
+    <span id="host" class="muted"></span>
+  </div>
+  <p id="msg" class="muted"></p>
   <script src="popup.js"></script>
 </body>
 </html>
