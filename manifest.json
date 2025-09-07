@@ -4,8 +4,10 @@
   "description": "Adds a dimming overlay to webpages.",
   "version": "1.0",
   "permissions": ["storage", "activeTab"],
+
   "action": {
     "default_popup": "popup.html"
+
   },
   "options_page": "options.html",
   "content_scripts": [
