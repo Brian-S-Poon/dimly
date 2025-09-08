@@ -1,21 +1,14 @@
 {
   "manifest_version": 3,
-  "name": "Night Light (Minimal)",
+  "name": "Night Light",
   "version": "1.0.0",
-  "description": "Dim the current page with a simple overlay.",
+  "description": "Dim the current page with an adjustable overlay.",
   "action": { "default_popup": "popup.html", "default_title": "Night Light" },
-  "permissions": ["tabs"],
+  "permissions": ["tabs", "storage"],
   "host_permissions": ["<all_urls>"],
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "exclude_matches": [
-        "*://chrome.google.com/*",
-        "chrome://*/*",
-        "edge://*/*",
-        "about:*",
-        "chrome-extension://*/*"
-      ],
       "js": ["content.js"],
       "run_at": "document_start"
     }
