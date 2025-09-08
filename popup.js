@@ -5,16 +5,11 @@ const msg = $('#msg');
 const host = $('#host');
 const toggleBtn = $('#toggle');
 
+function clamp01(x) { return Math.max(0, Math.min(1, Number(x || 0))); }
 function setUI(val) {
-  const v = Math.max(0, Math.min(1, Number(val || 0)));
+  const v = clamp01(val);
   slider.value = String(v);
   pct.textContent = Math.round(v * 100) + '%';
-}
-
-async function withActiveTab(fn) {
-  return new Promise((resolve) => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => resolve(fn(tabs[0])));
-  });
 }
 
 function send(tabId, payload) {
@@ -29,30 +24,46 @@ function send(tabId, payload) {
   });
 }
 
-// Init: show hostname and current level (if content script is injected here)
-withActiveTab(async (tab) => {
+async function init() {
+  // Get active tab (requires "tabs" permission)
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (!tab) { msg.textContent = 'No active tab.'; return; }
+
+  // Show host for clarity
   try { host.textContent = new URL(tab.url).hostname; } catch {}
-  const res = await send(tab.id, { type: 'GET_DIM_LEVEL' });
-  if (res?.ok) setUI(res.value);
-  else if ((res?.error || '').includes('Receiving end does not exist')) {
-    msg.textContent = "This page can't be dimmed (browser-restricted).";
-    slider.disabled = true;
-    toggleBtn.disabled = true;
-  } else if (!res?.ok) {
-    msg.textContent = 'Not ready on this page.';
+
+  // Restricted pages: content script won’t be injected → catch & explain
+  const res = await send(tab.id, { type: 'NIGHTLIGHT_GET_LEVEL' });
+  if (!res?.ok) {
+    if ((res?.error || '').includes('Receiving end does not exist')) {
+      msg.textContent = "This page can't be dimmed (browser-restricted).";
+      slider.disabled = true;
+      toggleBtn.disabled = true;
+      return;
+    }
+    msg.textContent = 'Not available on this page.';
+    return;
   }
 
+  // Initialize UI with current value
+  setUI(res.level);
+
   slider.addEventListener('input', async (e) => {
-    const val = Number(e.target.value);
-    setUI(val);
-    await send(tab.id, { type: 'SET_DIM_LEVEL', value: val });
+    const level = clamp01(e.target.value);
+    setUI(level);
+    const r = await send(tab.id, { type: 'NIGHTLIGHT_SET_LEVEL', level });
+    if (!r?.ok) msg.textContent = 'Failed to apply dimmer.';
+    else msg.textContent = '';
   });
 
   toggleBtn.addEventListener('click', async () => {
-    const res = await send(tab.id, { type: 'GET_DIM_LEVEL' });
-    const current = res?.ok ? res.value : 0;
-    const next = current > 0 ? 0 : 0.25;
+    const r0 = await send(tab.id, { type: 'NIGHTLIGHT_GET_LEVEL' });
+    const next = clamp01((r0?.ok ? r0.level : 0) > 0 ? 0 : 0.25);
     setUI(next);
-    await send(tab.id, { type: 'SET_DIM_LEVEL', value: next });
+    const r1 = await send(tab.id, { type: 'NIGHTLIGHT_SET_LEVEL', level: next });
+    if (!r1?.ok) msg.textContent = 'Failed to toggle.';
+    else msg.textContent = '';
   });
-});
+}
+
+init();
