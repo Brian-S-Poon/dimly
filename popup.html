@@ -2,31 +2,26 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Night Light</title>
+  <title>Screen Dimmer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body { font: 14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 12px; width: 260px; }
-    .row { display: flex; align-items: center; gap: 8px; }
-    label { width: 60px; }
-    input[type="range"] { flex: 1; }
+    .row { display:flex; align-items:center; gap:8px; }
+    label { width: 90px; }
+    input[type="range"] { flex:1; }
     .pill { padding: 2px 8px; border-radius: 999px; background: #eee; }
-    .muted { color: #666; }
-    button { padding: 6px 10px; }
+    button { padding:6px 10px; margin-top:10px; }
+    .muted { color:#666; margin-top:10px; }
   </style>
 </head>
 <body>
   <div class="row">
-    <label for="level">Dim</label>
+    <label for="level">Dim Level</label>
     <input id="level" type="range" min="0" max="1" step="0.01" value="0.25">
     <span id="pct" class="pill">25%</span>
   </div>
-
-  <div class="row" style="margin-top:10px;">
-    <button id="toggle">Toggle</button>
-    <span id="host" class="muted"></span>
-  </div>
-
-  <p id="msg" class="muted" style="margin-top:8px;"></p>
-
+  <button id="toggle">Toggle</button>
+  <p class="muted">Applies to all tabs (except Chrome-restricted pages).</p>
   <script src="popup.js"></script>
 </body>
 </html>
