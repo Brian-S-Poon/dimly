@@ -52,7 +52,7 @@ slider.addEventListener('change', (e) => {
   writeSync(level);
 });
 
-// Toggle writes once
+// Toggle writes to sync; if write quotas are hit, mirror to local so the state persists
 toggleBtn.addEventListener('click', async () => {
   const obj = await chrome.storage.sync.get({ [KEY]: DEFAULT_LEVEL });
   const next = obj[KEY] > 0 ? 0 : DEFAULT_LEVEL;
