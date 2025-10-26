@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Added per-site dimming locks so specific websites can stay at a custom brightness level.
+- Moved popup styling into a reusable stylesheet.
 
 
 
