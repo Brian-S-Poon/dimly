@@ -6,7 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-- Nothing yet.
+
+### Changed
+- Clarified the popup toggle's note so future updates keep the dimming fallback working.
 
 ## [1.2.1] - 2025-09-13
 
