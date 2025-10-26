@@ -3,7 +3,7 @@
   "name": "Screen Dimmer",
   "version": "1.2.1",
   "description": "Universal screen dimmer for Chrome. Adjust brightness on all websites with a simple slider for eye-friendly browsing.",
-  "action": { "default_popup": "popup.html", "default_title": "Screen Dimmer" },
+  "action": { "default_popup": "src/popup/index.html", "default_title": "Screen Dimmer" },
   "permissions": ["storage"],
   "host_permissions": ["<all_urls>"],
   "icons": {
@@ -12,7 +12,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content.js"],
+      "js": ["src/content/overlay.js"],
       "run_at": "document_start",
       "all_frames": true
     }
