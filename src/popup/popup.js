@@ -31,16 +31,16 @@ function updateSiteUI() {
   }
 
   siteControls.hidden = false;
-  siteHostLabel.textContent = `This site: ${currentHost}`;
+  siteHostLabel.textContent = `Site · ${currentHost}`;
   const locked = typeof currentSiteLevel === 'number';
   if (siteToggleBtn) siteToggleBtn.disabled = false;
 
   if (locked) {
-    if (siteToggleBtn) siteToggleBtn.textContent = 'Unlock this site';
-    siteStatus.textContent = `Locked at ${Math.round(clamp01(currentSiteLevel) * 100)}% on this site.`;
+    if (siteToggleBtn) siteToggleBtn.textContent = 'Unlock site';
+    siteStatus.textContent = `Locked at ${Math.round(clamp01(currentSiteLevel) * 100)}%.`;
   } else {
-    if (siteToggleBtn) siteToggleBtn.textContent = 'Lock this site at current level';
-    siteStatus.textContent = `Uses the global dimmer level (${Math.round(clamp01(lastLevel) * 100)}%).`;
+    if (siteToggleBtn) siteToggleBtn.textContent = 'Lock site';
+    siteStatus.textContent = `Using global level (${Math.round(clamp01(lastLevel) * 100)}%).`;
   }
 }
 
@@ -179,8 +179,8 @@ if (siteToggleBtn) {
       }
       await persistSiteLevels(siteLevelsCache);
       siteStatus.textContent = locking
-        ? `Locked at ${Math.round(targetLevel * 100)}% on this site.`
-        : `Uses the global dimmer level (${Math.round(clamp01(lastLevel) * 100)}%).`;
+        ? `Locked at ${Math.round(targetLevel * 100)}%.`
+        : `Using global level (${Math.round(clamp01(lastLevel) * 100)}%).`;
     } catch (err) {
       if (typeof previousLevel === 'number') {
         siteLevelsCache[currentHost] = previousLevel;
@@ -189,7 +189,7 @@ if (siteToggleBtn) {
         delete siteLevelsCache[currentHost];
         currentSiteLevel = null;
       }
-      siteStatus.textContent = 'Could not update site lock. Please try again.';
+      siteStatus.textContent = 'Update failed. Try again.';
     } finally {
       siteToggleBtn.disabled = false;
       updateSiteUI();
