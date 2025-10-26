@@ -77,4 +77,3 @@ chrome.storage.onChanged.addListener((changes, area) => {
     applyLevel(changes[KEY].newValue);
   }
 });
-
