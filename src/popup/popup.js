@@ -1,6 +1,7 @@
 const slider = document.querySelector('#level');
 const pct = document.querySelector('#pct');
 const toggleBtn = document.querySelector('#toggle');
+const globalStatus = document.querySelector('#global-status');
 const siteControls = document.querySelector('#site-controls');
 const siteHostLabel = document.querySelector('#site-host');
 const siteStatus = document.querySelector('#site-status');
@@ -13,6 +14,7 @@ function setUI(v){
   const val = clamp01(v);
   slider.value = String(val);
   pct.textContent = Math.round(val * 100) + '%';
+  updateGlobalUI(val);
   updateSiteUI();
 }
 
@@ -22,6 +24,20 @@ let lastLevel = DEFAULT_LEVEL;
 let currentHost = null;
 let siteLevelsCache = {};
 let currentSiteLevel = null;
+
+function updateGlobalUI(level) {
+  const val = clamp01(level);
+  const isOn = val > 0;
+  if (toggleBtn) {
+    toggleBtn.textContent = isOn ? 'Turn off' : 'Turn on';
+    toggleBtn.setAttribute('aria-pressed', String(isOn));
+  }
+  if (globalStatus) {
+    globalStatus.textContent = isOn
+      ? `Dimmer is on at ${Math.round(val * 100)}%.`
+      : 'Dimmer is off.';
+  }
+}
 
 function updateSiteUI() {
   if (!siteControls || !siteHostLabel || !siteStatus) return;
