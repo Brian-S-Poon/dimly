@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Simplified popup copy so the dimmer controls take up less space.
 - Added a popup heading and description so the global dim level control is clearer.
 - Refreshed popup buttons with clearer styling and hover feedback for better affordance.
+- Reworked the dim level slider layout and value pill for better spacing and readability.
 
 
 

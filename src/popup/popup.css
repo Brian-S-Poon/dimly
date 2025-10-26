@@ -19,24 +19,39 @@ body {
   color: #444;
 }
 
-.row {
+.slider-group {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.slider-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 label {
-  width: 90px;
+  display: block;
+  font-weight: 600;
 }
 
 input[type="range"] {
-  flex: 1;
+  width: 100%;
 }
 
 .pill {
-  padding: 2px 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 12px;
   border-radius: 999px;
-  background: #eee;
+  font-weight: 600;
+  background: linear-gradient(180deg, #eaf1ff, #d7e5ff);
+  color: #12306b;
+  border: 1px solid rgba(54, 105, 201, 0.35);
+  box-shadow: 0 1px 1px rgba(15, 23, 42, 0.12);
 }
 
 button {

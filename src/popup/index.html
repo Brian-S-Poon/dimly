@@ -11,10 +11,12 @@
     <h1 class="title">Global dimming</h1>
     <p class="description">Choose how dark the overlay becomes when Screen Dimmer is turned on.</p>
   </header>
-  <div class="row">
-    <label for="level">Dim Level</label>
+  <div class="slider-group">
+    <div class="slider-meta">
+      <label for="level">Dim level</label>
+      <span id="pct" class="pill">25%</span>
+    </div>
     <input id="level" type="range" min="0" max="1" step="0.01" value="0.25">
-    <span id="pct" class="pill">25%</span>
   </div>
   <button id="toggle">Toggle</button>
   <p class="muted small-text">Applies to every site except Chrome's built-in pages.</p>
