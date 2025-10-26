@@ -12,6 +12,8 @@
     .pill { padding: 2px 8px; border-radius: 999px; background: #eee; }
     button { padding:6px 10px; margin-top:10px; }
     .muted { color:#666; margin-top:10px; }
+    #site-controls { margin-top:12px; display:flex; flex-direction:column; gap:4px; }
+    #site-controls button { margin-top:0; }
   </style>
 </head>
 <body>
@@ -22,6 +24,11 @@
   </div>
   <button id="toggle">Toggle</button>
   <p class="muted">Applies to all tabs (except Chrome restricted pages).</p>
+  <div id="site-controls" hidden>
+    <p class="muted" id="site-host"></p>
+    <button id="site-toggle" type="button">Lock this site at current level</button>
+    <p class="muted" id="site-status"></p>
+  </div>
   <script src="popup.js"></script>
 </body>
 </html>
