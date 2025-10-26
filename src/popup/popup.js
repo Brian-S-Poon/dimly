@@ -9,7 +9,6 @@ const siteToggleBtn = document.querySelector('#site-toggle');
 const KEY = 'screendimmer_global_level';
 const DEFAULT_LEVEL = 0.25;
 const SITE_KEY = 'screendimmer_site_levels';
-const SITE_DIRTY_KEY = `${SITE_KEY}:dirty`;
 const QUOTA_RE = /MAX_WRITE_OPERATIONS_PER_MINUTE/i;
 
 function clamp01(x){ return Math.max(0, Math.min(1, Number(x || 0))); }
@@ -63,10 +62,10 @@ async function loadSiteLevels() {
 async function persistSiteLevels(levels) {
   try {
     await chrome.storage.sync.set({ [SITE_KEY]: levels });
-    await chrome.storage.local.remove([SITE_KEY, SITE_DIRTY_KEY]);
+    await chrome.storage.local.remove([SITE_KEY]);
   } catch (e) {
     if (chrome.runtime.lastError && QUOTA_RE.test(chrome.runtime.lastError.message)) {
-      await chrome.storage.local.set({ [SITE_KEY]: levels, [SITE_DIRTY_KEY]: true });
+      await chrome.storage.local.set({ [SITE_KEY]: levels });
     } else {
       throw e;
     }
@@ -121,7 +120,7 @@ async function writeSync(level) {
     } catch (e) {
       if (chrome.runtime.lastError &&
           QUOTA_RE.test(chrome.runtime.lastError.message)) {
-        await chrome.storage.local.set({ [KEY]: level, [`${KEY}:dirty`]: true });
+        await chrome.storage.local.set({ [KEY]: level });
       }
     }
   }, 250); // adjust delay if needed
@@ -160,7 +159,7 @@ toggleBtn.addEventListener('click', async () => {
   } catch (e) {
     if (chrome.runtime.lastError &&
         QUOTA_RE.test(chrome.runtime.lastError.message)) {
-      await chrome.storage.local.set({ [KEY]: next, [`${KEY}:dirty`]: true });
+      await chrome.storage.local.set({ [KEY]: next });
     }
   }
 });
