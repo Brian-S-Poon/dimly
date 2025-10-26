@@ -7,8 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
-- Clarified the popup toggle's note so future updates keep the dimming fallback working.
+
 
 ## [1.2.1] - 2025-09-13
 
