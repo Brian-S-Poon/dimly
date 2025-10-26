@@ -6,6 +6,7 @@ const siteControls = document.querySelector('#site-controls');
 const siteHostLabel = document.querySelector('#site-host');
 const siteStatus = document.querySelector('#site-status');
 const siteToggleBtn = document.querySelector('#site-toggle');
+const siteHint = document.querySelector('#site-hint');
 
 const QUOTA_RE = /MAX_WRITE_OPERATIONS_PER_MINUTE/i;
 
@@ -41,15 +42,29 @@ function updateGlobalUI(level) {
 
 function updateSiteUI() {
   if (!siteControls || !siteHostLabel || !siteStatus) return;
+
   if (!currentHost) {
-    siteControls.hidden = true;
+    siteControls.hidden = false;
+    siteHostLabel.textContent = 'Per-site dimming';
+    siteStatus.textContent = 'This page does not support per-site controls.';
+    if (siteHint) {
+      siteHint.hidden = false;
+      siteHint.textContent = 'Visit another website (http or https) to set a custom dim level.';
+    }
+    if (siteToggleBtn) {
+      siteToggleBtn.hidden = true;
+      siteToggleBtn.disabled = true;
+    }
     return;
   }
 
   siteControls.hidden = false;
   siteHostLabel.textContent = `Site · ${currentHost}`;
   const locked = typeof currentSiteLevel === 'number';
-  if (siteToggleBtn) siteToggleBtn.disabled = false;
+  if (siteToggleBtn) {
+    siteToggleBtn.hidden = false;
+    siteToggleBtn.disabled = false;
+  }
 
   if (locked) {
     if (siteToggleBtn) siteToggleBtn.textContent = 'Unlock site';
@@ -57,6 +72,10 @@ function updateSiteUI() {
   } else {
     if (siteToggleBtn) siteToggleBtn.textContent = 'Lock site';
     siteStatus.textContent = `Using global level (${Math.round(clamp01(lastLevel) * 100)}%).`;
+  }
+  if (siteHint) {
+    siteHint.hidden = false;
+    siteHint.textContent = 'Overrides apply only to this site.';
   }
 }
 
