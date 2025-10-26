@@ -1,6 +1,7 @@
 const slider = document.querySelector('#level');
 const pct = document.querySelector('#pct');
 const toggleBtn = document.querySelector('#toggle');
+const toggleStatus = document.querySelector('#toggle-status');
 const siteControls = document.querySelector('#site-controls');
 const siteHostLabel = document.querySelector('#site-host');
 const siteStatus = document.querySelector('#site-status');
@@ -13,6 +14,15 @@ function setUI(v){
   const val = clamp01(v);
   slider.value = String(val);
   pct.textContent = Math.round(val * 100) + '%';
+  const isOff = val === 0;
+  if (toggleBtn) {
+    toggleBtn.textContent = isOff ? 'Turn on dimmer' : 'Turn off dimmer';
+  }
+  if (toggleStatus) {
+    toggleStatus.textContent = isOff
+      ? 'The global dimmer is currently off.'
+      : 'The global dimmer is active.';
+  }
   updateSiteUI();
 }
 

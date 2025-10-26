@@ -83,6 +83,10 @@ button:disabled {
   font-size: 12px;
 }
 
+#toggle-status {
+  margin-top: 6px;
+}
+
 .site-header {
   display: flex;
   align-items: center;
