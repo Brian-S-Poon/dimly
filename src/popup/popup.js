@@ -6,9 +6,6 @@ const siteHostLabel = document.querySelector('#site-host');
 const siteStatus = document.querySelector('#site-status');
 const siteToggleBtn = document.querySelector('#site-toggle');
 
-const KEY = 'screendimmer_global_level';
-const DEFAULT_LEVEL = 0.25;
-const SITE_KEY = 'screendimmer_site_levels';
 const QUOTA_RE = /MAX_WRITE_OPERATIONS_PER_MINUTE/i;
 
 function clamp01(x){ return Math.max(0, Math.min(1, Number(x || 0))); }
@@ -116,19 +113,19 @@ async function writeSync(level) {
   clearTimeout(writeTimer);
   writeTimer = setTimeout(async () => {
     try {
-      await chrome.storage.sync.set({ [KEY]: level });
+      await chrome.storage.sync.set({ [GLOBAL_KEY]: level });
     } catch (e) {
       if (chrome.runtime.lastError &&
           QUOTA_RE.test(chrome.runtime.lastError.message)) {
-        await chrome.storage.local.set({ [KEY]: level });
+        await chrome.storage.local.set({ [GLOBAL_KEY]: level });
       }
     }
   }, 250); // adjust delay if needed
 }
 
 // Initialize UI
-chrome.storage.sync.get({ [KEY]: DEFAULT_LEVEL }, (obj) => {
-  lastLevel = obj[KEY];
+chrome.storage.sync.get({ [GLOBAL_KEY]: DEFAULT_LEVEL }, (obj) => {
+  lastLevel = obj[GLOBAL_KEY];
   setUI(lastLevel);
 });
 
@@ -150,16 +147,16 @@ slider.addEventListener('change', (e) => {
 
 // Toggle writes to sync; if write quotas are hit, mirror to local so the state persists
 toggleBtn.addEventListener('click', async () => {
-  const obj = await chrome.storage.sync.get({ [KEY]: DEFAULT_LEVEL });
-  const next = obj[KEY] > 0 ? 0 : DEFAULT_LEVEL;
+  const obj = await chrome.storage.sync.get({ [GLOBAL_KEY]: DEFAULT_LEVEL });
+  const next = obj[GLOBAL_KEY] > 0 ? 0 : DEFAULT_LEVEL;
   lastLevel = next;
   setUI(next);
   try {
-    await chrome.storage.sync.set({ [KEY]: next });
+    await chrome.storage.sync.set({ [GLOBAL_KEY]: next });
   } catch (e) {
     if (chrome.runtime.lastError &&
         QUOTA_RE.test(chrome.runtime.lastError.message)) {
-      await chrome.storage.local.set({ [KEY]: next });
+      await chrome.storage.local.set({ [GLOBAL_KEY]: next });
     }
   }
 });
