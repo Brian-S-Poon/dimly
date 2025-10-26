@@ -13,10 +13,12 @@
     <span id="pct" class="pill">25%</span>
   </div>
   <button id="toggle">Toggle</button>
-  <p class="muted">Applies to all tabs (except Chrome restricted pages).</p>
+  <p class="muted small-text">Global level (all tabs except system pages).</p>
   <div id="site-controls" hidden>
-    <p class="muted" id="site-host"></p>
-    <button id="site-toggle" type="button">Lock this site at current level</button>
+    <div class="site-header">
+      <p class="muted" id="site-host"></p>
+      <button id="site-toggle" type="button">Lock site</button>
+    </div>
     <p class="muted" id="site-status"></p>
   </div>
   <script src="../shared/constants.js"></script>

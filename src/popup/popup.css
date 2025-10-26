@@ -34,6 +34,21 @@ button {
   margin-top: 10px;
 }
 
+.small-text {
+  font-size: 12px;
+}
+
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.site-header .muted {
+  margin: 0;
+}
+
 #site-controls {
   margin-top: 12px;
   display: flex;
