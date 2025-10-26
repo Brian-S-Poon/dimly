@@ -3,11 +3,16 @@
 const OVERLAY_ID = 'screendimmer-overlay';
 const MAX_Z = 2147483647;
 const DEFAULT_LEVEL = 0.25;
-const KEY = 'screendimmer_global_level';
+const GLOBAL_KEY = 'screendimmer_global_level';
+const SITE_KEY = 'screendimmer_site_levels';
 
 let overlay = null;
 let currentLevel = 0;
 let aliveObserver = null;
+
+function clamp01(value) {
+  return Math.max(0, Math.min(1, Number(value || 0)));
+}
 
 function ensureOverlay() {
   if (overlay && overlay.isConnected) return overlay;
@@ -28,7 +33,7 @@ function ensureOverlay() {
 }
 
 function applyLevel(level) {
-  const v = Math.max(0, Math.min(1, Number(level || 0)));
+  const v = clamp01(level);
   currentLevel = v;
   ensureOverlay().style.background = `rgba(0,0,0,${v})`;
 }
@@ -61,19 +66,32 @@ function handleFullscreen() {
 ['fullscreenchange','webkitfullscreenchange','msfullscreenchange']
   .forEach(e => document.addEventListener(e, handleFullscreen, true));
 
-// Startup: prefer sync; if not set, check local
-chrome.storage.sync.get({ [KEY]: null }, (obj) => {
-  if (obj[KEY] != null) {
-    applyLevel(obj[KEY]);
-  } else {
-    chrome.storage.local.get({ [KEY]: DEFAULT_LEVEL }, (lo) => applyLevel(lo[KEY]));
-  }
-  startKeepAlive();
-});
+function loadLevel() {
+  const host = location.hostname;
+  chrome.storage.sync.get({ [GLOBAL_KEY]: null, [SITE_KEY]: null }, (syncValues) => {
+    chrome.storage.local.get({ [GLOBAL_KEY]: DEFAULT_LEVEL, [SITE_KEY]: null }, (localValues) => {
+      const combinedSiteLevels = Object.assign({}, localValues[SITE_KEY] || {}, syncValues[SITE_KEY] || {});
+      const siteLevel = combinedSiteLevels && combinedSiteLevels[host] != null
+        ? combinedSiteLevels[host]
+        : null;
 
-// React to both areas
+      if (siteLevel != null) {
+        applyLevel(siteLevel);
+      } else if (syncValues[GLOBAL_KEY] != null) {
+        applyLevel(syncValues[GLOBAL_KEY]);
+      } else {
+        applyLevel(localValues[GLOBAL_KEY]);
+      }
+      startKeepAlive();
+    });
+  });
+}
+
+loadLevel();
+
+// React to changes in either storage area
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (changes[KEY] && (area === 'sync' || area === 'local')) {
-    applyLevel(changes[KEY].newValue);
+  if ((changes[GLOBAL_KEY] || changes[SITE_KEY]) && (area === 'sync' || area === 'local')) {
+    loadLevel();
   }
 });
