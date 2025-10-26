@@ -4,6 +4,11 @@ body {
   width: 260px;
 }
 
+.description {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
 .row {
   display: flex;
   align-items: center;
