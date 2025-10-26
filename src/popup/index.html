@@ -16,17 +16,15 @@
     <input id="level" type="range" min="0" max="1" step="0.01" value="0.25">
     <span id="pct" class="pill">25%</span>
   </div>
-  <section class="section" id="global-controls">
-    <button id="toggle">Toggle</button>
-    <p class="muted small-text">Applies to every site except Chrome's built-in pages.</p>
-  </section>
-  <section class="section" id="site-controls" hidden>
+  <button id="toggle">Toggle</button>
+  <p class="muted small-text">Applies to every site except Chrome's built-in pages.</p>
+  <div id="site-controls" hidden>
     <div class="site-header">
       <p class="muted" id="site-host"></p>
       <button id="site-toggle" type="button">Lock site</button>
     </div>
     <p class="muted" id="site-status"></p>
-  </section>
+  </div>
   <script src="../shared/constants.js"></script>
   <script src="popup.js"></script>
 </body>

@@ -43,13 +43,6 @@ button {
   padding: 6px 10px;
 }
 
-.section {
-  margin-top: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
 .muted {
   color: #666;
   margin: 0;
@@ -57,6 +50,16 @@ button {
 
 .small-text {
   font-size: 12px;
+}
+
+#toggle {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+}
+
+#toggle + .muted.small-text {
+  margin-top: 6px;
 }
 
 .site-header {
@@ -71,8 +74,11 @@ button {
 }
 
 #site-controls {
+  margin-top: 20px;
   padding-top: 12px;
   border-top: 1px solid #e4e4e4;
+  display: flex;
+  flex-direction: column;
   gap: 6px;
 }
 

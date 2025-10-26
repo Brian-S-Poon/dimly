@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved popup styling into a reusable stylesheet.
 - Simplified popup copy so the dimmer controls take up less space.
 - Added a popup heading and description so the global dim level control is clearer.
-- Grouped the popup actions into clearer sections with breathing room between global and site controls.
+- Added breathing room between the global toggle and site controls for a clearer popup hierarchy.
 
 
 
