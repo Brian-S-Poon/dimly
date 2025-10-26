@@ -4,6 +4,21 @@ body {
   width: 260px;
 }
 
+.popup-header {
+  margin-bottom: 12px;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.description {
+  margin: 0;
+  color: #444;
+}
+
 .row {
   display: flex;
   align-items: center;
