@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added dark mode styles to the popup so it adapts to system theme preferences.
 - Grouped popup controls into styled global and per-site sections for clearer separation.
 - Popup always shows per-site dimming controls with guidance when a page isn't eligible.
 - Added per-site dimming locks so specific websites can stay at a custom brightness level.
