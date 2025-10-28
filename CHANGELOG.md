@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- _No changes yet._
+- Updated popup hint copy to reference HTTP and HTTPS in uppercase.
 
 ## [1.3.0] - 2025-10-28
 
