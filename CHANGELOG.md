@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refreshed popup buttons with clearer styling and hover feedback for better affordance.
 - Reworked the dim level slider layout and value pill for better spacing and readability.
 - Updated the popup toggle to show on/off status text and state-aware button labels.
+- Restyled the popup brightness slider track and thumb with gradient theming and hover feedback.
 
 
 
