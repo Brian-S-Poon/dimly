@@ -49,7 +49,7 @@ class PreviewConfig:
 
 
 CHROME_STUB_TEMPLATE = """
-(() => {
+(() => {{
   const GLOBAL_KEY = 'screendimmer_global_level';
   const SITE_KEY = 'screendimmer_site_levels';
   const siteHost = {site_host};
