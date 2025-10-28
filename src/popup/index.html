@@ -18,13 +18,16 @@
     </div>
     <input id="level" type="range" min="0" max="1" step="0.01" value="0.25">
   </div>
-  <button id="toggle" type="button">Turn off</button>
+  <button id="toggle" class="primary-button" type="button">Turn off</button>
   <p id="global-status" class="muted">Dimmer is on at 25%.</p>
   <p class="muted small-text">Applies to every site except Chrome's built-in pages.</p>
   <div id="site-controls">
     <div class="site-header">
       <p class="muted" id="site-host">Per-site dimming</p>
-      <button id="site-toggle" type="button" hidden>Lock site</button>
+      <button id="site-toggle" type="button" class="site-action" hidden>
+        <span class="site-action-icon" aria-hidden="true"></span>
+        <span class="site-action-label">Lock site</span>
+      </button>
     </div>
     <p class="muted" id="site-status">Per-site dimming works on regular websites.</p>
     <p class="muted small-text" id="site-hint">Visit a supported site to customize it individually.</p>

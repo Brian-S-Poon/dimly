@@ -6,6 +6,9 @@ const siteControls = document.querySelector('#site-controls');
 const siteHostLabel = document.querySelector('#site-host');
 const siteStatus = document.querySelector('#site-status');
 const siteToggleBtn = document.querySelector('#site-toggle');
+const siteToggleLabel = siteToggleBtn
+  ? siteToggleBtn.querySelector('.site-action-label')
+  : null;
 const siteHint = document.querySelector('#site-hint');
 
 const QUOTA_RE = /MAX_WRITE_OPERATIONS_PER_MINUTE/i;
@@ -54,6 +57,7 @@ function updateSiteUI() {
     if (siteToggleBtn) {
       siteToggleBtn.hidden = true;
       siteToggleBtn.disabled = true;
+      siteToggleBtn.setAttribute('aria-pressed', 'false');
     }
     return;
   }
@@ -64,18 +68,28 @@ function updateSiteUI() {
   if (siteToggleBtn) {
     siteToggleBtn.hidden = false;
     siteToggleBtn.disabled = false;
+    siteToggleBtn.setAttribute('aria-pressed', String(locked));
   }
 
   if (locked) {
-    if (siteToggleBtn) siteToggleBtn.textContent = 'Unlock site';
+    setSiteToggleText('Unlock site');
     siteStatus.textContent = `Locked at ${Math.round(clamp01(currentSiteLevel) * 100)}%.`;
   } else {
-    if (siteToggleBtn) siteToggleBtn.textContent = 'Lock site';
+    setSiteToggleText('Lock site');
     siteStatus.textContent = `Using global level (${Math.round(clamp01(lastLevel) * 100)}%).`;
   }
   if (siteHint) {
     siteHint.hidden = false;
     siteHint.textContent = 'Overrides apply only to this site.';
+  }
+}
+
+function setSiteToggleText(label) {
+  if (!siteToggleBtn) return;
+  if (siteToggleLabel) {
+    siteToggleLabel.textContent = label;
+  } else {
+    siteToggleBtn.textContent = label;
   }
 }
 
