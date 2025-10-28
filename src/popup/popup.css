@@ -144,3 +144,37 @@ button:disabled {
 .site-controls button {
   margin-top: 0;
 }
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #0b1220;
+    color: #e6efff;
+  }
+
+  .controls-section {
+    border-color: rgba(80, 117, 179, 0.6);
+    background: linear-gradient(180deg, #162543, #101a30);
+    box-shadow: 0 1px 2px rgba(2, 6, 23, 0.6);
+  }
+
+  .section-heading {
+    color: #9ec5ff;
+  }
+
+  .site-heading,
+  .description,
+  label {
+    color: #e6efff;
+  }
+
+  .pill {
+    background: linear-gradient(180deg, #1a325b, #152748);
+    color: #f0f6ff;
+    border-color: rgba(132, 179, 255, 0.55);
+    box-shadow: 0 1px 1px rgba(2, 6, 23, 0.6);
+  }
+
+  .muted {
+    color: #9fb6d8;
+  }
+}
