@@ -49,7 +49,7 @@ function updateSiteUI() {
     siteStatus.textContent = 'This page does not support per-site controls.';
     if (siteHint) {
       siteHint.hidden = false;
-      siteHint.textContent = 'Visit another website (http or https) to set a custom dim level.';
+      siteHint.textContent = 'Visit another website (HTTP or HTTPS) to set a custom dim level.';
     }
     if (siteToggleBtn) {
       siteToggleBtn.hidden = true;
