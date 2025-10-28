@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Screen Dimmer",
-  "version": "1.2.1",
-  "description": "Universal screen dimmer for Chrome. Adjust brightness on all websites with a simple slider for eye-friendly browsing.",
+  "version": "1.3.0",
+  "description": "Dim any site with global or per-site brightness controls, quick locks, and a theme-aware popup for comfortable browsing.",
   "action": { "default_popup": "src/popup/index.html", "default_title": "Screen Dimmer" },
   "permissions": ["storage", "tabs"],
   "host_permissions": ["<all_urls>"],
