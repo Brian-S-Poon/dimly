@@ -32,12 +32,26 @@
     </div>
     <p class="muted" id="site-status">Per-site dimming works on regular websites.</p>
     <p class="muted small-text" id="site-hint">Visit a supported site to customize it individually.</p>
+    <button id="site-manage" type="button" class="link-button">Manage overrides</button>
+  </section>
+  <section class="controls-section site-manager" id="site-manager" aria-labelledby="site-manager-heading" hidden>
+    <div class="site-manager-header">
+      <h2 id="site-manager-heading" class="section-heading">Site overrides</h2>
+      <button id="site-manager-close" type="button" class="link-button">Back</button>
+    </div>
+    <p id="site-manager-status" class="muted small-text" role="status" aria-live="polite" hidden></p>
+    <p id="site-manager-empty" class="muted small-text">No site overrides saved yet.</p>
+    <ul id="site-manager-list" class="site-manager-list" hidden></ul>
+    <div class="site-manager-footer">
+      <button id="site-manager-reset" type="button" class="danger">Reset all</button>
+    </div>
   </section>
   <script src="../shared/constants.js"></script>
   <script src="../shared/math.js"></script>
   <script src="../shared/storage.js"></script>
   <script src="state.js"></script>
   <script src="ui.js"></script>
+  <script src="site-storage.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>
