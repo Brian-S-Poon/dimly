@@ -17,6 +17,8 @@
       "matches": ["<all_urls>"],
       "js": [
         "src/shared/constants.js",
+        "src/shared/math.js",
+        "src/shared/storage.js",
         "src/content/overlay.js"
       ],
       "run_at": "document_start",

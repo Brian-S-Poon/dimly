@@ -1,222 +1,91 @@
-const slider = document.querySelector('#level');
-const pct = document.querySelector('#pct');
-const toggleBtn = document.querySelector('#toggle');
-const globalStatus = document.querySelector('#global-status');
-const siteControls = document.querySelector('#site-controls');
-const siteHostLabel = document.querySelector('#site-host');
-const siteStatus = document.querySelector('#site-status');
-const siteToggleBtn = document.querySelector('#site-toggle');
-const siteHint = document.querySelector('#site-hint');
+(function (global) {
+  const { clamp01 } = global.ScreenDimmerMath;
+  const storage = global.ScreenDimmerStorage;
+  const ui = global.ScreenDimmerPopupUI;
+  const state = global.ScreenDimmerPopupState;
 
-const QUOTA_RE = /MAX_WRITE_OPERATIONS_PER_MINUTE/i;
+  let writeTimer = null;
+  let lastLevel = DEFAULT_LEVEL;
+  let currentHost = null;
+  let currentSiteLevel = null;
+  let siteLevelsCache = {};
 
-function clamp01(x){ return Math.max(0, Math.min(1, Number(x || 0))); }
-function setUI(v){
-  const val = clamp01(v);
-  slider.value = String(val);
-  pct.textContent = Math.round(val * 100) + '%';
-  updateGlobalUI(val);
-  updateSiteUI();
-}
-
-// --- Debounced writer to sync ---
-let writeTimer = null;
-let lastLevel = DEFAULT_LEVEL;
-let currentHost = null;
-let siteLevelsCache = {};
-let currentSiteLevel = null;
-
-function updateGlobalUI(level) {
-  const val = clamp01(level);
-  const isOn = val > 0;
-  if (toggleBtn) {
-    toggleBtn.textContent = isOn ? 'Turn off' : 'Turn on';
-    toggleBtn.setAttribute('aria-pressed', String(isOn));
-  }
-  if (globalStatus) {
-    globalStatus.textContent = isOn
-      ? `Dimmer is on at ${Math.round(val * 100)}%.`
-      : 'Dimmer is off.';
-  }
-}
-
-function updateSiteUI() {
-  if (!siteControls || !siteHostLabel || !siteStatus) return;
-
-  if (!currentHost) {
-    siteControls.hidden = false;
-    siteHostLabel.textContent = 'Per-site dimming';
-    siteStatus.textContent = 'This page does not support per-site controls.';
-    if (siteHint) {
-      siteHint.hidden = false;
-      siteHint.textContent = 'Visit another website (HTTP or HTTPS) to set a custom dim level.';
-    }
-    if (siteToggleBtn) {
-      siteToggleBtn.hidden = true;
-      siteToggleBtn.disabled = true;
-    }
-    return;
-  }
-
-  siteControls.hidden = false;
-  siteHostLabel.textContent = `Site · ${currentHost}`;
-  const locked = typeof currentSiteLevel === 'number';
-  if (siteToggleBtn) {
-    siteToggleBtn.hidden = false;
-    siteToggleBtn.disabled = false;
-  }
-
-  if (locked) {
-    if (siteToggleBtn) siteToggleBtn.textContent = 'Unlock site';
-    siteStatus.textContent = `Locked at ${Math.round(clamp01(currentSiteLevel) * 100)}%.`;
-  } else {
-    if (siteToggleBtn) siteToggleBtn.textContent = 'Lock site';
-    siteStatus.textContent = `Using global level (${Math.round(clamp01(lastLevel) * 100)}%).`;
-  }
-  if (siteHint) {
-    siteHint.hidden = false;
-    siteHint.textContent = 'Overrides apply only to this site.';
-  }
-}
-
-function storageGet(area, defaults) {
-  return new Promise((resolve) => {
-    chrome.storage[area].get(defaults, (items) => resolve(items));
-  });
-}
-
-async function loadSiteLevels() {
-  const syncValues = await storageGet('sync', { [SITE_KEY]: null });
-  const localValues = await storageGet('local', { [SITE_KEY]: null });
-  return Object.assign({}, localValues[SITE_KEY] || {}, syncValues[SITE_KEY] || {});
-}
-
-async function persistSiteLevels(levels) {
-  try {
-    await chrome.storage.sync.set({ [SITE_KEY]: levels });
-    await chrome.storage.local.remove([SITE_KEY]);
-  } catch (e) {
-    if (chrome.runtime.lastError && QUOTA_RE.test(chrome.runtime.lastError.message)) {
-      await chrome.storage.local.set({ [SITE_KEY]: levels });
-    } else {
-      throw e;
-    }
-  }
-}
-
-async function getActiveHost() {
-  const tabs = await new Promise((resolve) => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (found) => {
-      if (chrome.runtime.lastError) {
-        resolve([]);
-      } else {
-        resolve(found || []);
-      }
+  function applyLevel(level) {
+    lastLevel = clamp01(level);
+    ui.updateLevel(lastLevel);
+    ui.updateGlobal(lastLevel);
+    ui.renderSite({
+      host: currentHost,
+      lockedLevel: currentSiteLevel,
+      globalLevel: lastLevel
     });
-  });
-
-  const tab = tabs[0];
-  if (!tab || !tab.url) return null;
-  try {
-    const url = new URL(tab.url);
-    if (url.protocol === 'http:' || url.protocol === 'https:') {
-      return url.hostname;
-    }
-  } catch (err) {
-    // Ignore malformed URLs
-  }
-  return null;
-}
-
-async function initSiteControls() {
-  if (!siteControls || !siteToggleBtn || !siteHostLabel || !siteStatus) return;
-  const host = await getActiveHost();
-  currentHost = host;
-  if (!host) {
-    updateSiteUI();
-    return;
   }
 
-  siteLevelsCache = await loadSiteLevels();
-  currentSiteLevel = typeof siteLevelsCache[host] === 'number'
-    ? clamp01(siteLevelsCache[host])
-    : null;
-  updateSiteUI();
-}
+  function updateSiteUI(message) {
+    ui.renderSite({
+      host: currentHost,
+      lockedLevel: currentSiteLevel,
+      globalLevel: lastLevel,
+      message
+    });
+  }
 
-async function writeSync(level) {
-  clearTimeout(writeTimer);
-  writeTimer = setTimeout(async () => {
-    try {
-      await chrome.storage.sync.set({ [GLOBAL_KEY]: level });
-    } catch (e) {
-      if (chrome.runtime.lastError &&
-          QUOTA_RE.test(chrome.runtime.lastError.message)) {
-        await chrome.storage.local.set({ [GLOBAL_KEY]: level });
+  function scheduleGlobalWrite(level) {
+    clearTimeout(writeTimer);
+    writeTimer = setTimeout(async () => {
+      try {
+        await storage.setGlobalLevel(level);
+      } catch (err) {
+        console.error('Failed to persist global level', err);
       }
-    }
-  }, 250); // adjust delay if needed
-}
+    }, 250);
+  }
 
-// Initialize UI
-chrome.storage.sync.get({ [GLOBAL_KEY]: DEFAULT_LEVEL }, (obj) => {
-  lastLevel = obj[GLOBAL_KEY];
-  setUI(lastLevel);
-});
+  function handleLevelInput(event) {
+    const value = clamp01(event.target.value);
+    applyLevel(value);
+    scheduleGlobalWrite(value);
+  }
 
-// Input while dragging: update UI immediately, delay writes
-slider.addEventListener('input', (e) => {
-  const level = clamp01(e.target.value);
-  lastLevel = level;
-  setUI(level);
-  writeSync(level);
-});
+  function handleLevelChange(event) {
+    const value = clamp01(event.target.value);
+    applyLevel(value);
+    scheduleGlobalWrite(value);
+  }
 
-// Commit on release as well
-slider.addEventListener('change', (e) => {
-  const level = clamp01(e.target.value);
-  lastLevel = level;
-  setUI(level);
-  writeSync(level);
-});
-
-// Toggle writes to sync; if write quotas are hit, mirror to local so the state persists
-toggleBtn.addEventListener('click', async () => {
-  const obj = await chrome.storage.sync.get({ [GLOBAL_KEY]: DEFAULT_LEVEL });
-  const next = obj[GLOBAL_KEY] > 0 ? 0 : DEFAULT_LEVEL;
-  lastLevel = next;
-  setUI(next);
-  try {
-    await chrome.storage.sync.set({ [GLOBAL_KEY]: next });
-  } catch (e) {
-    if (chrome.runtime.lastError &&
-        QUOTA_RE.test(chrome.runtime.lastError.message)) {
-      await chrome.storage.local.set({ [GLOBAL_KEY]: next });
+  async function handleToggleClick() {
+    const nextLevel = lastLevel > 0 ? 0 : DEFAULT_LEVEL;
+    applyLevel(nextLevel);
+    try {
+      await storage.setGlobalLevel(nextLevel);
+    } catch (err) {
+      console.error('Failed to toggle global level', err);
     }
   }
-});
 
-if (siteToggleBtn) {
-  siteToggleBtn.addEventListener('click', async () => {
+  async function handleSiteToggleClick() {
     if (!currentHost) return;
     const locking = typeof currentSiteLevel !== 'number';
     const targetLevel = locking ? clamp01(lastLevel) : null;
     const previousLevel = siteLevelsCache[currentHost];
 
-    siteToggleBtn.disabled = true;
+    ui.setSiteToggleDisabled(true);
     try {
       if (locking) {
-        siteLevelsCache[currentHost] = targetLevel;
+        const nextLevels = Object.assign({}, siteLevelsCache, { [currentHost]: targetLevel });
+        await storage.setSiteLevels(nextLevels);
+        siteLevelsCache = nextLevels;
         currentSiteLevel = targetLevel;
       } else {
-        delete siteLevelsCache[currentHost];
+        const nextLevels = Object.assign({}, siteLevelsCache);
+        delete nextLevels[currentHost];
+        await storage.setSiteLevels(nextLevels);
+        siteLevelsCache = nextLevels;
         currentSiteLevel = null;
       }
-      await persistSiteLevels(siteLevelsCache);
-      siteStatus.textContent = locking
-        ? `Locked at ${Math.round(targetLevel * 100)}%.`
-        : `Using global level (${Math.round(clamp01(lastLevel) * 100)}%).`;
+      updateSiteUI();
     } catch (err) {
+      console.error('Failed to update site override', err);
       if (typeof previousLevel === 'number') {
         siteLevelsCache[currentHost] = previousLevel;
         currentSiteLevel = clamp01(previousLevel);
@@ -224,12 +93,34 @@ if (siteToggleBtn) {
         delete siteLevelsCache[currentHost];
         currentSiteLevel = null;
       }
-      siteStatus.textContent = 'Update failed. Try again.';
+      updateSiteUI('Update failed. Try again.');
     } finally {
-      siteToggleBtn.disabled = false;
-      updateSiteUI();
+      ui.setSiteToggleDisabled(false);
     }
-  });
-}
+  }
 
-initSiteControls();
+  async function init() {
+    ui.bindEvents({
+      onLevelInput: handleLevelInput,
+      onLevelChange: handleLevelChange,
+      onToggleClick: handleToggleClick,
+      onSiteToggleClick: handleSiteToggleClick
+    });
+
+    try {
+      const initial = await state.loadInitialData();
+      lastLevel = initial.globalLevel;
+      currentHost = initial.host;
+      siteLevelsCache = initial.siteLevels || {};
+      currentSiteLevel = initial.currentSiteLevel;
+      applyLevel(lastLevel);
+      updateSiteUI();
+    } catch (err) {
+      console.error('Failed to initialize popup', err);
+      applyLevel(DEFAULT_LEVEL);
+      updateSiteUI('Unable to read saved settings.');
+    }
+  }
+
+  init();
+})(typeof window !== 'undefined' ? window : this);

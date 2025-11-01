@@ -1,15 +1,14 @@
 // Screen Dimmer – universal dimmer content script
 
+const { clamp01 } = window.ScreenDimmerMath;
+const storage = window.ScreenDimmerStorage;
+
 const OVERLAY_ID = 'screendimmer-overlay';
 const MAX_Z = 2147483647;
 
 let overlay = null;
 let currentLevel = 0;
 let aliveObserver = null;
-
-function clamp01(value) {
-  return Math.max(0, Math.min(1, Number(value || 0)));
-}
 
 function ensureOverlay() {
   if (overlay && overlay.isConnected) return overlay;
@@ -63,25 +62,20 @@ function handleFullscreen() {
 ['fullscreenchange','webkitfullscreenchange','msfullscreenchange']
   .forEach(e => document.addEventListener(e, handleFullscreen, true));
 
-function loadLevel() {
+async function loadLevel() {
   const host = location.hostname;
-  chrome.storage.sync.get({ [GLOBAL_KEY]: null, [SITE_KEY]: null }, (syncValues) => {
-    chrome.storage.local.get({ [GLOBAL_KEY]: DEFAULT_LEVEL, [SITE_KEY]: null }, (localValues) => {
-      const combinedSiteLevels = Object.assign({}, localValues[SITE_KEY] || {}, syncValues[SITE_KEY] || {});
-      const siteLevel = combinedSiteLevels && combinedSiteLevels[host] != null
-        ? combinedSiteLevels[host]
-        : null;
-
-      if (siteLevel != null) {
-        applyLevel(siteLevel);
-      } else if (syncValues[GLOBAL_KEY] != null) {
-        applyLevel(syncValues[GLOBAL_KEY]);
-      } else {
-        applyLevel(localValues[GLOBAL_KEY]);
-      }
-      startKeepAlive();
-    });
-  });
+  try {
+    const { globalLevel, siteLevels } = await storage.getLevelState();
+    if (host && siteLevels && siteLevels[host] != null) {
+      applyLevel(siteLevels[host]);
+    } else {
+      applyLevel(globalLevel);
+    }
+    startKeepAlive();
+  } catch (err) {
+    console.error('Failed to load dimmer level', err);
+    applyLevel(DEFAULT_LEVEL);
+  }
 }
 
 loadLevel();
