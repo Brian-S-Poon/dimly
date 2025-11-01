@@ -1,6 +1,7 @@
 (function (global) {
   const { clamp01 } = global.ScreenDimmerMath;
   const storage = global.ScreenDimmerStorage;
+  const siteStorage = global.ScreenDimmerSiteStorage;
   const ui = global.ScreenDimmerPopupUI;
   const state = global.ScreenDimmerPopupState;
 
@@ -8,7 +9,16 @@
   let lastLevel = DEFAULT_LEVEL;
   let currentHost = null;
   let currentSiteLevel = null;
-  let siteLevelsCache = {};
+  let managerVisible = false;
+
+  function syncManagerUI(message) {
+    const levels = siteStorage.getCache();
+    ui.updateManageSummary(levels);
+    if (managerVisible) {
+      ui.renderManager(levels);
+      ui.setManagerStatus(message || '');
+    }
+  }
 
   function applyLevel(level) {
     lastLevel = clamp01(level);
@@ -67,35 +77,109 @@
     if (!currentHost) return;
     const locking = typeof currentSiteLevel !== 'number';
     const targetLevel = locking ? clamp01(lastLevel) : null;
-    const previousLevel = siteLevelsCache[currentHost];
+    const previousLevels = siteStorage.getCache();
+    const previousLevel = previousLevels[currentHost];
 
     ui.setSiteToggleDisabled(true);
     try {
       if (locking) {
-        const nextLevels = Object.assign({}, siteLevelsCache, { [currentHost]: targetLevel });
-        await storage.setSiteLevels(nextLevels);
-        siteLevelsCache = nextLevels;
-        currentSiteLevel = targetLevel;
+        const { level } = await siteStorage.upsert(currentHost, targetLevel);
+        currentSiteLevel = level;
       } else {
-        const nextLevels = Object.assign({}, siteLevelsCache);
-        delete nextLevels[currentHost];
-        await storage.setSiteLevels(nextLevels);
-        siteLevelsCache = nextLevels;
+        await siteStorage.remove(currentHost);
         currentSiteLevel = null;
       }
       updateSiteUI();
+      syncManagerUI('');
     } catch (err) {
       console.error('Failed to update site override', err);
+      siteStorage.setCache(previousLevels);
       if (typeof previousLevel === 'number') {
-        siteLevelsCache[currentHost] = previousLevel;
         currentSiteLevel = clamp01(previousLevel);
       } else {
-        delete siteLevelsCache[currentHost];
         currentSiteLevel = null;
       }
       updateSiteUI('Update failed. Try again.');
+      syncManagerUI('Update failed. Try again.');
     } finally {
       ui.setSiteToggleDisabled(false);
+    }
+  }
+
+  function handleManageOpen() {
+    managerVisible = true;
+    ui.renderManager(siteStorage.getCache());
+    ui.setManagerVisible(true);
+    ui.setManagerStatus('');
+    ui.focusManagerClose();
+  }
+
+  function handleManageClose() {
+    managerVisible = false;
+    ui.setManagerVisible(false);
+    ui.setManagerStatus('');
+    ui.focusManageButton();
+  }
+
+  async function handleManagerLevelChange(host, value) {
+    if (!host) return;
+    const previousLevels = siteStorage.getCache();
+    try {
+      const { level } = await siteStorage.upsert(host, clamp01(value));
+      if (host === currentHost) {
+        currentSiteLevel = level;
+        updateSiteUI();
+      }
+      syncManagerUI(`Updated ${host}.`);
+    } catch (err) {
+      console.error('Failed to update site override', err);
+      siteStorage.setCache(previousLevels);
+      if (host === currentHost) {
+        currentSiteLevel = siteStorage.getLevel(currentHost);
+        updateSiteUI('Update failed. Try again.');
+      }
+      syncManagerUI('Update failed. Try again.');
+    }
+  }
+
+  async function handleManagerDelete(host) {
+    if (!host) return;
+    const previousLevels = siteStorage.getCache();
+    try {
+      await siteStorage.remove(host);
+      if (host === currentHost) {
+        currentSiteLevel = null;
+        updateSiteUI();
+      }
+      syncManagerUI(`Removed ${host}.`);
+    } catch (err) {
+      console.error('Failed to remove site override', err);
+      siteStorage.setCache(previousLevels);
+      if (host === currentHost) {
+        currentSiteLevel = siteStorage.getLevel(currentHost);
+        updateSiteUI('Update failed. Try again.');
+      }
+      syncManagerUI('Update failed. Try again.');
+    }
+  }
+
+  async function handleManagerReset() {
+    const previousLevels = siteStorage.getCache();
+    try {
+      await siteStorage.reset();
+      if (currentHost && previousLevels[currentHost] != null) {
+        currentSiteLevel = null;
+        updateSiteUI();
+      }
+      syncManagerUI('All overrides cleared.');
+    } catch (err) {
+      console.error('Failed to reset site overrides', err);
+      siteStorage.setCache(previousLevels);
+      if (currentHost) {
+        currentSiteLevel = siteStorage.getLevel(currentHost);
+        updateSiteUI('Update failed. Try again.');
+      }
+      syncManagerUI('Reset failed. Try again.');
     }
   }
 
@@ -104,17 +188,23 @@
       onLevelInput: handleLevelInput,
       onLevelChange: handleLevelChange,
       onToggleClick: handleToggleClick,
-      onSiteToggleClick: handleSiteToggleClick
+      onSiteToggleClick: handleSiteToggleClick,
+      onManageOpen: handleManageOpen,
+      onManageClose: handleManageClose,
+      onManagerLevelChange: handleManagerLevelChange,
+      onManagerDelete: handleManagerDelete,
+      onManagerReset: handleManagerReset
     });
 
     try {
       const initial = await state.loadInitialData();
       lastLevel = initial.globalLevel;
       currentHost = initial.host;
-      siteLevelsCache = initial.siteLevels || {};
-      currentSiteLevel = initial.currentSiteLevel;
+      siteStorage.setCache(initial.siteLevels || {});
+      currentSiteLevel = siteStorage.getLevel(currentHost);
       applyLevel(lastLevel);
       updateSiteUI();
+      syncManagerUI('');
     } catch (err) {
       console.error('Failed to initialize popup', err);
       applyLevel(DEFAULT_LEVEL);

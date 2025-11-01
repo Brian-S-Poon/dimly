@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added a site override manager in the popup so you can edit, remove, or reset per-site dim levels.
 - Updated popup hint copy to reference HTTP and HTTPS in uppercase.
 - Applied the Dimly nighttime color palette to the popup for a cohesive brand look.
 
