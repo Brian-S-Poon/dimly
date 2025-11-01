@@ -1,3 +1,5 @@
+import { DEFAULT_LEVEL, GLOBAL_KEY, SITE_KEY } from '../shared/constants.js';
+
 const slider = document.querySelector('#level');
 const pct = document.querySelector('#pct');
 const toggleBtn = document.querySelector('#toggle');

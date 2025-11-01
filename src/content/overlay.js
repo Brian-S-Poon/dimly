@@ -1,5 +1,7 @@
 // Screen Dimmer – universal dimmer content script
 
+import { DEFAULT_LEVEL, GLOBAL_KEY, SITE_KEY } from '../shared/constants.js';
+
 const OVERLAY_ID = 'screendimmer-overlay';
 const MAX_Z = 2147483647;
 

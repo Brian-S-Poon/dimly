@@ -5,3 +5,4 @@
 - `"<all_urls>"` — to inject the dimmer on every website, since the extension’s purpose is to dim any site.
 - `content_scripts` @ `document_start` — to place the overlay before the page fully shows, avoiding a bright flash.
 - `all_frames: true` — to dim iframes/embedded content along with the main page.
+- `content_scripts` `type: "module"` — allows the overlay to import shared constants without duplicating global scripts.
