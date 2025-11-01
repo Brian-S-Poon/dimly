@@ -86,3 +86,24 @@ chrome.storage.onChanged.addListener((changes, area) => {
     loadLevel();
   }
 });
+
+function resetForTest() {
+  if (overlay && typeof overlay.remove === 'function') {
+    overlay.remove();
+  }
+  if (aliveObserver && typeof aliveObserver.disconnect === 'function') {
+    aliveObserver.disconnect();
+  }
+  overlay = null;
+  currentLevel = 0;
+  aliveObserver = null;
+}
+
+if (typeof window !== 'undefined') {
+  window.ScreenDimmerOverlay = Object.assign({}, window.ScreenDimmerOverlay, {
+    ensureOverlay,
+    applyLevel,
+    loadLevel,
+    _resetForTest: resetForTest
+  });
+}
