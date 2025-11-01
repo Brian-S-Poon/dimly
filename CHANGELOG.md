@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Updated popup hint copy to reference HTTP and HTTPS in uppercase.
+- Applied the Dimly nighttime color palette to the popup for a cohesive brand look.
 
 ## [1.3.0] - 2025-10-28
 
