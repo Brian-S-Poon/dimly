@@ -171,6 +171,11 @@ button:active {
   color: var(--brand-text-light);
 }
 
+#site-toggle {
+  min-width: 120px;
+  text-align: center;
+}
+
 #toggle[data-state="on"] {
   background-color: var(--brand-primary);
   border-color: var(--brand-primary);
