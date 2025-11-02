@@ -26,10 +26,19 @@ body {
 }
 
 .popup-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   margin: 0;
   font-size: 18px;
   font-weight: 700;
   color: var(--brand-text-dark);
+}
+
+.popup-logo {
+  display: block;
+  height: 20px;
+  width: auto;
 }
 
 .settings-button {
