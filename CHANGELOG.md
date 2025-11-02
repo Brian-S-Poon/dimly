@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed filled styling from the slider value and settings controls for a lighter popup header treatment.
 - Trimmed popup copy to remove redundant scheduling and per-site guidance text.
 - Replaced options page gradients with flat colors and simplified badges to mirror the refreshed popup styling.
+- Clarified popup messaging on Chrome Web Store pages so site controls explain that Chrome blocks dimming there.
 
 ## [1.3.0] - 2025-10-28
 
