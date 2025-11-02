@@ -49,7 +49,7 @@
     if (!host) {
       if (blockedHost) {
         siteHostLabel.hidden = false;
-        siteHostLabel.textContent = `Site · ${blockedHost}`;
+        siteHostLabel.textContent = blockedHost;
       } else {
         siteHostLabel.textContent = '';
         siteHostLabel.hidden = true;
@@ -69,7 +69,7 @@
     }
 
     siteHostLabel.hidden = false;
-    siteHostLabel.textContent = `Site · ${host}`;
+    siteHostLabel.textContent = host;
 
     const isLocked = typeof lockedLevel === 'number';
 
