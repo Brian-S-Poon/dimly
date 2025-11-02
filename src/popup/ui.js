@@ -33,6 +33,7 @@
     if (toggleBtn) {
       toggleBtn.textContent = isOn ? 'Turn off' : 'Turn on';
       toggleBtn.setAttribute('aria-pressed', String(isOn));
+      toggleBtn.dataset.state = isOn ? 'on' : 'off';
     }
     if (globalStatus) {
       globalStatus.textContent = isOn
@@ -61,6 +62,8 @@
       if (siteToggleBtn) {
         siteToggleBtn.hidden = true;
         siteToggleBtn.disabled = true;
+        siteToggleBtn.removeAttribute('data-state');
+        siteToggleBtn.removeAttribute('aria-pressed');
       }
       return;
     }
@@ -73,6 +76,8 @@
     if (siteToggleBtn) {
       siteToggleBtn.hidden = false;
       siteToggleBtn.textContent = isLocked ? 'Unlock site' : 'Lock site';
+      siteToggleBtn.dataset.state = isLocked ? 'locked' : 'unlocked';
+      siteToggleBtn.setAttribute('aria-pressed', String(isLocked));
     }
 
     if (message) {
