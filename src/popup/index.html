@@ -11,13 +11,11 @@
     <h1 class="popup-title">Screen Dimmer</h1>
     <button id="open-options" type="button" class="settings-button" aria-label="Open scheduling settings">
       <span aria-hidden="true">⚙️</span>
-      <span class="settings-label">Scheduling</span>
     </button>
   </header>
   <section class="controls-section global-controls" aria-labelledby="global-controls-heading">
     <h2 id="global-controls-heading" class="section-heading">Global controls</h2>
     <header class="popup-header">
-      <h3 class="title">Global dimming</h3>
       <p class="description">Choose how dark the overlay becomes when Screen Dimmer is turned on.</p>
     </header>
     <div class="slider-group">
@@ -28,18 +26,15 @@
       <input id="level" type="range" min="0" max="1" step="0.01" value="0.25">
     </div>
     <button id="toggle" type="button">Turn off</button>
-    <p id="global-status" class="muted">Dimmer is on at 25%.</p>
-    <p class="muted small-text">Applies to every site except Chrome's built-in pages.</p>
-    <p class="muted small-text">Need automation? Configure schedule rules from the scheduling settings.</p>
   </section>
   <section class="controls-section site-controls" id="site-controls" aria-labelledby="site-controls-heading">
     <h2 id="site-controls-heading" class="section-heading">Site controls</h2>
     <div class="site-header">
-      <h3 class="site-heading" id="site-host">Per-site dimming</h3>
+      <h3 class="site-heading" id="site-host" hidden></h3>
       <button id="site-toggle" type="button" hidden>Lock site</button>
     </div>
-    <p class="muted" id="site-status">Per-site dimming works on regular websites.</p>
-    <p class="muted small-text" id="site-hint">Visit a supported site to customize it individually.</p>
+    <p class="muted" id="site-status">Site controls are available on supported websites.</p>
+    <p class="muted small-text" id="site-hint" hidden></p>
     <button id="site-manage" type="button" class="link-button">Manage overrides</button>
   </section>
   <section class="controls-section site-manager" id="site-manager" aria-labelledby="site-manager-heading" hidden>
