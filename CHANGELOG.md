@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- Added the Dimly logo beside the popup heading for clearer branding and fixed its image path.
 - Stacked the popup site heading and lock button so long hostnames stay readable and align with the global toggle.
 - Wrapped long site hostnames in the popup so the lock button stays visible on narrow layouts.
 - Prevented long site names in the popup from pushing the lock button outside the card and matched the global toggle's width for consistent sizing.
