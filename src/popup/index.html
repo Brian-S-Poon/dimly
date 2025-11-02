@@ -11,12 +11,13 @@
     <h1 class="popup-title">Dimly</h1>
     <button id="open-options" type="button" class="settings-button" aria-label="Open scheduling settings">
       <span aria-hidden="true">⚙️</span>
+      <span class="settings-label">More settings</span>
     </button>
   </header>
   <section class="controls-section global-controls" aria-labelledby="global-controls-heading">
-    <h2 id="global-controls-heading" class="section-heading">Global controls</h2>
+    <h2 id="global-controls-heading" class="section-heading">All Sites</h2>
     <header class="popup-header">
-      <p class="description">Choose how dark the overlay becomes when Dimly is turned on.</p>
+      <p class="description">Choose your preferred dim level when Dimly is on.</p>
     </header>
     <div class="slider-group">
       <div class="slider-meta">
@@ -25,10 +26,10 @@
       </div>
       <input id="level" type="range" min="0" max="1" step="0.01" value="0.25">
     </div>
-    <button id="toggle" type="button">Turn off</button>
+    <button id="toggle" type="button">On</button>
   </section>
   <section class="controls-section site-controls" id="site-controls" aria-labelledby="site-controls-heading">
-    <h2 id="site-controls-heading" class="section-heading">Site controls</h2>
+    <h2 id="site-controls-heading" class="section-heading">This Site Only</h2>
     <div class="site-header">
       <h3 class="site-heading" id="site-host" hidden></h3>
       <button id="site-toggle" type="button" hidden>Lock site</button>
