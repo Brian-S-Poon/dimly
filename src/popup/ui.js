@@ -31,7 +31,7 @@
     const val = clamp01(level);
     const isOn = val > 0;
     if (toggleBtn) {
-      toggleBtn.textContent = isOn ? 'Turn off' : 'Turn on';
+      toggleBtn.textContent = isOn ? 'On' : 'Off';
       toggleBtn.setAttribute('aria-pressed', String(isOn));
       toggleBtn.dataset.state = isOn ? 'on' : 'off';
     }
@@ -85,12 +85,12 @@
     } else if (isLocked) {
       siteStatus.textContent = `Locked at ${Math.round(clamp01(lockedLevel) * 100)}%.`;
     } else {
-      siteStatus.textContent = `Using global level (${Math.round(clamp01(globalLevel) * 100)}%).`;
+      siteStatus.textContent = `Using dim level (${Math.round(clamp01(globalLevel) * 100)}%).`;
     }
 
     if (siteHint) {
-      siteHint.hidden = false;
-      siteHint.textContent = 'Overrides apply only to this site.';
+      siteHint.hidden = true;
+      siteHint.textContent = '';
     }
 
     if (siteToggleBtn) {
