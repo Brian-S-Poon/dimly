@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Renamed popup site management labels from "overrides" to "site settings" for clearer wording.
 - Revised popup copy to clarify dim level controls and add a "More settings" label to the gear icon.
 - Renamed the popup heading and description to say Dimly.
 - Added a site override manager in the popup so you can edit, remove, or reset per-site dim levels.

@@ -110,7 +110,7 @@
       ? Object.keys(levels).filter((key) => typeof levels[key] === 'number')
       : [];
     const count = entries.length;
-    manageBtn.textContent = count ? `Manage overrides (${count})` : 'Manage overrides';
+    manageBtn.textContent = count ? `Manage Site Settings (${count})` : 'Manage Site Settings';
   }
 
   function updateManagerSliderDisplay(sliderEl) {
