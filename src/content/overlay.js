@@ -8,7 +8,30 @@ const MAX_Z = 2147483647;
 
 let overlay = null;
 let currentLevel = 0;
+let currentTintPreset = DEFAULT_TINT_PRESET;
+let currentCustomTint = Object.assign({}, DEFAULT_CUSTOM_TINT);
+let resolvedTint = { r: 0, g: 0, b: 0 };
 let aliveObserver = null;
+
+function cloneTint(tint) {
+  if (!tint) return { r: 0, g: 0, b: 0 };
+  return {
+    r: Number(tint.r) || 0,
+    g: Number(tint.g) || 0,
+    b: Number(tint.b) || 0
+  };
+}
+
+function applyTintState(preset, customTint) {
+  currentTintPreset = preset || DEFAULT_TINT_PRESET;
+  currentCustomTint = Object.assign({}, customTint || DEFAULT_CUSTOM_TINT);
+  const source = currentTintPreset === 'custom'
+    ? currentCustomTint
+    : TINT_PRESETS[currentTintPreset] || TINT_PRESETS[DEFAULT_TINT_PRESET];
+  resolvedTint = cloneTint(source);
+}
+
+applyTintState(DEFAULT_TINT_PRESET, DEFAULT_CUSTOM_TINT);
 
 function ensureOverlay() {
   if (overlay && overlay.isConnected) return overlay;
@@ -31,7 +54,8 @@ function ensureOverlay() {
 function applyLevel(level) {
   const v = clamp01(level);
   currentLevel = v;
-  ensureOverlay().style.background = `rgba(0,0,0,${v})`;
+  const tint = resolvedTint || cloneTint(TINT_PRESETS[DEFAULT_TINT_PRESET]);
+  ensureOverlay().style.background = `rgba(${tint.r},${tint.g},${tint.b},${v})`;
 }
 
 function startKeepAlive() {
@@ -62,10 +86,16 @@ function handleFullscreen() {
 ['fullscreenchange','webkitfullscreenchange','msfullscreenchange']
   .forEach(e => document.addEventListener(e, handleFullscreen, true));
 
-async function loadLevel() {
+async function loadState() {
   const host = location.hostname;
   try {
-    const { globalLevel, siteLevels } = await storage.getLevelState();
+    const [{ globalLevel, siteLevels }, tintState] = await Promise.all([
+      storage.getLevelState(),
+      storage.getTintState()
+    ]);
+
+    applyTintState(tintState && tintState.preset, tintState && tintState.customTint);
+
     if (host && siteLevels && siteLevels[host] != null) {
       applyLevel(siteLevels[host]);
     } else {
@@ -73,16 +103,28 @@ async function loadLevel() {
     }
     startKeepAlive();
   } catch (err) {
-    console.error('Failed to load dimmer level', err);
+    console.error('Failed to load dimmer state', err);
+    applyTintState(DEFAULT_TINT_PRESET, DEFAULT_CUSTOM_TINT);
     applyLevel(DEFAULT_LEVEL);
   }
 }
 
-loadLevel();
+loadState();
 
 // React to changes in either storage area
 chrome.storage.onChanged.addListener((changes, area) => {
-  if ((changes[GLOBAL_KEY] || changes[SITE_KEY]) && (area === 'sync' || area === 'local')) {
-    loadLevel();
+  const isRelevantArea = area === 'sync' || area === 'local';
+  if (!isRelevantArea) return;
+
+  if (changes[GLOBAL_KEY] || changes[SITE_KEY] || changes[TINT_PRESET_KEY] || changes[CUSTOM_TINT_KEY]) {
+    loadState();
+  }
+});
+
+chrome.runtime.onMessage.addListener((message) => {
+  if (!message || typeof message !== 'object') return;
+  if (message.type === 'screendimmer:update-tint') {
+    applyTintState(message.preset, message.customTint);
+    applyLevel(currentLevel);
   }
 });

@@ -9,6 +9,18 @@
   let currentHost = null;
   let currentSiteLevel = null;
   let siteLevelsCache = {};
+  let tintPreset = DEFAULT_TINT_PRESET;
+  let customTint = Object.assign({}, DEFAULT_CUSTOM_TINT);
+
+  function cloneTint(tint) {
+    if (!tint) return { r: 0, g: 0, b: 0, a: 1 };
+    return {
+      r: Number(tint.r) || 0,
+      g: Number(tint.g) || 0,
+      b: Number(tint.b) || 0,
+      a: typeof tint.a === 'number' ? Math.min(1, Math.max(0, tint.a)) : 1
+    };
+  }
 
   function applyLevel(level) {
     lastLevel = clamp01(level);
@@ -21,12 +33,45 @@
     });
   }
 
+  function applyTintState(preset, tint) {
+    tintPreset = typeof preset === 'string' ? preset : DEFAULT_TINT_PRESET;
+    customTint = cloneTint(tint || customTint);
+    ui.updateTint({ preset: tintPreset, customTint });
+  }
+
   function updateSiteUI(message) {
     ui.renderSite({
       host: currentHost,
       lockedLevel: currentSiteLevel,
       globalLevel: lastLevel,
       message
+    });
+  }
+
+  function hexToTint(hex) {
+    if (typeof hex !== 'string' || !/^#?[0-9a-fA-F]{6}$/.test(hex)) {
+      return cloneTint(customTint);
+    }
+    const normalized = hex.startsWith('#') ? hex.slice(1) : hex;
+    const r = parseInt(normalized.slice(0, 2), 16);
+    const g = parseInt(normalized.slice(2, 4), 16);
+    const b = parseInt(normalized.slice(4, 6), 16);
+    return { r, g, b, a: 1 };
+  }
+
+  function notifyTintChange() {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (chrome.runtime.lastError) return;
+      const tab = tabs && tabs[0];
+      if (!tab || typeof tab.id !== 'number') return;
+      chrome.tabs.sendMessage(tab.id, {
+        type: 'screendimmer:update-tint',
+        preset: tintPreset,
+        customTint
+      }, () => {
+        // Ignore missing receivers
+        void chrome.runtime.lastError;
+      });
     });
   }
 
@@ -39,6 +84,35 @@
         console.error('Failed to persist global level', err);
       }
     }, 250);
+  }
+
+  async function handleTintPresetChange(event) {
+    const value = typeof event.target.value === 'string'
+      ? event.target.value
+      : DEFAULT_TINT_PRESET;
+    applyTintState(value, customTint);
+    try {
+      await storage.setTintPreset(value);
+    } catch (err) {
+      console.error('Failed to update tint preset', err);
+    }
+    notifyTintChange();
+  }
+
+  async function handleCustomTintInput(event) {
+    const nextTint = hexToTint(event.target.value);
+    customTint = nextTint;
+    const previousPreset = tintPreset;
+    applyTintState('custom', customTint);
+    try {
+      await storage.setCustomTint(customTint);
+      if (previousPreset !== 'custom') {
+        await storage.setTintPreset('custom');
+      }
+    } catch (err) {
+      console.error('Failed to update custom tint', err);
+    }
+    notifyTintChange();
   }
 
   function handleLevelInput(event) {
@@ -104,7 +178,9 @@
       onLevelInput: handleLevelInput,
       onLevelChange: handleLevelChange,
       onToggleClick: handleToggleClick,
-      onSiteToggleClick: handleSiteToggleClick
+      onSiteToggleClick: handleSiteToggleClick,
+      onTintPresetChange: handleTintPresetChange,
+      onCustomTintInput: handleCustomTintInput
     });
 
     try {
@@ -113,6 +189,7 @@
       currentHost = initial.host;
       siteLevelsCache = initial.siteLevels || {};
       currentSiteLevel = initial.currentSiteLevel;
+      applyTintState(initial.tintPreset, initial.customTint);
       applyLevel(lastLevel);
       updateSiteUI();
     } catch (err) {

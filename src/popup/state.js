@@ -27,10 +27,11 @@
   }
 
   async function loadInitialData() {
-    const [globalLevel, host, siteLevels] = await Promise.all([
+    const [globalLevel, host, siteLevels, tintState] = await Promise.all([
       storage.getGlobalLevel(),
       getActiveHost(),
-      storage.getSiteLevels()
+      storage.getSiteLevels(),
+      storage.getTintState()
     ]);
     const normalizedGlobal = clamp01(globalLevel);
     const currentSiteLevel = host && typeof siteLevels[host] === 'number'
@@ -41,7 +42,9 @@
       host,
       siteLevels,
       globalLevel: normalizedGlobal,
-      currentSiteLevel
+      currentSiteLevel,
+      tintPreset: tintState && tintState.preset ? tintState.preset : DEFAULT_TINT_PRESET,
+      customTint: tintState && tintState.customTint ? tintState.customTint : DEFAULT_CUSTOM_TINT
     };
   }
 

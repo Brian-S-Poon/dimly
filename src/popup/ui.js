@@ -10,6 +10,20 @@
   const siteStatus = document.querySelector('#site-status');
   const siteToggleBtn = document.querySelector('#site-toggle');
   const siteHint = document.querySelector('#site-hint');
+  const tintPresetSelect = document.querySelector('#tint-preset');
+  const customTintGroup = document.querySelector('#custom-tint-group');
+  const customTintInput = document.querySelector('#custom-tint');
+
+  function tintToHex(tint) {
+    if (!tint) return '#000000';
+    const clamp = (value) => {
+      const num = Number(value);
+      if (!Number.isFinite(num)) return 0;
+      return Math.min(255, Math.max(0, Math.round(num)));
+    };
+    const toHex = (value) => clamp(value).toString(16).padStart(2, '0');
+    return `#${toHex(tint.r)}${toHex(tint.g)}${toHex(tint.b)}`;
+  }
 
   function updateLevel(level) {
     const val = clamp01(level);
@@ -28,6 +42,18 @@
       globalStatus.textContent = isOn
         ? `Dimmer is on at ${Math.round(val * 100)}%.`
         : 'Dimmer is off.';
+    }
+  }
+
+  function updateTint({ preset, customTint }) {
+    if (tintPresetSelect && preset) {
+      tintPresetSelect.value = preset;
+    }
+    if (customTintGroup) {
+      customTintGroup.hidden = preset !== 'custom';
+    }
+    if (customTintInput && customTint) {
+      customTintInput.value = tintToHex(customTint);
     }
   }
 
@@ -81,7 +107,7 @@
     }
   }
 
-  function bindEvents({ onLevelInput, onLevelChange, onToggleClick, onSiteToggleClick }) {
+  function bindEvents({ onLevelInput, onLevelChange, onToggleClick, onSiteToggleClick, onTintPresetChange, onCustomTintInput }) {
     if (slider && onLevelInput) {
       slider.addEventListener('input', onLevelInput);
     }
@@ -94,11 +120,18 @@
     if (siteToggleBtn && onSiteToggleClick) {
       siteToggleBtn.addEventListener('click', onSiteToggleClick);
     }
+    if (tintPresetSelect && onTintPresetChange) {
+      tintPresetSelect.addEventListener('change', onTintPresetChange);
+    }
+    if (customTintInput && onCustomTintInput) {
+      customTintInput.addEventListener('input', onCustomTintInput);
+    }
   }
 
   global.ScreenDimmerPopupUI = {
     updateLevel,
     updateGlobal,
+    updateTint,
     renderSite,
     setSiteToggleDisabled,
     bindEvents
