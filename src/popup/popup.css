@@ -51,11 +51,6 @@ body {
   font-size: 14px;
 }
 
-.settings-label {
-  font-size: 12px;
-  font-weight: 600;
-}
-
 body.manager-open {
   width: 320px;
   max-height: 520px;
@@ -93,12 +88,6 @@ body.manager-open {
 
 .popup-header {
   margin-bottom: 12px;
-}
-
-.title {
-  font-size: 16px;
-  font-weight: 600;
-  margin: 0 0 4px;
 }
 
 .description {
@@ -237,10 +226,6 @@ button.danger:focus-visible {
 button.danger:disabled {
   background-color: rgba(226, 98, 95, 0.35);
   border-color: rgba(240, 123, 123, 0.4);
-}
-
-#global-status {
-  margin: 8px 0 0;
 }
 
 .muted {

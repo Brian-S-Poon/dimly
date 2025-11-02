@@ -46,11 +46,12 @@
     siteControls.hidden = false;
 
     if (!host) {
-      siteHostLabel.textContent = 'Per-site dimming';
-      siteStatus.textContent = 'This page does not support per-site controls.';
+      siteHostLabel.textContent = '';
+      siteHostLabel.hidden = true;
+      siteStatus.textContent = 'Site controls are unavailable on this page.';
       if (siteHint) {
-        siteHint.hidden = false;
-        siteHint.textContent = 'Visit another website (HTTP or HTTPS) to set a custom dim level.';
+        siteHint.hidden = true;
+        siteHint.textContent = '';
       }
       if (siteToggleBtn) {
         siteToggleBtn.hidden = true;
@@ -59,6 +60,7 @@
       return;
     }
 
+    siteHostLabel.hidden = false;
     siteHostLabel.textContent = `Site · ${host}`;
     const isLocked = typeof lockedLevel === 'number';
 
