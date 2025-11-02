@@ -11,7 +11,7 @@
 }
 
 body {
-  font: 14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font: 14px/1.4 'Inter', sans-serif;
   margin: 12px;
   width: 260px;
   background-color: var(--brand-bg-dark);
