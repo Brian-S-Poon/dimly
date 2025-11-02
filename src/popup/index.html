@@ -24,6 +24,72 @@
     <p id="global-status" class="muted">Dimmer is on at 25%.</p>
     <p class="muted small-text">Applies to every site except Chrome's built-in pages.</p>
   </section>
+  <section class="controls-section schedule-controls" aria-labelledby="schedule-controls-heading">
+    <h2 id="schedule-controls-heading" class="section-heading">Schedule</h2>
+    <div class="schedule-toggle">
+      <label class="toggle-label" for="schedule-enabled">
+        <input id="schedule-enabled" type="checkbox">
+        Enable scheduled dimming
+      </label>
+      <p id="schedule-status" class="muted small-text">Schedule is off.</p>
+    </div>
+    <div id="schedule-config" class="schedule-config" hidden>
+      <p class="muted small-text">Screen Dimmer will automatically change levels when each rule becomes active.</p>
+      <div class="schedule-rule" data-rule="0">
+        <header class="schedule-rule-header">
+          <h3 class="schedule-rule-title">Daytime</h3>
+          <span id="schedule-level-pill-0" class="pill">0%</span>
+        </header>
+        <label class="schedule-field">
+          <span class="field-label">Level</span>
+          <input id="schedule-level-0" type="range" min="0" max="1" step="0.01" value="0">
+        </label>
+        <label class="schedule-field">
+          <span class="field-label">Starts at</span>
+          <select id="schedule-type-0">
+            <option value="sunrise">Sunrise</option>
+            <option value="sunset">Sunset</option>
+            <option value="custom">Custom time</option>
+          </select>
+        </label>
+        <label class="schedule-field schedule-field-time" id="schedule-time-wrapper-0" hidden>
+          <span class="field-label">Time</span>
+          <input id="schedule-time-0" type="time" value="07:00">
+        </label>
+        <label class="schedule-field schedule-field-offset" id="schedule-offset-wrapper-0">
+          <span class="field-label">Offset (minutes)</span>
+          <input id="schedule-offset-0" type="number" min="-720" max="720" step="5" value="0">
+        </label>
+      </div>
+      <div class="schedule-rule" data-rule="1">
+        <header class="schedule-rule-header">
+          <h3 class="schedule-rule-title">Nighttime</h3>
+          <span id="schedule-level-pill-1" class="pill">60%</span>
+        </header>
+        <label class="schedule-field">
+          <span class="field-label">Level</span>
+          <input id="schedule-level-1" type="range" min="0" max="1" step="0.01" value="0.6">
+        </label>
+        <label class="schedule-field">
+          <span class="field-label">Starts at</span>
+          <select id="schedule-type-1">
+            <option value="sunset">Sunset</option>
+            <option value="sunrise">Sunrise</option>
+            <option value="custom">Custom time</option>
+          </select>
+        </label>
+        <label class="schedule-field schedule-field-time" id="schedule-time-wrapper-1" hidden>
+          <span class="field-label">Time</span>
+          <input id="schedule-time-1" type="time" value="19:00">
+        </label>
+        <label class="schedule-field schedule-field-offset" id="schedule-offset-wrapper-1">
+          <span class="field-label">Offset (minutes)</span>
+          <input id="schedule-offset-1" type="number" min="-720" max="720" step="5" value="0">
+        </label>
+      </div>
+      <p id="schedule-error" class="error-message" role="alert" hidden></p>
+    </div>
+  </section>
   <section class="controls-section site-controls" id="site-controls" aria-labelledby="site-controls-heading">
     <h2 id="site-controls-heading" class="section-heading">Site controls</h2>
     <div class="site-header">

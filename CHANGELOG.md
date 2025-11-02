@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added scheduled dimming with sunrise/sunset or custom time rules, plus a background worker that applies them automatically.
+- Updated the popup with scheduling controls and smoother overlay fades when levels change.
 - Updated popup hint copy to reference HTTP and HTTPS in uppercase.
 - Applied the Dimly nighttime color palette to the popup for a cohesive brand look.
 

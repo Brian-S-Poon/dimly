@@ -27,10 +27,11 @@
   }
 
   async function loadInitialData() {
-    const [globalLevel, host, siteLevels] = await Promise.all([
+    const [globalLevel, host, siteLevels, schedule] = await Promise.all([
       storage.getGlobalLevel(),
       getActiveHost(),
-      storage.getSiteLevels()
+      storage.getSiteLevels(),
+      storage.getScheduleConfig()
     ]);
     const normalizedGlobal = clamp01(globalLevel);
     const currentSiteLevel = host && typeof siteLevels[host] === 'number'
@@ -41,7 +42,8 @@
       host,
       siteLevels,
       globalLevel: normalizedGlobal,
-      currentSiteLevel
+      currentSiteLevel,
+      schedule
     };
   }
 

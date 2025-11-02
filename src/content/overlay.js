@@ -9,6 +9,7 @@ const MAX_Z = 2147483647;
 let overlay = null;
 let currentLevel = 0;
 let aliveObserver = null;
+let transitionsReady = false;
 
 function ensureOverlay() {
   if (overlay && overlay.isConnected) return overlay;
@@ -20,7 +21,8 @@ function ensureOverlay() {
     width: '100vw',
     height: '100vh',
     pointerEvents: 'none',
-    background: 'rgba(0,0,0,0)',
+    backgroundColor: 'rgba(0,0,0,0)',
+    transition: 'background-color 0.45s ease',
     zIndex: String(MAX_Z)
   });
   (document.documentElement || document.body || document.head || document)
@@ -28,10 +30,28 @@ function ensureOverlay() {
   return overlay;
 }
 
-function applyLevel(level) {
+function setOverlayLevel(value, immediate) {
+  const node = ensureOverlay();
+  if (immediate) {
+    node.style.transition = 'none';
+    node.style.backgroundColor = `rgba(0,0,0,${value})`;
+    requestAnimationFrame(() => {
+      node.style.transition = 'background-color 0.45s ease';
+      transitionsReady = true;
+    });
+  } else {
+    if (!transitionsReady) {
+      node.style.transition = 'background-color 0.45s ease';
+      transitionsReady = true;
+    }
+    node.style.backgroundColor = `rgba(0,0,0,${value})`;
+  }
+}
+
+function applyLevel(level, options = {}) {
   const v = clamp01(level);
   currentLevel = v;
-  ensureOverlay().style.background = `rgba(0,0,0,${v})`;
+  setOverlayLevel(v, Boolean(options.immediate));
 }
 
 function startKeepAlive() {
@@ -62,19 +82,23 @@ function handleFullscreen() {
 ['fullscreenchange','webkitfullscreenchange','msfullscreenchange']
   .forEach(e => document.addEventListener(e, handleFullscreen, true));
 
+let hasLoadedInitial = false;
+
 async function loadLevel() {
   const host = location.hostname;
   try {
     const { globalLevel, siteLevels } = await storage.getLevelState();
     if (host && siteLevels && siteLevels[host] != null) {
-      applyLevel(siteLevels[host]);
+      applyLevel(siteLevels[host], { immediate: !hasLoadedInitial });
     } else {
-      applyLevel(globalLevel);
+      applyLevel(globalLevel, { immediate: !hasLoadedInitial });
     }
     startKeepAlive();
+    hasLoadedInitial = true;
   } catch (err) {
     console.error('Failed to load dimmer level', err);
-    applyLevel(DEFAULT_LEVEL);
+    applyLevel(DEFAULT_LEVEL, { immediate: !hasLoadedInitial });
+    hasLoadedInitial = true;
   }
 }
 

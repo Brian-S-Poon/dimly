@@ -150,3 +150,96 @@ button:disabled {
 .site-controls button {
   margin-top: 0;
 }
+
+.schedule-toggle {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: #e6e8ef;
+}
+
+.schedule-config {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.schedule-config.schedule-disabled {
+  opacity: 0.85;
+}
+
+.schedule-rule {
+  padding: 10px;
+  border: 1px solid rgba(79, 183, 167, 0.25);
+  border-radius: 10px;
+  background: rgba(32, 34, 44, 0.85);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.schedule-rule-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.schedule-rule-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.schedule-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-weight: 500;
+}
+
+.schedule-field select,
+.schedule-field input[type="number"],
+.schedule-field input[type="time"] {
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid rgba(230, 232, 239, 0.25);
+  padding: 4px 6px;
+  background: rgba(16, 17, 24, 0.65);
+  color: #e6e8ef;
+}
+
+.field-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #8ca6a1;
+}
+
+.schedule-field-offset input[type="number"] {
+  text-align: center;
+}
+
+.error-message {
+  background: rgba(210, 87, 87, 0.15);
+  border: 1px solid rgba(210, 87, 87, 0.45);
+  color: #ffb5b5;
+  padding: 6px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.schedule-controls input[disabled],
+.schedule-controls select[disabled] {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
