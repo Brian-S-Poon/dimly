@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Applied the Dimly nighttime color palette to the popup for a cohesive brand look.
 - Introduced configurable scheduling with sunrise/sunset support, background automation, and smoother overlay transitions.
 - Moved scheduling management to a full options page and linked it from the popup for quicker access to automation settings.
+- Flattened popup surfaces and buttons to remove glossy gradients and keep elevation subtle.
 
 ## [1.3.0] - 2025-10-28
 
