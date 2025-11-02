@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Screen Dimmer · Scheduling settings</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <main class="options-container">
+    <header class="options-header">
+      <h1 class="options-title">Scheduling</h1>
+      <p class="muted">Configure automation rules that flip between dimming levels at specific times or around sunrise and sunset.</p>
+    </header>
+    <section class="controls-section schedule-controls" id="schedule-controls" aria-labelledby="schedule-controls-heading">
+      <div class="schedule-header">
+        <h2 id="schedule-controls-heading" class="section-heading">Schedule</h2>
+        <label class="schedule-toggle">
+          <input id="schedule-enabled" type="checkbox">
+          <span>Enable scheduling</span>
+        </label>
+      </div>
+      <p class="muted small-text">Automatically flip dimming levels at sunrise, sunset, or custom times.</p>
+      <p id="schedule-status" class="muted small-text" role="status" aria-live="polite" hidden></p>
+      <fieldset id="schedule-editor" class="schedule-editor" disabled>
+        <legend class="sr-only">Scheduling options</legend>
+        <div class="schedule-row">
+          <div class="slider-group compact">
+            <div class="slider-meta">
+              <label for="schedule-fallback">Fallback level</label>
+              <span id="schedule-fallback-pct" class="pill">25%</span>
+            </div>
+            <input id="schedule-fallback" type="range" min="0" max="1" step="0.01" value="0.25">
+          </div>
+        </div>
+        <div class="schedule-row">
+          <label for="schedule-transition" class="schedule-label">Transition (seconds)</label>
+          <input id="schedule-transition" type="number" min="0" max="60" step="0.5" value="0.8" class="schedule-number">
+        </div>
+        <div class="schedule-location">
+          <div class="schedule-location-heading">Sunrise/sunset location</div>
+          <div class="schedule-location-grid">
+            <label>
+              <span>Latitude</span>
+              <input id="schedule-latitude" type="number" min="-90" max="90" step="0.0001" placeholder="Optional">
+            </label>
+            <label>
+              <span>Longitude</span>
+              <input id="schedule-longitude" type="number" min="-180" max="180" step="0.0001" placeholder="Optional">
+            </label>
+          </div>
+          <p class="muted small-text">Leave blank to fall back to 6:00 and 18:00 for sunrise and sunset.</p>
+        </div>
+        <div class="schedule-rules-header">
+          <h3 class="schedule-rules-title">Rules</h3>
+          <button id="schedule-add-rule" type="button" class="link-button">Add rule</button>
+        </div>
+        <ul id="schedule-rules" class="schedule-rule-list"></ul>
+      </fieldset>
+    </section>
+  </main>
+  <script src="../shared/constants.js"></script>
+  <script src="../shared/math.js"></script>
+  <script src="../shared/storage.js"></script>
+  <script src="schedule.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

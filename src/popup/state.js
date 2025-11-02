@@ -27,12 +27,12 @@
   }
 
   async function loadInitialData() {
-    const [globalLevel, host, siteLevels] = await Promise.all([
-      storage.getGlobalLevel(),
-      getActiveHost(),
-      storage.getSiteLevels()
+    const [levelState, host] = await Promise.all([
+      storage.getLevelState(),
+      getActiveHost()
     ]);
-    const normalizedGlobal = clamp01(globalLevel);
+    const normalizedGlobal = clamp01(levelState.globalLevel);
+    const siteLevels = levelState.siteLevels || {};
     const currentSiteLevel = host && typeof siteLevels[host] === 'number'
       ? clamp01(siteLevels[host])
       : null;
@@ -41,7 +41,8 @@
       host,
       siteLevels,
       globalLevel: normalizedGlobal,
-      currentSiteLevel
+      currentSiteLevel,
+      schedule: levelState.schedule
     };
   }
 

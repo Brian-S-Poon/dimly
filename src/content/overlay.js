@@ -5,10 +5,14 @@ const storage = window.ScreenDimmerStorage;
 
 const OVERLAY_ID = 'screendimmer-overlay';
 const MAX_Z = 2147483647;
+const DEFAULT_TRANSITION_MS = typeof DEFAULT_SCHEDULE_TRANSITION_MS === 'number'
+  ? DEFAULT_SCHEDULE_TRANSITION_MS
+  : 800;
 
 let overlay = null;
 let currentLevel = 0;
 let aliveObserver = null;
+let currentTransitionMs = DEFAULT_TRANSITION_MS;
 
 function ensureOverlay() {
   if (overlay && overlay.isConnected) return overlay;
@@ -21,17 +25,31 @@ function ensureOverlay() {
     height: '100vh',
     pointerEvents: 'none',
     background: 'rgba(0,0,0,0)',
-    zIndex: String(MAX_Z)
+    zIndex: String(MAX_Z),
+    transition: currentTransitionMs > 0 ? `background ${currentTransitionMs / 1000}s ease` : 'none'
   });
   (document.documentElement || document.body || document.head || document)
     .appendChild(overlay);
   return overlay;
 }
 
+function updateTransition(ms) {
+  const value = Number.isFinite(ms) ? Math.max(0, Math.min(ms, 60000)) : DEFAULT_TRANSITION_MS;
+  if (value === currentTransitionMs && overlay) {
+    return;
+  }
+  currentTransitionMs = value;
+  const el = ensureOverlay();
+  el.style.transition = currentTransitionMs > 0
+    ? `background ${currentTransitionMs / 1000}s ease`
+    : 'none';
+}
+
 function applyLevel(level) {
   const v = clamp01(level);
   currentLevel = v;
-  ensureOverlay().style.background = `rgba(0,0,0,${v})`;
+  const el = ensureOverlay();
+  el.style.background = `rgba(0,0,0,${v})`;
 }
 
 function startKeepAlive() {
@@ -65,7 +83,11 @@ function handleFullscreen() {
 async function loadLevel() {
   const host = location.hostname;
   try {
-    const { globalLevel, siteLevels } = await storage.getLevelState();
+    const { globalLevel, siteLevels, schedule } = await storage.getLevelState();
+    const transitionTarget = schedule && typeof schedule.transitionMs === 'number'
+      ? schedule.transitionMs
+      : DEFAULT_TRANSITION_MS;
+    updateTransition(transitionTarget);
     if (host && siteLevels && siteLevels[host] != null) {
       applyLevel(siteLevels[host]);
     } else {
@@ -75,6 +97,7 @@ async function loadLevel() {
   } catch (err) {
     console.error('Failed to load dimmer level', err);
     applyLevel(DEFAULT_LEVEL);
+    updateTransition(DEFAULT_TRANSITION_MS);
   }
 }
 
@@ -82,7 +105,7 @@ loadLevel();
 
 // React to changes in either storage area
 chrome.storage.onChanged.addListener((changes, area) => {
-  if ((changes[GLOBAL_KEY] || changes[SITE_KEY]) && (area === 'sync' || area === 'local')) {
+  if ((changes[GLOBAL_KEY] || changes[SITE_KEY] || changes[SCHEDULE_KEY]) && (area === 'sync' || area === 'local')) {
     loadLevel();
   }
 });
@@ -97,6 +120,7 @@ function resetForTest() {
   overlay = null;
   currentLevel = 0;
   aliveObserver = null;
+  currentTransitionMs = DEFAULT_TRANSITION_MS;
 }
 
 if (typeof window !== 'undefined') {
@@ -104,6 +128,7 @@ if (typeof window !== 'undefined') {
     ensureOverlay,
     applyLevel,
     loadLevel,
+    updateTransition,
     _resetForTest: resetForTest
   });
 }

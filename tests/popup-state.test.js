@@ -5,6 +5,7 @@ let tabsResult = [];
 let originalGlobals = {};
 let windowStub;
 let storageState;
+let defaultSchedule;
 
 function clamp01(value) {
   const num = Number(value ?? 0);
@@ -13,7 +14,15 @@ function clamp01(value) {
 }
 
 before(async () => {
-  storageState = { globalLevel: 0, siteLevels: {} };
+  defaultSchedule = {
+    enabled: false,
+    transitionMs: 800,
+    fallbackLevel: 0.25,
+    location: null,
+    rules: []
+  };
+  globalThis.DEFAULT_SCHEDULE = defaultSchedule;
+  storageState = { globalLevel: 0, siteLevels: {}, schedule: defaultSchedule };
   originalGlobals = {
     window: globalThis.window,
     ScreenDimmerMath: globalThis.ScreenDimmerMath,
@@ -24,8 +33,11 @@ before(async () => {
   windowStub = {
     ScreenDimmerMath: { clamp01 },
     ScreenDimmerStorage: {
-      getGlobalLevel: () => Promise.resolve(storageState.globalLevel),
-      getSiteLevels: () => Promise.resolve({ ...storageState.siteLevels })
+      getLevelState: () => Promise.resolve({
+        globalLevel: storageState.globalLevel,
+        siteLevels: { ...storageState.siteLevels },
+        schedule: storageState.schedule
+      })
     }
   };
   windowStub.window = windowStub;
@@ -56,6 +68,7 @@ beforeEach(() => {
   tabsResult = [];
   storageState.globalLevel = 0;
   storageState.siteLevels = {};
+  storageState.schedule = JSON.parse(JSON.stringify(defaultSchedule));
   globalThis.chrome.runtime.lastError = null;
 });
 
@@ -69,6 +82,8 @@ after(() => {
 function setStorage(values) {
   storageState.globalLevel = values.globalLevel;
   storageState.siteLevels = values.siteLevels;
+  const scheduleValue = values.schedule || defaultSchedule;
+  storageState.schedule = JSON.parse(JSON.stringify(scheduleValue));
 }
 
 test('loadInitialData returns host and clamps persisted levels', async () => {
@@ -84,6 +99,7 @@ test('loadInitialData returns host and clamps persisted levels', async () => {
   assert.equal(result.globalLevel, 1);
   assert.equal(result.currentSiteLevel, 0.8);
   assert.deepEqual(result.siteLevels, { 'example.com': 0.8 });
+  assert.deepEqual(result.schedule, DEFAULT_SCHEDULE);
 });
 
 test('getActiveHost returns null for unsupported protocols', async () => {
@@ -101,4 +117,5 @@ test('getActiveHost returns null for unsupported protocols', async () => {
   assert.equal(data.host, null);
   assert.equal(data.globalLevel, 0);
   assert.equal(data.currentSiteLevel, null);
+  assert.deepEqual(data.schedule, DEFAULT_SCHEDULE);
 });

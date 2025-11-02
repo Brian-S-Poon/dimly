@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a site override manager in the popup so you can edit, remove, or reset per-site dim levels.
 - Updated popup hint copy to reference HTTP and HTTPS in uppercase.
 - Applied the Dimly nighttime color palette to the popup for a cohesive brand look.
+- Introduced configurable scheduling with sunrise/sunset support, background automation, and smoother overlay transitions.
+- Moved scheduling management to a full options page and linked it from the popup for quicker access to automation settings.
 
 ## [1.3.0] - 2025-10-28
 

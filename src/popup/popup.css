@@ -6,6 +6,56 @@ body {
   color: #e6e8ef;
 }
 
+.popup-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.popup-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #f0f1f5;
+}
+
+.settings-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  margin: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(79, 183, 167, 0.6);
+  background: rgba(79, 183, 167, 0.15);
+  color: #4fb7a7;
+  box-shadow: none;
+  text-decoration: none;
+}
+
+.settings-button:hover,
+.settings-button:focus-visible {
+  background: rgba(79, 183, 167, 0.25);
+  color: #74d6c4;
+  transform: none;
+  box-shadow: none;
+}
+
+.settings-button:active {
+  transform: none;
+  box-shadow: none;
+}
+
+.settings-button span[aria-hidden="true"] {
+  font-size: 14px;
+}
+
+.settings-label {
+  font-size: 12px;
+  font-weight: 600;
+}
+
 body.manager-open {
   width: 320px;
   max-height: 520px;
@@ -162,6 +212,15 @@ button.link-button:disabled {
   color: rgba(79, 183, 167, 0.6);
 }
 
+button.link-button.danger-link {
+  color: #f28f6b;
+}
+
+button.link-button.danger-link:hover,
+button.link-button.danger-link:focus-visible {
+  color: #f6b590;
+}
+
 button.danger {
   background: linear-gradient(180deg, #f07b7b, #e2625f);
   border-color: rgba(239, 120, 120, 0.85);
@@ -271,4 +330,16 @@ button.danger:disabled {
 body.manager-open .controls-section.global-controls,
 body.manager-open .controls-section.site-controls {
   display: none;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }

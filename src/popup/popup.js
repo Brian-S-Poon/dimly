@@ -4,12 +4,27 @@
   const siteStorage = global.ScreenDimmerSiteStorage;
   const ui = global.ScreenDimmerPopupUI;
   const state = global.ScreenDimmerPopupState;
+  const optionsButton = document.querySelector('#open-options');
 
   let writeTimer = null;
   let lastLevel = DEFAULT_LEVEL;
   let currentHost = null;
   let currentSiteLevel = null;
   let managerVisible = false;
+
+  function openOptionsPage() {
+    if (!global.chrome || !chrome.runtime) {
+      return;
+    }
+    if (typeof chrome.runtime.openOptionsPage === 'function') {
+      chrome.runtime.openOptionsPage();
+      return;
+    }
+    if (typeof chrome.runtime.getURL === 'function') {
+      const url = chrome.runtime.getURL('src/options/index.html');
+      global.open(url, '_blank', 'noopener');
+    }
+  }
 
   function syncManagerUI(message) {
     const levels = siteStorage.getCache();
@@ -195,6 +210,16 @@
       onManagerDelete: handleManagerDelete,
       onManagerReset: handleManagerReset
     });
+
+    if (optionsButton) {
+      optionsButton.addEventListener('click', () => {
+        try {
+          openOptionsPage();
+        } catch (err) {
+          console.error('Failed to open options page', err);
+        }
+      });
+    }
 
     try {
       const initial = await state.loadInitialData();
