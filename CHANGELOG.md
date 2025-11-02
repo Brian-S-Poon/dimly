@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 - Stacked the popup site heading and lock button so long hostnames stay readable and align with the global toggle.
+- Wrapped long site hostnames in the popup so the lock button stays visible on narrow layouts.
 - Prevented long site names in the popup from pushing the lock button outside the card and matched the global toggle's width for consistent sizing.
 - Removed the "Site ·" prefix from the popup site label so hostnames display on their own.
 - Made the popup site lock toggle keep the same width whether locking or unlocking a site.

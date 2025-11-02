@@ -326,10 +326,6 @@ button.danger:disabled {
   overflow-wrap: anywhere;
 }
 
-.site-header #site-toggle {
-  width: 100%;
-}
-
 .site-controls button {
   margin-top: 0;
 }
