@@ -193,7 +193,7 @@
         currentSiteLevel = null;
         updateSiteUI();
       }
-      syncManagerUI('All overrides cleared.');
+      syncManagerUI('All site settings cleared.');
     } catch (err) {
       console.error('Failed to reset site overrides', err);
       siteStorage.setCache(previousLevels);
