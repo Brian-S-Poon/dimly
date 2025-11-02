@@ -2,7 +2,28 @@
   const { clamp01 } = global.ScreenDimmerMath;
   const storage = global.ScreenDimmerStorage;
 
-  async function getActiveHost() {
+  const RESTRICTED_SITES = [
+    {
+      label: 'Chrome Web Store',
+      matches: (url) => url.hostname === 'chrome.google.com' && url.pathname.startsWith('/webstore')
+    },
+    {
+      label: 'Chrome Web Store',
+      matches: (url) => url.hostname === 'chromewebstore.google.com'
+    }
+  ];
+
+  function resolveRestrictedHost(url) {
+    for (let index = 0; index < RESTRICTED_SITES.length; index += 1) {
+      const site = RESTRICTED_SITES[index];
+      if (site.matches(url)) {
+        return site.label;
+      }
+    }
+    return null;
+  }
+
+  async function getActiveTabInfo() {
     const tabs = await new Promise((resolve) => {
       chrome.tabs.query({ active: true, currentWindow: true }, (found) => {
         if (chrome.runtime.lastError) {
@@ -14,23 +35,35 @@
     });
 
     const tab = tabs[0];
-    if (!tab || !tab.url) return null;
+    if (!tab || !tab.url) {
+      return { host: null, blockedHost: null };
+    }
     try {
       const url = new URL(tab.url);
       if (url.protocol === 'http:' || url.protocol === 'https:') {
-        return url.hostname;
+        const blockedHost = resolveRestrictedHost(url);
+        if (blockedHost) {
+          return { host: null, blockedHost };
+        }
+        return { host: url.hostname, blockedHost: null };
       }
     } catch (err) {
       // Ignore malformed URLs
     }
-    return null;
+    return { host: null, blockedHost: null };
+  }
+
+  async function getActiveHost() {
+    const info = await getActiveTabInfo();
+    return info.host;
   }
 
   async function loadInitialData() {
-    const [levelState, host] = await Promise.all([
+    const [levelState, tabInfo] = await Promise.all([
       storage.getLevelState(),
-      getActiveHost()
+      getActiveTabInfo()
     ]);
+    const { host, blockedHost } = tabInfo;
     const normalizedGlobal = clamp01(levelState.globalLevel);
     const siteLevels = levelState.siteLevels || {};
     const currentSiteLevel = host && typeof siteLevels[host] === 'number'
@@ -39,6 +72,7 @@
 
     return {
       host,
+      blockedHost,
       siteLevels,
       globalLevel: normalizedGlobal,
       currentSiteLevel,
@@ -48,6 +82,7 @@
 
   global.ScreenDimmerPopupState = {
     getActiveHost,
+    getActiveTabInfo,
     loadInitialData
   };
 })(typeof window !== 'undefined' ? window : this);

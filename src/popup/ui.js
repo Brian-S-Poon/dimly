@@ -41,11 +41,11 @@
     }
   }
 
-  function renderSite({ host, lockedLevel, globalLevel, message }) {
+  function renderSite({ host, lockedLevel, globalLevel, message, blockedHost }) {
     if (!siteControls || !siteHostLabel || !siteStatus) return;
     siteControls.hidden = false;
 
-    if (!host) {
+    if (!host && !blockedHost) {
       siteHostLabel.textContent = '';
       siteHostLabel.hidden = true;
       siteStatus.textContent = 'Site controls are unavailable on this page.';
@@ -60,8 +60,23 @@
       return;
     }
 
+    const displayHost = host || blockedHost || '';
     siteHostLabel.hidden = false;
-    siteHostLabel.textContent = `Site · ${host}`;
+    siteHostLabel.textContent = `Site · ${displayHost}`;
+
+    if (!host && blockedHost) {
+      siteStatus.textContent = message || 'Chrome prevents extensions from running on this page.';
+      if (siteHint) {
+        siteHint.hidden = false;
+        siteHint.textContent = 'This site is restricted by Chrome, so the dimmer stays off here.';
+      }
+      if (siteToggleBtn) {
+        siteToggleBtn.hidden = true;
+        siteToggleBtn.disabled = true;
+      }
+      return;
+    }
+
     const isLocked = typeof lockedLevel === 'number';
 
     if (siteToggleBtn) {

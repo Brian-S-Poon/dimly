@@ -96,6 +96,7 @@ test('loadInitialData returns host and clamps persisted levels', async () => {
 
   const result = await state.loadInitialData();
   assert.equal(result.host, 'example.com');
+  assert.equal(result.blockedHost, null);
   assert.equal(result.globalLevel, 1);
   assert.equal(result.currentSiteLevel, 0.8);
   assert.deepEqual(result.siteLevels, { 'example.com': 0.8 });
@@ -115,7 +116,25 @@ test('getActiveHost returns null for unsupported protocols', async () => {
 
   const data = await state.loadInitialData();
   assert.equal(data.host, null);
+  assert.equal(data.blockedHost, null);
   assert.equal(data.globalLevel, 0);
   assert.equal(data.currentSiteLevel, null);
   assert.deepEqual(data.schedule, DEFAULT_SCHEDULE);
+});
+
+test('loadInitialData flags Chrome Web Store as restricted', async () => {
+  const state = windowStub.ScreenDimmerPopupState;
+  setStorage({
+    globalLevel: 0.5,
+    siteLevels: { 'chromewebstore.google.com': 0.3 }
+  });
+  tabsResult = [{ url: 'https://chromewebstore.google.com/detail/abcdef' }];
+
+  const host = await state.getActiveHost();
+  assert.equal(host, null);
+
+  const data = await state.loadInitialData();
+  assert.equal(data.host, null);
+  assert.equal(data.blockedHost, 'Chrome Web Store');
+  assert.equal(data.currentSiteLevel, null);
 });

@@ -11,6 +11,7 @@
   let currentHost = null;
   let currentSiteLevel = null;
   let managerVisible = false;
+  let blockedHost = null;
 
   function openOptionsPage() {
     if (!global.chrome || !chrome.runtime) {
@@ -42,16 +43,22 @@
     ui.renderSite({
       host: currentHost,
       lockedLevel: currentSiteLevel,
-      globalLevel: lastLevel
+      globalLevel: lastLevel,
+      blockedHost
     });
   }
 
   function updateSiteUI(message) {
+    let finalMessage = message;
+    if (!finalMessage && blockedHost) {
+      finalMessage = "Chrome prevents extensions from running on this page, so Screen Dimmer can't dim it.";
+    }
     ui.renderSite({
       host: currentHost,
       lockedLevel: currentSiteLevel,
       globalLevel: lastLevel,
-      message
+      message: finalMessage,
+      blockedHost
     });
   }
 
@@ -225,6 +232,7 @@
       const initial = await state.loadInitialData();
       lastLevel = initial.globalLevel;
       currentHost = initial.host;
+      blockedHost = initial.blockedHost || null;
       siteStorage.setCache(initial.siteLevels || {});
       currentSiteLevel = siteStorage.getLevel(currentHost);
       applyLevel(lastLevel);
