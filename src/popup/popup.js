@@ -51,7 +51,7 @@
   function updateSiteUI(message) {
     let finalMessage = message;
     if (!finalMessage && blockedHost) {
-      finalMessage = "Chrome prevents extensions from running on this page, so Screen Dimmer can't dim it.";
+      finalMessage = RESTRICTED_PAGE_MESSAGE;
     }
     ui.renderSite({
       host: currentHost,
