@@ -169,9 +169,6 @@ button:active {
   background-color: var(--brand-disabled);
   border-color: var(--brand-disabled);
   color: var(--brand-text-light);
-}
-
-#site-toggle {
   min-width: 120px;
   text-align: center;
 }
@@ -317,14 +314,15 @@ button.danger:disabled {
 }
 
 .site-header {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
-  justify-content: space-between;
   gap: 8px;
 }
 
 .site-header .site-heading {
   margin: 0;
+  min-width: 0;
 }
 
 .site-controls button {
