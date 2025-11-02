@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Clarified popup messaging on Chrome Web Store pages so site controls explain that Chrome blocks dimming there.
 - Unified restricted-page messaging so blocked tabs now show the same guidance when Chrome prevents dimming.
 - Updated popup toggle colors to use Google Blue for active states and Amber for locked overrides.
+- Replaced popup and options colors with the shared brand palette for consistent theming.
 
 ## [1.3.0] - 2025-10-28
 
