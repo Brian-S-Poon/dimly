@@ -82,11 +82,23 @@ function createDocument() {
 }
 
 let storageState;
+let defaultSchedule;
 let originalGlobals;
 let windowStub;
 
 before(async () => {
-  storageState = { globalLevel: 0.6, siteLevels: {} };
+  defaultSchedule = {
+    enabled: false,
+    transitionMs: 600,
+    fallbackLevel: 0.25,
+    location: null,
+    rules: []
+  };
+  storageState = {
+    globalLevel: 0.6,
+    siteLevels: {},
+    schedule: JSON.parse(JSON.stringify(defaultSchedule))
+  };
   originalGlobals = {
     window: globalThis.window,
     document: globalThis.document,
@@ -94,6 +106,8 @@ before(async () => {
     DEFAULT_LEVEL: globalThis.DEFAULT_LEVEL,
     GLOBAL_KEY: globalThis.GLOBAL_KEY,
     SITE_KEY: globalThis.SITE_KEY,
+    SCHEDULE_KEY: globalThis.SCHEDULE_KEY,
+    DEFAULT_SCHEDULE_TRANSITION_MS: globalThis.DEFAULT_SCHEDULE_TRANSITION_MS,
     MutationObserver: globalThis.MutationObserver,
     chrome: globalThis.chrome
   };
@@ -118,6 +132,8 @@ before(async () => {
   globalThis.DEFAULT_LEVEL = 0.25;
   globalThis.GLOBAL_KEY = 'screendimmer_global_level';
   globalThis.SITE_KEY = 'screendimmer_site_levels';
+  globalThis.SCHEDULE_KEY = 'screendimmer_schedule';
+  globalThis.DEFAULT_SCHEDULE_TRANSITION_MS = 600;
   globalThis.MutationObserver = class {
     constructor(callback) {
       this.callback = callback;
@@ -139,7 +155,11 @@ before(async () => {
 });
 
 beforeEach(() => {
-  storageState = { globalLevel: 0.6, siteLevels: {} };
+  storageState = {
+    globalLevel: 0.6,
+    siteLevels: {},
+    schedule: JSON.parse(JSON.stringify(defaultSchedule))
+  };
   const doc = createDocument();
   windowStub.document = doc;
   globalThis.document = doc;
@@ -154,6 +174,8 @@ after(() => {
   globalThis.DEFAULT_LEVEL = originalGlobals.DEFAULT_LEVEL;
   globalThis.GLOBAL_KEY = originalGlobals.GLOBAL_KEY;
   globalThis.SITE_KEY = originalGlobals.SITE_KEY;
+  globalThis.SCHEDULE_KEY = originalGlobals.SCHEDULE_KEY;
+  globalThis.DEFAULT_SCHEDULE_TRANSITION_MS = originalGlobals.DEFAULT_SCHEDULE_TRANSITION_MS;
   globalThis.MutationObserver = originalGlobals.MutationObserver;
   globalThis.chrome = originalGlobals.chrome;
 });
@@ -165,23 +187,27 @@ function getOverlay() {
 test('applies site override level for current host', async () => {
   storageState = {
     globalLevel: 0.4,
-    siteLevels: { 'example.com': 0.7 }
+    siteLevels: { 'example.com': 0.7 },
+    schedule: JSON.parse(JSON.stringify(defaultSchedule))
   };
 
   await windowStub.ScreenDimmerOverlay.loadLevel();
   const overlay = getOverlay();
   assert.ok(overlay, 'expected overlay to be created');
   assert.equal(overlay.style.background, 'rgba(0,0,0,0.7)');
+  assert.match(overlay.style.transition, /background/);
 });
 
 test('falls back to global level when no site override exists', async () => {
   storageState = {
     globalLevel: 0.33,
-    siteLevels: { 'other.com': 0.9 }
+    siteLevels: { 'other.com': 0.9 },
+    schedule: Object.assign(JSON.parse(JSON.stringify(defaultSchedule)), { transitionMs: 1200 })
   };
 
   await windowStub.ScreenDimmerOverlay.loadLevel();
   const overlay = getOverlay();
   assert.ok(overlay, 'expected overlay to be created');
   assert.equal(overlay.style.background, 'rgba(0,0,0,0.33)');
+  assert.ok(overlay.style.transition.includes('1.2'), 'transition should reflect schedule ms');
 });
