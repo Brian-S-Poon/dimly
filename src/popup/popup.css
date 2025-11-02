@@ -314,15 +314,20 @@ button.danger:disabled {
 }
 
 .site-header {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
 }
 
 .site-header .site-heading {
   margin: 0;
   min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.site-header #site-toggle {
+  width: 100%;
 }
 
 .site-controls button {
