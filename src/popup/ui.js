@@ -45,10 +45,15 @@
     if (!siteControls || !siteHostLabel || !siteStatus) return;
     siteControls.hidden = false;
 
-    if (!host && !blockedHost) {
-      siteHostLabel.textContent = '';
-      siteHostLabel.hidden = true;
-      siteStatus.textContent = 'Site controls are unavailable on this page.';
+    if (!host) {
+      if (blockedHost) {
+        siteHostLabel.hidden = false;
+        siteHostLabel.textContent = `Site · ${blockedHost}`;
+      } else {
+        siteHostLabel.textContent = '';
+        siteHostLabel.hidden = true;
+      }
+      siteStatus.textContent = message || RESTRICTED_PAGE_MESSAGE;
       if (siteHint) {
         siteHint.hidden = true;
         siteHint.textContent = '';
@@ -60,22 +65,8 @@
       return;
     }
 
-    const displayHost = host || blockedHost || '';
     siteHostLabel.hidden = false;
-    siteHostLabel.textContent = `Site · ${displayHost}`;
-
-    if (!host && blockedHost) {
-      siteStatus.textContent = message || 'Chrome prevents extensions from running on this page.';
-      if (siteHint) {
-        siteHint.hidden = false;
-        siteHint.textContent = 'This site is restricted by Chrome, so the dimmer stays off here.';
-      }
-      if (siteToggleBtn) {
-        siteToggleBtn.hidden = true;
-        siteToggleBtn.disabled = true;
-      }
-      return;
-    }
+    siteHostLabel.textContent = `Site · ${host}`;
 
     const isLocked = typeof lockedLevel === 'number';
 
