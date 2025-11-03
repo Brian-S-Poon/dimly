@@ -47,34 +47,68 @@ body {
 }
 
 .settings-button {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
   margin: 0;
-  border-radius: 999px;
-  border: none;
+  border-radius: 50%;
+  border: 1px solid transparent;
   background: none;
   color: var(--brand-primary);
-  box-shadow: none;
-  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease,
+    transform 0.15s ease;
 }
 
 .settings-button:hover,
 .settings-button:focus-visible {
-  background: none;
+  background-color: color-mix(in srgb, var(--brand-primary) 18%, transparent);
+  border-color: color-mix(in srgb, var(--brand-primary) 45%, transparent);
   color: var(--brand-primary-hover);
-  transform: none;
-  box-shadow: none;
+  outline: none;
+}
+
+.settings-button:focus-visible {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand-primary) 35%, transparent);
 }
 
 .settings-button:active {
-  transform: none;
-  box-shadow: none;
+  transform: translateY(1px);
+}
+
+.settings-button::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translate(-50%, 4px);
+  padding: 4px 8px;
+  border-radius: 6px;
+  background-color: rgba(32, 33, 36, 0.92);
+  color: var(--brand-bg-light);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 10;
+}
+
+.settings-button:hover::after,
+.settings-button:focus-visible::after {
+  opacity: 1;
+  transform: translate(-50%, 0);
 }
 
 .settings-button span[aria-hidden="true"] {
-  font-size: 14px;
+  font-size: 18px;
+  line-height: 1;
 }
 
 body.manager-open {
