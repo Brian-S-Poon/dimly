@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Made the popup site lock toggle keep the same width whether locking or unlocking a site.
 - Simplified popup copy by shortening the dim level description and removing counts from the site settings button.
 - Renamed popup site management labels from "overrides" to "site settings" for clearer wording.
-- Revised popup copy to clarify dim level controls and add a "More settings" label to the gear icon.
+- Updated popup copy to remove the "More settings" label from the gear icon and shorten the restricted-page warning.
 - Renamed the popup heading and description to say Dimly.
 - Added a site override manager in the popup so you can edit, remove, or reset per-site dim levels.
 - Updated popup hint copy to reference HTTP and HTTPS in uppercase.
