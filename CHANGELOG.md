@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- Improved the popup settings gear with icon-only affordances and a tooltip so its action is clearer.
 - Enlarged the popup logo and title text so the Dimly branding stands out in the top bar.
 - Added the Dimly logo beside the popup heading for clearer branding and fixed its image path.
 - Stacked the popup site heading and lock button so long hostnames stay readable and align with the global toggle.
