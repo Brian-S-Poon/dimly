@@ -85,6 +85,7 @@ let storageState;
 let defaultSchedule;
 let originalGlobals;
 let windowStub;
+let lastMutationObserver;
 
 before(async () => {
   defaultSchedule = {
@@ -137,6 +138,7 @@ before(async () => {
   globalThis.MutationObserver = class {
     constructor(callback) {
       this.callback = callback;
+      lastMutationObserver = this;
     }
     observe() {}
     disconnect() {}
@@ -160,6 +162,7 @@ beforeEach(() => {
     siteLevels: {},
     schedule: JSON.parse(JSON.stringify(defaultSchedule))
   };
+  lastMutationObserver = null;
   const doc = createDocument();
   windowStub.document = doc;
   globalThis.document = doc;
@@ -196,6 +199,31 @@ test('applies site override level for current host', async () => {
   assert.ok(overlay, 'expected overlay to be created');
   assert.equal(overlay.style.background, 'rgba(0,0,0,0.7)');
   assert.match(overlay.style.transition, /background/);
+});
+
+test('recreates overlay with previous level when removed', async () => {
+  storageState = {
+    globalLevel: 0.55,
+    siteLevels: {},
+    schedule: JSON.parse(JSON.stringify(defaultSchedule))
+  };
+
+  await windowStub.ScreenDimmerOverlay.loadLevel();
+  assert.ok(lastMutationObserver, 'expected keep-alive MutationObserver to be created');
+
+  const originalOverlay = getOverlay();
+  assert.ok(originalOverlay, 'expected overlay to be created');
+  const originalBackground = originalOverlay.style.background;
+
+  originalOverlay.remove();
+  assert.equal(getOverlay(), null, 'expected overlay to be removed from the DOM');
+
+  lastMutationObserver.callback();
+
+  const restoredOverlay = getOverlay();
+  assert.ok(restoredOverlay, 'expected overlay to be recreated by observer');
+  assert.equal(restoredOverlay.style.background, originalBackground, 'expected previous dim level to be restored');
+  assert.equal(restoredOverlay.style.zIndex, String(2147483647), 'expected overlay z-index to be reset');
 });
 
 test('falls back to global level when no site override exists', async () => {
