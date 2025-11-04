@@ -159,13 +159,27 @@
   }
 
   async function getSchedule() {
-    const defaults = { [SCHEDULE_KEY]: cloneScheduleDefault() };
-    const [syncValues, localValues] = await Promise.all([
-      storageGet('sync', defaults),
-      storageGet('local', defaults)
+    const defaultSchedule = cloneScheduleDefault();
+    const [syncValuesRaw, localValuesRaw] = await Promise.all([
+      storageGet('sync', null),
+      storageGet('local', { [SCHEDULE_KEY]: defaultSchedule })
     ]);
 
-    const source = syncValues[SCHEDULE_KEY] != null ? syncValues[SCHEDULE_KEY] : localValues[SCHEDULE_KEY];
+    const syncValues = syncValuesRaw && typeof syncValuesRaw === 'object'
+      ? syncValuesRaw
+      : {};
+    const localValues = localValuesRaw && typeof localValuesRaw === 'object'
+      ? localValuesRaw
+      : { [SCHEDULE_KEY]: defaultSchedule };
+
+    const hasSyncSchedule = Object.prototype.hasOwnProperty.call(syncValues, SCHEDULE_KEY)
+      && syncValues[SCHEDULE_KEY] != null;
+    const syncSchedule = hasSyncSchedule ? syncValues[SCHEDULE_KEY] : null;
+    const localSchedule = localValues[SCHEDULE_KEY] != null
+      ? localValues[SCHEDULE_KEY]
+      : defaultSchedule;
+
+    const source = hasSyncSchedule ? syncSchedule : localSchedule;
     return normalizeSchedule(source);
   }
 
