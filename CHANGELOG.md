@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Handle storage retrieval failures by falling back to default dimmer settings.
+
 ## [1.4.0] - 2025-11-02
 
 ### Added

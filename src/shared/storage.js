@@ -4,9 +4,30 @@
     ? global.ScreenDimmerMath.clamp01
     : (value) => Math.max(0, Math.min(1, Number(value || 0)));
 
+  function cloneDefaults(defaults) {
+    if (!defaults || typeof defaults !== 'object') {
+      return defaults;
+    }
+    if (Array.isArray(defaults)) {
+      return defaults.slice();
+    }
+    return Object.assign({}, defaults);
+  }
+
   function storageGet(area, defaults) {
-    return new Promise((resolve) => {
-      chrome.storage[area].get(defaults, (items) => resolve(items));
+    return new Promise((resolve, reject) => {
+      chrome.storage[area].get(defaults, (items) => {
+        const error = chrome.runtime && chrome.runtime.lastError;
+        if (error) {
+          if (typeof defaults !== 'undefined') {
+            resolve(cloneDefaults(defaults));
+          } else {
+            reject(error);
+          }
+          return;
+        }
+        resolve(items);
+      });
     });
   }
 
