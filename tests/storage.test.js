@@ -126,3 +126,33 @@ test('storageGet rejects when no defaults are provided and an error occurs', asy
 
   await assert.rejects(storageGet('sync'), /bad news/);
 });
+
+test('getSchedule falls back to local copy when sync is missing', async () => {
+  const schedule = {
+    enabled: true,
+    transitionMs: 1200,
+    fallbackLevel: 0.6,
+    location: { latitude: 42.36, longitude: -71.05 },
+    rules: [
+      {
+        id: 'evening',
+        label: 'Evening',
+        type: 'fixed',
+        time: '21:30',
+        level: 0.7,
+        enabled: true
+      }
+    ]
+  };
+
+  nextResult.sync = {};
+  nextResult.local = (defaults) => ({ ...clone(defaults), [SCHEDULE_KEY]: schedule });
+
+  const result = await globalThis.ScreenDimmerStorage.getSchedule();
+  assert.equal(result.enabled, true);
+  assert.equal(result.transitionMs, 1200);
+  assert.equal(result.fallbackLevel, 0.6);
+  assert.equal(result.rules.length, 1);
+  assert.equal(result.rules[0].time, '21:30');
+  assert.equal(result.rules[0].level, 0.7);
+});
