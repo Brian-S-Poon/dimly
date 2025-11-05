@@ -179,6 +179,10 @@
       ? localValues[SCHEDULE_KEY]
       : defaultSchedule;
 
+    // When sync storage runs out of quota we fall back to local storage writes.
+    // In that scenario sync will return an empty object even though the user
+    // still has a valid schedule in local storage. Prefer the local copy so the
+    // schedule does not silently reset to defaults.
     const source = hasSyncSchedule ? syncSchedule : localSchedule;
     return normalizeSchedule(source);
   }
