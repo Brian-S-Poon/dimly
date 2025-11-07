@@ -79,9 +79,7 @@
       }
       seenIds.add(id);
       safeRule.id = id;
-      safeRule.label = typeof safeRule.label === 'string' && safeRule.label.trim()
-        ? safeRule.label.trim()
-        : `Rule ${index + 1}`;
+      delete safeRule.label;
       safeRule.enabled = Boolean(safeRule.enabled);
 
       const type = safeRule.type === SCHEDULE_RULE_TYPES.SOLAR

@@ -110,7 +110,41 @@
     }
   }
 
-  function createRuleElement(rule) {
+  function formatFixedRuleName(rule) {
+    if (!rule) return 'Rule';
+    const match = /^([0-1]?\d|2[0-3]):([0-5]\d)$/.exec(rule.time || '');
+    if (!match) {
+      return 'Custom time';
+    }
+    const hours24 = Number(match[1]);
+    const minutes = match[2];
+    const period = hours24 >= 12 ? 'PM' : 'AM';
+    const hours12 = hours24 % 12 === 0 ? 12 : hours24 % 12;
+    return `${hours12}:${minutes} ${period}`;
+  }
+
+  function formatSolarRuleName(rule) {
+    const base = rule && rule.event === SCHEDULE_SOLAR_EVENTS.SUNRISE ? 'Sunrise' : 'Sunset';
+    const offset = Number(rule && rule.offsetMinutes);
+    if (!Number.isFinite(offset) || offset === 0) {
+      return base;
+    }
+    const sign = offset > 0 ? '+' : '-';
+    return `${base} ${sign}${Math.abs(offset)}m`;
+  }
+
+  function getRuleName(rule, index) {
+    if (!rule || typeof rule !== 'object') {
+      return `Rule ${index + 1}`;
+    }
+    if (rule.type === SCHEDULE_RULE_TYPES.SOLAR) {
+      return formatSolarRuleName(rule);
+    }
+    const name = formatFixedRuleName(rule);
+    return name || `Rule ${index + 1}`;
+  }
+
+  function createRuleElement(rule, index) {
     const li = document.createElement('li');
     li.className = 'schedule-rule-item';
     li.dataset.ruleId = rule.id;
@@ -118,14 +152,19 @@
     const titleRow = document.createElement('div');
     titleRow.className = 'schedule-rule-row';
 
-    const labelWrap = document.createElement('label');
-    labelWrap.innerHTML = `<span class="schedule-label">Label</span>`;
-    const labelInput = document.createElement('input');
-    labelInput.type = 'text';
-    labelInput.value = rule.label || '';
-    labelInput.dataset.action = 'label';
-    labelWrap.appendChild(labelInput);
-    titleRow.appendChild(labelWrap);
+    const nameBlock = document.createElement('div');
+    nameBlock.className = 'schedule-rule-name';
+    nameBlock.dataset.role = 'rule-name';
+    const nameLabel = document.createElement('span');
+    nameLabel.className = 'schedule-label';
+    nameLabel.textContent = 'Rule';
+    nameBlock.appendChild(nameLabel);
+    const nameValue = document.createElement('div');
+    nameValue.className = 'schedule-rule-name-value';
+    nameValue.dataset.role = 'rule-name-value';
+    nameValue.textContent = getRuleName(rule, typeof index === 'number' ? index : 0);
+    nameBlock.appendChild(nameValue);
+    titleRow.appendChild(nameBlock);
 
     const enabledWrap = document.createElement('label');
     enabledWrap.className = 'schedule-rule-enabled';
@@ -257,8 +296,8 @@
       rulesListEl.appendChild(empty);
       return;
     }
-    rules.forEach((rule) => {
-      rulesListEl.appendChild(createRuleElement(rule));
+    rules.forEach((rule, index) => {
+      rulesListEl.appendChild(createRuleElement(rule, index));
     });
   }
 
@@ -279,13 +318,16 @@
       if (!enabledRules.length) {
         errors.push('Add at least one enabled rule.');
       }
-      enabledRules.forEach((rule) => {
+      enabledRules.forEach((rule, index) => {
+        const allRules = Array.isArray(data.rules) ? data.rules : [];
+        const ruleIndex = allRules.indexOf(rule);
+        const name = getRuleName(rule, ruleIndex >= 0 ? ruleIndex : index);
         if (rule.type === SCHEDULE_RULE_TYPES.FIXED) {
           if (!parseTime(rule.time)) {
-            errors.push(`Set a valid time for ${rule.label || 'a rule'}.`);
+            errors.push(`Set a valid time for ${name}.`);
           }
         } else if (!Object.prototype.hasOwnProperty.call(SOLAR_EVENT_LABELS, rule.event)) {
-          errors.push(`Choose sunrise or sunset for ${rule.label || 'a rule'}.`);
+          errors.push(`Choose sunrise or sunset for ${name}.`);
         }
       });
     }
@@ -337,6 +379,22 @@
     if (offsetBlock) offsetBlock.hidden = !isSolar;
   }
 
+  function refreshRuleName(ruleId) {
+    if (!rulesListEl) return;
+    const item = rulesListEl.querySelector(`[data-rule-id="${cssEscape(ruleId)}"]`);
+    if (!item) return;
+    const ruleIndex = Array.isArray(scheduleState.rules)
+      ? scheduleState.rules.findIndex((entry) => entry.id === ruleId)
+      : -1;
+    if (ruleIndex < 0) return;
+    const rule = scheduleState.rules[ruleIndex];
+    if (!rule) return;
+    const valueEl = item.querySelector('[data-role="rule-name-value"]');
+    if (valueEl) {
+      valueEl.textContent = getRuleName(rule, ruleIndex);
+    }
+  }
+
   function handleToggleChange(event) {
     scheduleState.enabled = Boolean(event.target.checked);
     updateEditorState();
@@ -363,7 +421,6 @@
   function handleAddRule() {
     const rule = {
       id: generateId(),
-      label: 'New rule',
       type: SCHEDULE_RULE_TYPES.FIXED,
       time: '19:00',
       level: clamp01(scheduleState.fallbackLevel || DEFAULT_LEVEL),
@@ -391,10 +448,8 @@
     const ruleId = item.dataset.ruleId;
     const rule = findRule(ruleId);
     if (!rule) return;
+    let shouldUpdateName = false;
     switch (target.dataset.action) {
-      case 'label':
-        rule.label = target.value.slice(0, 60);
-        break;
       case 'level': {
         const value = clamp01(target.value);
         rule.level = value;
@@ -404,16 +459,21 @@
       }
       case 'time':
         rule.time = target.value;
+        shouldUpdateName = true;
         break;
       case 'offset': {
         const offset = Number(target.value);
         if (Number.isFinite(offset)) {
           rule.offsetMinutes = Math.max(-720, Math.min(720, Math.round(offset)));
+          shouldUpdateName = true;
         }
         break;
       }
       default:
         break;
+    }
+    if (shouldUpdateName) {
+      refreshRuleName(ruleId);
     }
   }
 
@@ -424,6 +484,7 @@
     const ruleId = item.dataset.ruleId;
     const rule = findRule(ruleId);
     if (!rule) return;
+    let shouldUpdateName = false;
     switch (target.dataset.action) {
       case 'enabled':
         rule.enabled = Boolean(target.checked);
@@ -439,17 +500,17 @@
           rule.event = SCHEDULE_SOLAR_EVENTS.SUNSET;
         }
         updateRuleVisibility(ruleId);
+        shouldUpdateName = true;
         break;
       case 'event':
         rule.event = Object.prototype.hasOwnProperty.call(SOLAR_EVENT_LABELS, target.value)
           ? target.value
           : SCHEDULE_SOLAR_EVENTS.SUNSET;
-        break;
-      case 'label':
-        rule.label = target.value.slice(0, 60);
+        shouldUpdateName = true;
         break;
       case 'time':
         rule.time = target.value;
+        shouldUpdateName = true;
         break;
       case 'level':
         rule.level = clamp01(target.value);
@@ -458,11 +519,15 @@
         const offset = Number(target.value);
         if (Number.isFinite(offset)) {
           rule.offsetMinutes = Math.max(-720, Math.min(720, Math.round(offset)));
+          shouldUpdateName = true;
         }
         break;
       }
       default:
         break;
+    }
+    if (shouldUpdateName) {
+      refreshRuleName(ruleId);
     }
     requestSave();
   }
