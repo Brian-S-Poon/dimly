@@ -16,7 +16,6 @@ const DEFAULT_SCHEDULE = Object.freeze({
   enabled: false,
   transitionMs: DEFAULT_SCHEDULE_TRANSITION_MS,
   fallbackLevel: DEFAULT_LEVEL,
-  location: null,
   rules: Object.freeze([
     Object.freeze({
       id: 'daytime',

@@ -14,8 +14,6 @@
   const fallbackEl = section.querySelector('#schedule-fallback');
   const fallbackPctEl = section.querySelector('#schedule-fallback-pct');
   const transitionEl = section.querySelector('#schedule-transition');
-  const latEl = section.querySelector('#schedule-latitude');
-  const lonEl = section.querySelector('#schedule-longitude');
   const addRuleBtn = section.querySelector('#schedule-add-rule');
   const rulesListEl = section.querySelector('#schedule-rules');
 
@@ -109,16 +107,6 @@
     if (transitionEl) {
       const seconds = Math.round((Number(scheduleState.transitionMs || DEFAULT_SCHEDULE_TRANSITION_MS) / 1000) * 10) / 10;
       transitionEl.value = Number.isFinite(seconds) ? String(seconds) : '0.8';
-    }
-    if (latEl) {
-      latEl.value = scheduleState.location && typeof scheduleState.location.latitude === 'number'
-        ? String(scheduleState.location.latitude)
-        : '';
-    }
-    if (lonEl) {
-      lonEl.value = scheduleState.location && typeof scheduleState.location.longitude === 'number'
-        ? String(scheduleState.location.longitude)
-        : '';
     }
   }
 
@@ -372,25 +360,6 @@
     requestSave();
   }
 
-  function handleLocationChange() {
-    const lat = latEl && latEl.value.trim() !== '' ? Number(latEl.value) : null;
-    const lon = lonEl && lonEl.value.trim() !== '' ? Number(lonEl.value) : null;
-    const validLat = Number.isFinite(lat) && Math.abs(lat) <= 90;
-    const validLon = Number.isFinite(lon) && Math.abs(lon) <= 180;
-    if (validLat && validLon) {
-      scheduleState.location = { latitude: lat, longitude: lon };
-    } else if (validLat && lonEl && lonEl.value.trim() !== '') {
-      setStatus('Longitude must be a number between -180 and 180.', true);
-      return;
-    } else if (validLon && latEl && latEl.value.trim() !== '') {
-      setStatus('Latitude must be a number between -90 and 90.', true);
-      return;
-    } else {
-      scheduleState.location = null;
-    }
-    requestSave();
-  }
-
   function handleAddRule() {
     const rule = {
       id: generateId(),
@@ -521,14 +490,6 @@
     }
     if (transitionEl) {
       transitionEl.addEventListener('change', handleTransitionChange);
-    }
-    if (latEl) {
-      latEl.addEventListener('change', handleLocationChange);
-      latEl.addEventListener('blur', handleLocationChange);
-    }
-    if (lonEl) {
-      lonEl.addEventListener('change', handleLocationChange);
-      lonEl.addEventListener('blur', handleLocationChange);
     }
     if (addRuleBtn) {
       addRuleBtn.addEventListener('click', handleAddRule);

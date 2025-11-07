@@ -46,7 +46,6 @@ before(async () => {
     enabled: false,
     transitionMs: 800,
     fallbackLevel: 0.25,
-    location: null,
     rules: []
   };
   globalThis.GLOBAL_KEY = 'test_global_key';
@@ -132,7 +131,6 @@ test('getSchedule falls back to local copy when sync is missing', async () => {
     enabled: true,
     transitionMs: 1200,
     fallbackLevel: 0.6,
-    location: { latitude: 42.36, longitude: -71.05 },
     rules: [
       {
         id: 'evening',
@@ -155,4 +153,5 @@ test('getSchedule falls back to local copy when sync is missing', async () => {
   assert.equal(result.rules.length, 1);
   assert.equal(result.rules[0].time, '21:30');
   assert.equal(result.rules[0].level, 0.7);
+  assert.equal('location' in result, false);
 });
