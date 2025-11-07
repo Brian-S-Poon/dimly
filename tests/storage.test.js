@@ -134,7 +134,6 @@ test('getSchedule falls back to local copy when sync is missing', async () => {
     rules: [
       {
         id: 'evening',
-        label: 'Evening',
         type: 'fixed',
         time: '21:30',
         level: 0.7,

@@ -224,6 +224,17 @@ button.link-button:disabled {
   color: var(--brand-text-dark);
 }
 
+.schedule-rule-name {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.schedule-rule-name-value {
+  font-weight: 600;
+  color: var(--brand-text-dark);
+}
+
 .schedule-number {
   max-width: 140px;
 }
