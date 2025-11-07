@@ -19,14 +19,12 @@ const DEFAULT_SCHEDULE = Object.freeze({
   rules: Object.freeze([
     Object.freeze({
       id: 'daytime',
-      type: SCHEDULE_RULE_TYPES.FIXED,
       time: '07:00',
       level: 0.15,
       enabled: true
     }),
     Object.freeze({
       id: 'night',
-      type: SCHEDULE_RULE_TYPES.FIXED,
       time: '21:00',
       level: 0.55,
       enabled: true
