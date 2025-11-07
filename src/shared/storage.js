@@ -3,6 +3,7 @@
   const clamp01 = global.ScreenDimmerMath && typeof global.ScreenDimmerMath.clamp01 === 'function'
     ? global.ScreenDimmerMath.clamp01
     : (value) => Math.max(0, Math.min(1, Number(value || 0)));
+  const SOLAR_SCHEDULE_ENABLED = Boolean(global.SCREEN_DIMMER_SOLAR_SCHEDULE_ENABLED);
 
   function cloneDefaults(defaults) {
     if (!defaults || typeof defaults !== 'object') {
@@ -82,28 +83,41 @@
       delete safeRule.label;
       safeRule.enabled = Boolean(safeRule.enabled);
 
-      const type = safeRule.type === SCHEDULE_RULE_TYPES.SOLAR
-        ? SCHEDULE_RULE_TYPES.SOLAR
-        : SCHEDULE_RULE_TYPES.FIXED;
-      safeRule.type = type;
-
+      const fallbackLevel = fallbackRule && typeof fallbackRule.level === 'number'
+        ? fallbackRule.level
+        : DEFAULT_LEVEL;
       const level = Number(safeRule.level);
-      safeRule.level = Number.isFinite(level) ? clamp01(level) : clamp01(fallbackRule.level);
+      safeRule.level = Number.isFinite(level) ? clamp01(level) : clamp01(fallbackLevel);
 
-      if (type === SCHEDULE_RULE_TYPES.FIXED) {
-        const time = typeof safeRule.time === 'string' ? safeRule.time.trim() : '';
-        const match = /^([0-1]?\d|2[0-3]):([0-5]\d)$/.exec(time);
-        safeRule.time = match ? `${match[1].padStart(2, '0')}:${match[2]}` : fallbackRule.time;
-        safeRule.event = SCHEDULE_SOLAR_EVENTS.SUNSET;
-        safeRule.offsetMinutes = 0;
-      } else {
+      const fallbackTime = fallbackRule && typeof fallbackRule.time === 'string'
+        ? fallbackRule.time
+        : '19:00';
+      const isSolarRule = SOLAR_SCHEDULE_ENABLED && safeRule.type === SCHEDULE_RULE_TYPES.SOLAR;
+
+      if (isSolarRule) {
+        safeRule.type = SCHEDULE_RULE_TYPES.SOLAR;
         const event = safeRule.event === SCHEDULE_SOLAR_EVENTS.SUNRISE
           ? SCHEDULE_SOLAR_EVENTS.SUNRISE
           : SCHEDULE_SOLAR_EVENTS.SUNSET;
         safeRule.event = event;
         const offset = Number(safeRule.offsetMinutes);
-        safeRule.offsetMinutes = Number.isFinite(offset) ? Math.max(-720, Math.min(720, offset)) : 0;
+        safeRule.offsetMinutes = Number.isFinite(offset)
+          ? Math.max(-720, Math.min(720, offset))
+          : 0;
         safeRule.time = null;
+      } else {
+        const time = typeof safeRule.time === 'string' ? safeRule.time.trim() : '';
+        const match = /^([0-1]?\d|2[0-3]):([0-5]\d)$/.exec(time);
+        safeRule.time = match ? `${match[1].padStart(2, '0')}:${match[2]}` : fallbackTime;
+        if (SOLAR_SCHEDULE_ENABLED) {
+          safeRule.type = SCHEDULE_RULE_TYPES.FIXED;
+          safeRule.event = SCHEDULE_SOLAR_EVENTS.SUNSET;
+          safeRule.offsetMinutes = 0;
+        } else {
+          delete safeRule.type;
+          delete safeRule.event;
+          delete safeRule.offsetMinutes;
+        }
       }
 
       return safeRule;

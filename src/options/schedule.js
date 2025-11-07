@@ -17,15 +17,21 @@
   const addRuleBtn = section.querySelector('#schedule-add-rule');
   const rulesListEl = section.querySelector('#schedule-rules');
 
-  const RULE_TYPE_LABELS = {
-    [SCHEDULE_RULE_TYPES.FIXED]: 'Custom time',
-    [SCHEDULE_RULE_TYPES.SOLAR]: 'Sunrise/sunset'
-  };
+  const SOLAR_SCHEDULE_ENABLED = Boolean(global.SCREEN_DIMMER_SOLAR_SCHEDULE_ENABLED);
 
-  const SOLAR_EVENT_LABELS = {
-    [SCHEDULE_SOLAR_EVENTS.SUNRISE]: 'Sunrise',
-    [SCHEDULE_SOLAR_EVENTS.SUNSET]: 'Sunset'
-  };
+  const RULE_TYPE_LABELS = SOLAR_SCHEDULE_ENABLED
+    ? {
+        [SCHEDULE_RULE_TYPES.FIXED]: 'Custom time',
+        [SCHEDULE_RULE_TYPES.SOLAR]: 'Sunrise/sunset'
+      }
+    : null;
+
+  const SOLAR_EVENT_LABELS = SOLAR_SCHEDULE_ENABLED
+    ? {
+        [SCHEDULE_SOLAR_EVENTS.SUNRISE]: 'Sunrise',
+        [SCHEDULE_SOLAR_EVENTS.SUNSET]: 'Sunset'
+      }
+    : null;
 
   const cssEscape = (value) => {
     if (global.CSS && typeof global.CSS.escape === 'function') {
@@ -124,6 +130,9 @@
   }
 
   function formatSolarRuleName(rule) {
+    if (!SOLAR_SCHEDULE_ENABLED || !SOLAR_EVENT_LABELS) {
+      return 'Rule';
+    }
     const base = rule && rule.event === SCHEDULE_SOLAR_EVENTS.SUNRISE ? 'Sunrise' : 'Sunset';
     const offset = Number(rule && rule.offsetMinutes);
     if (!Number.isFinite(offset) || offset === 0) {
@@ -137,7 +146,7 @@
     if (!rule || typeof rule !== 'object') {
       return `Rule ${index + 1}`;
     }
-    if (rule.type === SCHEDULE_RULE_TYPES.SOLAR) {
+    if (SOLAR_SCHEDULE_ENABLED && rule.type === SCHEDULE_RULE_TYPES.SOLAR) {
       return formatSolarRuleName(rule);
     }
     const name = formatFixedRuleName(rule);
@@ -178,22 +187,53 @@
 
     li.appendChild(titleRow);
 
-    const typeRow = document.createElement('div');
-    typeRow.className = 'schedule-rule-row';
+    const controlsRow = document.createElement('div');
+    controlsRow.className = 'schedule-rule-row';
 
-    const typeWrap = document.createElement('label');
-    typeWrap.innerHTML = `<span class="schedule-label">Type</span>`;
-    const typeSelect = document.createElement('select');
-    typeSelect.dataset.action = 'type';
-    Object.keys(RULE_TYPE_LABELS).forEach((typeKey) => {
-      const option = document.createElement('option');
-      option.value = typeKey;
-      option.textContent = RULE_TYPE_LABELS[typeKey];
-      if (typeKey === rule.type) option.selected = true;
-      typeSelect.appendChild(option);
-    });
-    typeWrap.appendChild(typeSelect);
-    typeRow.appendChild(typeWrap);
+    let eventWrap = null;
+    let offsetWrap = null;
+
+    if (SOLAR_SCHEDULE_ENABLED && RULE_TYPE_LABELS && SOLAR_EVENT_LABELS) {
+      const typeWrap = document.createElement('label');
+      typeWrap.innerHTML = `<span class="schedule-label">Type</span>`;
+      const typeSelect = document.createElement('select');
+      typeSelect.dataset.action = 'type';
+      Object.keys(RULE_TYPE_LABELS).forEach((typeKey) => {
+        const option = document.createElement('option');
+        option.value = typeKey;
+        option.textContent = RULE_TYPE_LABELS[typeKey];
+        if (typeKey === rule.type) option.selected = true;
+        typeSelect.appendChild(option);
+      });
+      typeWrap.appendChild(typeSelect);
+      controlsRow.appendChild(typeWrap);
+
+      eventWrap = document.createElement('label');
+      eventWrap.dataset.role = 'event-container';
+      eventWrap.innerHTML = `<span class="schedule-label">Event</span>`;
+      const eventSelect = document.createElement('select');
+      eventSelect.dataset.action = 'event';
+      Object.keys(SOLAR_EVENT_LABELS).forEach((eventKey) => {
+        const option = document.createElement('option');
+        option.value = eventKey;
+        option.textContent = SOLAR_EVENT_LABELS[eventKey];
+        if (eventKey === rule.event) option.selected = true;
+        eventSelect.appendChild(option);
+      });
+      eventWrap.appendChild(eventSelect);
+
+      offsetWrap = document.createElement('label');
+      offsetWrap.dataset.role = 'offset-container';
+      offsetWrap.innerHTML = `<span class="schedule-label">Offset (minutes)</span>`;
+      const offsetInput = document.createElement('input');
+      offsetInput.type = 'number';
+      offsetInput.step = '1';
+      offsetInput.min = '-720';
+      offsetInput.max = '720';
+      offsetInput.value = String(Number(rule.offsetMinutes || 0));
+      offsetInput.dataset.action = 'offset';
+      offsetWrap.appendChild(offsetInput);
+    }
 
     const timeWrap = document.createElement('label');
     timeWrap.dataset.role = 'time-container';
@@ -201,40 +241,17 @@
     const timeInput = document.createElement('input');
     timeInput.type = 'time';
     timeInput.step = 60;
-    timeInput.value = rule.time || '19:00';
+    timeInput.value = parseTime(rule.time) ? rule.time : '19:00';
     timeInput.dataset.action = 'time';
     timeWrap.appendChild(timeInput);
-    typeRow.appendChild(timeWrap);
+    controlsRow.appendChild(timeWrap);
 
-    const eventWrap = document.createElement('label');
-    eventWrap.dataset.role = 'event-container';
-    eventWrap.innerHTML = `<span class="schedule-label">Event</span>`;
-    const eventSelect = document.createElement('select');
-    eventSelect.dataset.action = 'event';
-    Object.keys(SOLAR_EVENT_LABELS).forEach((eventKey) => {
-      const option = document.createElement('option');
-      option.value = eventKey;
-      option.textContent = SOLAR_EVENT_LABELS[eventKey];
-      if (eventKey === rule.event) option.selected = true;
-      eventSelect.appendChild(option);
-    });
-    eventWrap.appendChild(eventSelect);
-    typeRow.appendChild(eventWrap);
+    if (SOLAR_SCHEDULE_ENABLED) {
+      if (eventWrap) controlsRow.appendChild(eventWrap);
+      if (offsetWrap) controlsRow.appendChild(offsetWrap);
+    }
 
-    const offsetWrap = document.createElement('label');
-    offsetWrap.dataset.role = 'offset-container';
-    offsetWrap.innerHTML = `<span class="schedule-label">Offset (minutes)</span>`;
-    const offsetInput = document.createElement('input');
-    offsetInput.type = 'number';
-    offsetInput.step = '1';
-    offsetInput.min = '-720';
-    offsetInput.max = '720';
-    offsetInput.value = String(Number(rule.offsetMinutes || 0));
-    offsetInput.dataset.action = 'offset';
-    offsetWrap.appendChild(offsetInput);
-    typeRow.appendChild(offsetWrap);
-
-    li.appendChild(typeRow);
+    li.appendChild(controlsRow);
 
     const actionsRow = document.createElement('div');
     actionsRow.className = 'schedule-rule-actions';
@@ -277,10 +294,12 @@
 
     li.appendChild(actionsRow);
 
-    const isSolar = rule.type === SCHEDULE_RULE_TYPES.SOLAR;
-    timeWrap.hidden = isSolar;
-    eventWrap.hidden = !isSolar;
-    offsetWrap.hidden = !isSolar;
+    if (SOLAR_SCHEDULE_ENABLED && eventWrap && offsetWrap) {
+      const isSolar = rule.type === SCHEDULE_RULE_TYPES.SOLAR;
+      timeWrap.hidden = isSolar;
+      eventWrap.hidden = !isSolar;
+      offsetWrap.hidden = !isSolar;
+    }
 
     return li;
   }
@@ -322,11 +341,11 @@
         const allRules = Array.isArray(data.rules) ? data.rules : [];
         const ruleIndex = allRules.indexOf(rule);
         const name = getRuleName(rule, ruleIndex >= 0 ? ruleIndex : index);
-        if (rule.type === SCHEDULE_RULE_TYPES.FIXED) {
+        if (!SOLAR_SCHEDULE_ENABLED || rule.type !== SCHEDULE_RULE_TYPES.SOLAR) {
           if (!parseTime(rule.time)) {
             errors.push(`Set a valid time for ${name}.`);
           }
-        } else if (!Object.prototype.hasOwnProperty.call(SOLAR_EVENT_LABELS, rule.event)) {
+        } else if (!SOLAR_EVENT_LABELS || !Object.prototype.hasOwnProperty.call(SOLAR_EVENT_LABELS, rule.event)) {
           errors.push(`Choose sunrise or sunset for ${name}.`);
         }
       });
@@ -366,6 +385,7 @@
   }
 
   function updateRuleVisibility(ruleId) {
+    if (!SOLAR_SCHEDULE_ENABLED) return;
     const item = rulesListEl && rulesListEl.querySelector(`[data-rule-id="${cssEscape(ruleId)}"]`);
     if (!item) return;
     const rule = scheduleState.rules.find((entry) => entry.id === ruleId);
@@ -421,13 +441,15 @@
   function handleAddRule() {
     const rule = {
       id: generateId(),
-      type: SCHEDULE_RULE_TYPES.FIXED,
       time: '19:00',
       level: clamp01(scheduleState.fallbackLevel || DEFAULT_LEVEL),
-      enabled: true,
-      event: SCHEDULE_SOLAR_EVENTS.SUNSET,
-      offsetMinutes: 0
+      enabled: true
     };
+    if (SOLAR_SCHEDULE_ENABLED) {
+      rule.type = SCHEDULE_RULE_TYPES.FIXED;
+      rule.event = SCHEDULE_SOLAR_EVENTS.SUNSET;
+      rule.offsetMinutes = 0;
+    }
     if (!Array.isArray(scheduleState.rules)) {
       scheduleState.rules = [];
     }
@@ -462,6 +484,7 @@
         shouldUpdateName = true;
         break;
       case 'offset': {
+        if (!SOLAR_SCHEDULE_ENABLED) break;
         const offset = Number(target.value);
         if (Number.isFinite(offset)) {
           rule.offsetMinutes = Math.max(-720, Math.min(720, Math.round(offset)));
@@ -490,23 +513,30 @@
         rule.enabled = Boolean(target.checked);
         break;
       case 'type':
-        rule.type = target.value === SCHEDULE_RULE_TYPES.SOLAR
-          ? SCHEDULE_RULE_TYPES.SOLAR
-          : SCHEDULE_RULE_TYPES.FIXED;
-        if (rule.type === SCHEDULE_RULE_TYPES.FIXED && !parseTime(rule.time)) {
-          rule.time = '19:00';
+        if (SOLAR_SCHEDULE_ENABLED) {
+          rule.type = target.value === SCHEDULE_RULE_TYPES.SOLAR
+            ? SCHEDULE_RULE_TYPES.SOLAR
+            : SCHEDULE_RULE_TYPES.FIXED;
+          if (rule.type === SCHEDULE_RULE_TYPES.FIXED && !parseTime(rule.time)) {
+            rule.time = '19:00';
+          }
+          if (
+            rule.type === SCHEDULE_RULE_TYPES.SOLAR &&
+            (!SOLAR_EVENT_LABELS || !Object.prototype.hasOwnProperty.call(SOLAR_EVENT_LABELS, rule.event))
+          ) {
+            rule.event = SCHEDULE_SOLAR_EVENTS.SUNSET;
+          }
+          updateRuleVisibility(ruleId);
+          shouldUpdateName = true;
         }
-        if (rule.type === SCHEDULE_RULE_TYPES.SOLAR && !Object.prototype.hasOwnProperty.call(SOLAR_EVENT_LABELS, rule.event)) {
-          rule.event = SCHEDULE_SOLAR_EVENTS.SUNSET;
-        }
-        updateRuleVisibility(ruleId);
-        shouldUpdateName = true;
         break;
       case 'event':
-        rule.event = Object.prototype.hasOwnProperty.call(SOLAR_EVENT_LABELS, target.value)
-          ? target.value
-          : SCHEDULE_SOLAR_EVENTS.SUNSET;
-        shouldUpdateName = true;
+        if (SOLAR_SCHEDULE_ENABLED && SOLAR_EVENT_LABELS) {
+          rule.event = Object.prototype.hasOwnProperty.call(SOLAR_EVENT_LABELS, target.value)
+            ? target.value
+            : SCHEDULE_SOLAR_EVENTS.SUNSET;
+          shouldUpdateName = true;
+        }
         break;
       case 'time':
         rule.time = target.value;
@@ -516,6 +546,7 @@
         rule.level = clamp01(target.value);
         break;
       case 'offset': {
+        if (!SOLAR_SCHEDULE_ENABLED) break;
         const offset = Number(target.value);
         if (Number.isFinite(offset)) {
           rule.offsetMinutes = Math.max(-720, Math.min(720, Math.round(offset)));

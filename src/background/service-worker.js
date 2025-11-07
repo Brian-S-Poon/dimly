@@ -5,6 +5,7 @@ importScripts('../shared/constants.js', '../shared/math.js', '../shared/storage.
 
 const storage = self.ScreenDimmerStorage;
 const { clamp01 } = self.ScreenDimmerMath;
+const SOLAR_SCHEDULE_ENABLED = Boolean(self.SCREEN_DIMMER_SOLAR_SCHEDULE_ENABLED);
 const ALARM_NAME = 'screendimmer_schedule_tick';
 const FALLBACK_SOLAR_TIMES = {
   [SCHEDULE_SOLAR_EVENTS.SUNRISE]: '06:00',
@@ -104,17 +105,22 @@ function calculateSolarEvent(baseDate, location, event) {
   return result;
 }
 
+function isSolarRule(rule) {
+  return SOLAR_SCHEDULE_ENABLED && rule && rule.type === SCHEDULE_RULE_TYPES.SOLAR;
+}
+
 function resolveRuleTime(rule, schedule, referenceDate) {
-  if (rule.type === SCHEDULE_RULE_TYPES.FIXED) {
-    return buildDateWithTime(referenceDate, rule.time);
+  if (!rule) return null;
+  if (isSolarRule(rule)) {
+    const base = calculateSolarEvent(referenceDate, schedule.location, rule.event);
+    if (!base) return null;
+    const offset = Number(rule.offsetMinutes) || 0;
+    if (offset) {
+      base.setMinutes(base.getMinutes() + offset);
+    }
+    return base;
   }
-  const base = calculateSolarEvent(referenceDate, schedule.location, rule.event);
-  if (!base) return null;
-  const offset = Number(rule.offsetMinutes) || 0;
-  if (offset) {
-    base.setMinutes(base.getMinutes() + offset);
-  }
-  return base;
+  return buildDateWithTime(referenceDate, rule.time);
 }
 
 function computePlan(schedule, now = new Date()) {
