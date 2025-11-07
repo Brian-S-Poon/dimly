@@ -228,27 +228,6 @@ button.link-button:disabled {
   max-width: 140px;
 }
 
-.schedule-location {
-  display: grid;
-  gap: 12px;
-}
-
-.schedule-location-heading {
-  font-weight: 600;
-  color: var(--brand-text-dark);
-}
-
-.schedule-location-grid {
-  display: grid;
-  gap: 12px;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-}
-
-.schedule-location-grid label {
-  display: grid;
-  gap: 6px;
-}
-
 .schedule-rule-list {
   list-style: none;
   padding: 0;

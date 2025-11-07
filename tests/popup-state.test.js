@@ -18,7 +18,6 @@ before(async () => {
     enabled: false,
     transitionMs: 800,
     fallbackLevel: 0.25,
-    location: null,
     rules: []
   };
   globalThis.DEFAULT_SCHEDULE = defaultSchedule;

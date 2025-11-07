@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Handle storage retrieval failures by falling back to default dimmer settings.
 - Fix schedule retrieval so local data is used when sync storage runs out of quota.
+- Removed manual sunrise/sunset coordinate inputs from scheduling and simplified schedule storage.
 
 ## [1.4.0] - 2025-11-02
 

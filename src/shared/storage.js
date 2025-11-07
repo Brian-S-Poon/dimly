@@ -66,15 +66,7 @@
       ? clamp01(Math.max(0, Math.min(1, fallbackLevel)))
       : DEFAULT_LEVEL;
 
-    if (normalized.location && typeof normalized.location === 'object') {
-      const lat = Number(normalized.location.latitude);
-      const lon = Number(normalized.location.longitude);
-      const hasLat = Number.isFinite(lat) && Math.abs(lat) <= 90;
-      const hasLon = Number.isFinite(lon) && Math.abs(lon) <= 180;
-      normalized.location = hasLat && hasLon ? { latitude: lat, longitude: lon } : null;
-    } else {
-      normalized.location = null;
-    }
+    delete normalized.location;
 
     const rules = Array.isArray(normalized.rules) ? normalized.rules : [];
     const seenIds = new Set();

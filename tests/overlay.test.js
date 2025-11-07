@@ -92,7 +92,6 @@ before(async () => {
     enabled: false,
     transitionMs: 600,
     fallbackLevel: 0.25,
-    location: null,
     rules: []
   };
   storageState = {
