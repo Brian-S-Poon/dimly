@@ -285,12 +285,6 @@ button.link-button:disabled {
   margin-top: 0;
 }
 
-.schedule-rule-enabled {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
 .schedule-status-error {
   color: var(--brand-lock);
 }

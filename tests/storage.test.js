@@ -136,7 +136,7 @@ test('getSchedule falls back to local copy when sync is missing', async () => {
         id: 'evening',
         time: '21:30',
         level: 0.7,
-        enabled: true
+        enabled: false
       }
     ]
   };
@@ -151,5 +151,6 @@ test('getSchedule falls back to local copy when sync is missing', async () => {
   assert.equal(result.rules.length, 1);
   assert.equal(result.rules[0].time, '21:30');
   assert.equal(result.rules[0].level, 0.7);
+  assert.equal('enabled' in result.rules[0], false);
   assert.equal('location' in result, false);
 });

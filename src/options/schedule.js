@@ -175,16 +175,6 @@
     nameBlock.appendChild(nameValue);
     titleRow.appendChild(nameBlock);
 
-    const enabledWrap = document.createElement('label');
-    enabledWrap.className = 'schedule-rule-enabled';
-    const enabledCheckbox = document.createElement('input');
-    enabledCheckbox.type = 'checkbox';
-    enabledCheckbox.dataset.action = 'enabled';
-    enabledCheckbox.checked = Boolean(rule.enabled);
-    enabledWrap.appendChild(enabledCheckbox);
-    enabledWrap.appendChild(document.createTextNode('Enabled'));
-    titleRow.appendChild(enabledWrap);
-
     li.appendChild(titleRow);
 
     const controlsRow = document.createElement('div');
@@ -333,11 +323,11 @@
     const errors = [];
     if (!data) return ['Schedule missing'];
     if (data.enabled) {
-      const enabledRules = (data.rules || []).filter((rule) => rule && rule.enabled);
-      if (!enabledRules.length) {
-        errors.push('Add at least one enabled rule.');
+      const activeRules = (data.rules || []).filter((rule) => Boolean(rule));
+      if (!activeRules.length) {
+        errors.push('Add at least one rule.');
       }
-      enabledRules.forEach((rule, index) => {
+      activeRules.forEach((rule, index) => {
         const allRules = Array.isArray(data.rules) ? data.rules : [];
         const ruleIndex = allRules.indexOf(rule);
         const name = getRuleName(rule, ruleIndex >= 0 ? ruleIndex : index);
@@ -442,8 +432,7 @@
     const rule = {
       id: generateId(),
       time: '19:00',
-      level: clamp01(scheduleState.fallbackLevel || DEFAULT_LEVEL),
-      enabled: true
+      level: clamp01(scheduleState.fallbackLevel || DEFAULT_LEVEL)
     };
     if (SOLAR_SCHEDULE_ENABLED) {
       rule.type = SCHEDULE_RULE_TYPES.FIXED;
@@ -509,9 +498,6 @@
     if (!rule) return;
     let shouldUpdateName = false;
     switch (target.dataset.action) {
-      case 'enabled':
-        rule.enabled = Boolean(target.checked);
-        break;
       case 'type':
         if (SOLAR_SCHEDULE_ENABLED) {
           rule.type = target.value === SCHEDULE_RULE_TYPES.SOLAR

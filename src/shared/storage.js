@@ -81,7 +81,9 @@
       seenIds.add(id);
       safeRule.id = id;
       delete safeRule.label;
-      safeRule.enabled = Boolean(safeRule.enabled);
+      if (Object.prototype.hasOwnProperty.call(safeRule, 'enabled')) {
+        delete safeRule.enabled;
+      }
 
       const fallbackLevel = fallbackRule && typeof fallbackRule.level === 'number'
         ? fallbackRule.level

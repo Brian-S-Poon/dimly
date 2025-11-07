@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed manual sunrise/sunset coordinate inputs from scheduling and simplified schedule storage.
 - Removed custom schedule rule labels in favor of automatic names derived from rule settings.
 - Simplified rule creation to default to fixed-time triggers and hide sunrise/sunset controls behind a feature flag.
+- Simplified schedule rules so they are always active and removed per-rule enable toggles from the editor.
 
 ## [1.4.0] - 2025-11-02
 
