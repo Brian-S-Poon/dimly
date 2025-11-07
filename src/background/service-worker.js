@@ -127,14 +127,14 @@ function computePlan(schedule, now = new Date()) {
   if (!schedule || !Array.isArray(schedule.rules)) {
     return { active: null, next: null };
   }
-  const enabledRules = schedule.rules.filter((rule) => rule && rule.enabled);
-  if (!enabledRules.length) {
+  const availableRules = schedule.rules.filter((rule) => Boolean(rule));
+  if (!availableRules.length) {
     return { active: null, next: null };
   }
 
   const occurrences = [];
 
-  enabledRules.forEach((rule) => {
+  availableRules.forEach((rule) => {
     const today = resolveRuleTime(rule, schedule, now);
     const tomorrow = resolveRuleTime(rule, schedule, addDays(now, 1));
     const yesterday = resolveRuleTime(rule, schedule, addDays(now, -1));
