@@ -134,12 +134,7 @@
       return 'Rule';
     }
     const base = rule && rule.event === SCHEDULE_SOLAR_EVENTS.SUNRISE ? 'Sunrise' : 'Sunset';
-    const offset = Number(rule && rule.offsetMinutes);
-    if (!Number.isFinite(offset) || offset === 0) {
-      return base;
-    }
-    const sign = offset > 0 ? '+' : '-';
-    return `${base} ${sign}${Math.abs(offset)}m`;
+    return base;
   }
 
   function getRuleName(rule, index) {
@@ -181,7 +176,6 @@
     controlsRow.className = 'schedule-rule-row';
 
     let eventWrap = null;
-    let offsetWrap = null;
 
     if (SOLAR_SCHEDULE_ENABLED && RULE_TYPE_LABELS && SOLAR_EVENT_LABELS) {
       const typeWrap = document.createElement('label');
@@ -211,18 +205,6 @@
         eventSelect.appendChild(option);
       });
       eventWrap.appendChild(eventSelect);
-
-      offsetWrap = document.createElement('label');
-      offsetWrap.dataset.role = 'offset-container';
-      offsetWrap.innerHTML = `<span class="schedule-label">Offset (minutes)</span>`;
-      const offsetInput = document.createElement('input');
-      offsetInput.type = 'number';
-      offsetInput.step = '1';
-      offsetInput.min = '-720';
-      offsetInput.max = '720';
-      offsetInput.value = String(Number(rule.offsetMinutes || 0));
-      offsetInput.dataset.action = 'offset';
-      offsetWrap.appendChild(offsetInput);
     }
 
     const timeWrap = document.createElement('label');
@@ -236,9 +218,8 @@
     timeWrap.appendChild(timeInput);
     controlsRow.appendChild(timeWrap);
 
-    if (SOLAR_SCHEDULE_ENABLED) {
-      if (eventWrap) controlsRow.appendChild(eventWrap);
-      if (offsetWrap) controlsRow.appendChild(offsetWrap);
+    if (SOLAR_SCHEDULE_ENABLED && eventWrap) {
+      controlsRow.appendChild(eventWrap);
     }
 
     li.appendChild(controlsRow);
@@ -284,11 +265,10 @@
 
     li.appendChild(actionsRow);
 
-    if (SOLAR_SCHEDULE_ENABLED && eventWrap && offsetWrap) {
+    if (SOLAR_SCHEDULE_ENABLED && eventWrap) {
       const isSolar = rule.type === SCHEDULE_RULE_TYPES.SOLAR;
       timeWrap.hidden = isSolar;
       eventWrap.hidden = !isSolar;
-      offsetWrap.hidden = !isSolar;
     }
 
     return li;
@@ -383,10 +363,8 @@
     const isSolar = rule.type === SCHEDULE_RULE_TYPES.SOLAR;
     const timeBlock = item.querySelector('[data-role="time-container"]');
     const eventBlock = item.querySelector('[data-role="event-container"]');
-    const offsetBlock = item.querySelector('[data-role="offset-container"]');
     if (timeBlock) timeBlock.hidden = isSolar;
     if (eventBlock) eventBlock.hidden = !isSolar;
-    if (offsetBlock) offsetBlock.hidden = !isSolar;
   }
 
   function refreshRuleName(ruleId) {
@@ -437,7 +415,6 @@
     if (SOLAR_SCHEDULE_ENABLED) {
       rule.type = SCHEDULE_RULE_TYPES.FIXED;
       rule.event = SCHEDULE_SOLAR_EVENTS.SUNSET;
-      rule.offsetMinutes = 0;
     }
     if (!Array.isArray(scheduleState.rules)) {
       scheduleState.rules = [];
@@ -472,15 +449,6 @@
         rule.time = target.value;
         shouldUpdateName = true;
         break;
-      case 'offset': {
-        if (!SOLAR_SCHEDULE_ENABLED) break;
-        const offset = Number(target.value);
-        if (Number.isFinite(offset)) {
-          rule.offsetMinutes = Math.max(-720, Math.min(720, Math.round(offset)));
-          shouldUpdateName = true;
-        }
-        break;
-      }
       default:
         break;
     }
@@ -531,15 +499,6 @@
       case 'level':
         rule.level = clamp01(target.value);
         break;
-      case 'offset': {
-        if (!SOLAR_SCHEDULE_ENABLED) break;
-        const offset = Number(target.value);
-        if (Number.isFinite(offset)) {
-          rule.offsetMinutes = Math.max(-720, Math.min(720, Math.round(offset)));
-          shouldUpdateName = true;
-        }
-        break;
-      }
       default:
         break;
     }

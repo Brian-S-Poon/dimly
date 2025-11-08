@@ -114,10 +114,6 @@ function resolveRuleTime(rule, schedule, referenceDate) {
   if (isSolarRule(rule)) {
     const base = calculateSolarEvent(referenceDate, schedule.location, rule.event);
     if (!base) return null;
-    const offset = Number(rule.offsetMinutes) || 0;
-    if (offset) {
-      base.setMinutes(base.getMinutes() + offset);
-    }
     return base;
   }
   return buildDateWithTime(referenceDate, rule.time);

@@ -84,6 +84,9 @@
       if (Object.prototype.hasOwnProperty.call(safeRule, 'enabled')) {
         delete safeRule.enabled;
       }
+      if (Object.prototype.hasOwnProperty.call(safeRule, 'offsetMinutes')) {
+        delete safeRule.offsetMinutes;
+      }
 
       const fallbackLevel = fallbackRule && typeof fallbackRule.level === 'number'
         ? fallbackRule.level
@@ -102,10 +105,6 @@
           ? SCHEDULE_SOLAR_EVENTS.SUNRISE
           : SCHEDULE_SOLAR_EVENTS.SUNSET;
         safeRule.event = event;
-        const offset = Number(safeRule.offsetMinutes);
-        safeRule.offsetMinutes = Number.isFinite(offset)
-          ? Math.max(-720, Math.min(720, offset))
-          : 0;
         safeRule.time = null;
       } else {
         const time = typeof safeRule.time === 'string' ? safeRule.time.trim() : '';
@@ -114,11 +113,9 @@
         if (SOLAR_SCHEDULE_ENABLED) {
           safeRule.type = SCHEDULE_RULE_TYPES.FIXED;
           safeRule.event = SCHEDULE_SOLAR_EVENTS.SUNSET;
-          safeRule.offsetMinutes = 0;
         } else {
           delete safeRule.type;
           delete safeRule.event;
-          delete safeRule.offsetMinutes;
         }
       }
 
