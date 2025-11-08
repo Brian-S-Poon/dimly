@@ -13,6 +13,21 @@
     }
   ];
 
+  function normalizeTint(tint) {
+    if (typeof tint !== 'string') {
+      return DEFAULT_TINT;
+    }
+    const trimmed = tint.trim();
+    if (/^#[0-9a-f]{6}$/i.test(trimmed)) {
+      return trimmed.toLowerCase();
+    }
+    if (/^#[0-9a-f]{3}$/i.test(trimmed)) {
+      const hex = trimmed.slice(1).toLowerCase();
+      return `#${hex[0]}${hex[0]}${hex[1]}${hex[1]}${hex[2]}${hex[2]}`;
+    }
+    return DEFAULT_TINT;
+  }
+
   function resolveRestrictedHost(url) {
     for (let index = 0; index < RESTRICTED_SITES.length; index += 1) {
       const site = RESTRICTED_SITES[index];
@@ -76,7 +91,8 @@
       siteLevels,
       globalLevel: normalizedGlobal,
       currentSiteLevel,
-      schedule: levelState.schedule
+      schedule: levelState.schedule,
+      tintColor: normalizeTint(levelState.tintColor)
     };
   }
 

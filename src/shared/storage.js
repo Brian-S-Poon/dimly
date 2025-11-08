@@ -4,6 +4,8 @@
     ? global.ScreenDimmerMath.clamp01
     : (value) => Math.max(0, Math.min(1, Number(value || 0)));
   const SOLAR_SCHEDULE_ENABLED = Boolean(global.SCREEN_DIMMER_SOLAR_SCHEDULE_ENABLED);
+  const DEFAULT_TINT_VALUE = typeof global.DEFAULT_TINT === 'string' ? global.DEFAULT_TINT : '#000000';
+  const TINT_STORAGE_KEY = typeof global.TINT_KEY === 'string' ? global.TINT_KEY : 'screendimmer_global_tint';
 
   function cloneDefaults(defaults) {
     if (!defaults || typeof defaults !== 'object') {
@@ -37,6 +39,21 @@
     return Boolean(message && QUOTA_RE.test(message));
   }
 
+  function normalizeTintValue(value) {
+    if (typeof value !== 'string') {
+      return DEFAULT_TINT_VALUE;
+    }
+    const trimmed = value.trim();
+    if (/^#[0-9a-f]{6}$/i.test(trimmed)) {
+      return trimmed.toLowerCase();
+    }
+    if (/^#[0-9a-f]{3}$/i.test(trimmed)) {
+      const hex = trimmed.slice(1).toLowerCase();
+      return `#${hex[0]}${hex[0]}${hex[1]}${hex[1]}${hex[2]}${hex[2]}`;
+    }
+    return DEFAULT_TINT_VALUE;
+  }
+
   async function setGlobalLevel(level) {
     try {
       await chrome.storage.sync.set({ [GLOBAL_KEY]: level });
@@ -44,6 +61,20 @@
     } catch (err) {
       if (isQuotaError()) {
         await chrome.storage.local.set({ [GLOBAL_KEY]: level });
+      } else {
+        throw err;
+      }
+    }
+  }
+
+  async function setGlobalTint(tint) {
+    const normalized = normalizeTintValue(tint);
+    try {
+      await chrome.storage.sync.set({ [TINT_STORAGE_KEY]: normalized });
+      await chrome.storage.local.remove([TINT_STORAGE_KEY]);
+    } catch (err) {
+      if (isQuotaError()) {
+        await chrome.storage.local.set({ [TINT_STORAGE_KEY]: normalized });
       } else {
         throw err;
       }
@@ -204,10 +235,26 @@
     return localValues[GLOBAL_KEY];
   }
 
+  async function getGlobalTint() {
+    const [syncValues, localValues] = await Promise.all([
+      storageGet('sync', { [TINT_STORAGE_KEY]: null }),
+      storageGet('local', { [TINT_STORAGE_KEY]: DEFAULT_TINT_VALUE })
+    ]);
+    const raw = syncValues[TINT_STORAGE_KEY] != null
+      ? syncValues[TINT_STORAGE_KEY]
+      : localValues[TINT_STORAGE_KEY];
+    return normalizeTintValue(raw);
+  }
+
   async function getLevelState() {
     const [syncValues, localValues] = await Promise.all([
-      storageGet('sync', { [GLOBAL_KEY]: null, [SITE_KEY]: null, [SCHEDULE_KEY]: null }),
-      storageGet('local', { [GLOBAL_KEY]: DEFAULT_LEVEL, [SITE_KEY]: null, [SCHEDULE_KEY]: cloneScheduleDefault() })
+      storageGet('sync', { [GLOBAL_KEY]: null, [SITE_KEY]: null, [SCHEDULE_KEY]: null, [TINT_STORAGE_KEY]: null }),
+      storageGet('local', {
+        [GLOBAL_KEY]: DEFAULT_LEVEL,
+        [SITE_KEY]: null,
+        [SCHEDULE_KEY]: cloneScheduleDefault(),
+        [TINT_STORAGE_KEY]: DEFAULT_TINT_VALUE
+      })
     ]);
 
     const siteLevels = Object.assign({}, localValues[SITE_KEY] || {}, syncValues[SITE_KEY] || {});
@@ -218,13 +265,20 @@
     const scheduleRaw = syncValues[SCHEDULE_KEY] != null ? syncValues[SCHEDULE_KEY] : localValues[SCHEDULE_KEY];
     const schedule = normalizeSchedule(scheduleRaw);
 
-    return { globalLevel, siteLevels, schedule };
+    const tintRaw = syncValues[TINT_STORAGE_KEY] != null
+      ? syncValues[TINT_STORAGE_KEY]
+      : localValues[TINT_STORAGE_KEY];
+    const tintColor = normalizeTintValue(tintRaw);
+
+    return { globalLevel, siteLevels, schedule, tintColor };
   }
 
   global.ScreenDimmerStorage = {
     storageGet,
     getGlobalLevel,
     setGlobalLevel,
+    getGlobalTint,
+    setGlobalTint,
     getSiteLevels,
     setSiteLevels,
     setSchedule,

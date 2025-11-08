@@ -131,6 +131,13 @@ body.manager-open {
   gap: 6px;
 }
 
+.tint-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+}
+
 .slider-meta {
   display: flex;
   align-items: baseline;
@@ -146,6 +153,16 @@ label {
 
 input[type="range"] {
   width: 100%;
+}
+
+select {
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--brand-primary);
+  background-color: var(--brand-bg-dark);
+  color: var(--brand-text-dark);
+  font-weight: 600;
 }
 
 .pill {

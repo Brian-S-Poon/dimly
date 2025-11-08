@@ -19,9 +19,11 @@ before(async () => {
     window: globalThis.window,
     DEFAULT_LEVEL: globalThis.DEFAULT_LEVEL,
     DEFAULT_SCHEDULE: globalThis.DEFAULT_SCHEDULE,
+    DEFAULT_TINT: globalThis.DEFAULT_TINT,
     GLOBAL_KEY: globalThis.GLOBAL_KEY,
     SITE_KEY: globalThis.SITE_KEY,
     SCHEDULE_KEY: globalThis.SCHEDULE_KEY,
+    TINT_KEY: globalThis.TINT_KEY,
     SCHEDULE_RULE_TYPES: globalThis.SCHEDULE_RULE_TYPES,
     SCHEDULE_SOLAR_EVENTS: globalThis.SCHEDULE_SOLAR_EVENTS,
     chrome: globalThis.chrome,
@@ -48,9 +50,11 @@ before(async () => {
     fallbackLevel: 0.25,
     rules: []
   };
+  globalThis.DEFAULT_TINT = '#000000';
   globalThis.GLOBAL_KEY = 'test_global_key';
   globalThis.SITE_KEY = 'test_site_key';
   globalThis.SCHEDULE_KEY = 'test_schedule_key';
+  globalThis.TINT_KEY = 'screendimmer_global_tint';
   globalThis.SCHEDULE_RULE_TYPES = { FIXED: 'fixed', SOLAR: 'solar' };
   globalThis.SCHEDULE_SOLAR_EVENTS = { SUNRISE: 'sunrise', SUNSET: 'sunset' };
 
@@ -153,4 +157,17 @@ test('getSchedule falls back to local copy when sync is missing', async () => {
   assert.equal(result.rules[0].level, 0.7);
   assert.equal('enabled' in result.rules[0], false);
   assert.equal('location' in result, false);
+});
+
+test('getLevelState returns tint color', async () => {
+  nextResult.sync = (defaults) => ({
+    ...clone(defaults),
+    [GLOBAL_KEY]: 0.4,
+    [TINT_KEY]: '#ff0000'
+  });
+  nextResult.local = (defaults) => ({ ...clone(defaults) });
+
+  const state = await globalThis.ScreenDimmerStorage.getLevelState();
+  assert.equal(state.globalLevel, 0.4);
+  assert.equal(state.tintColor, '#ff0000');
 });

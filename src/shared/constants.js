@@ -1,7 +1,9 @@
 const DEFAULT_LEVEL = 0.25;
+const DEFAULT_TINT = '#000000';
 const GLOBAL_KEY = 'screendimmer_global_level';
 const SITE_KEY = 'screendimmer_site_levels';
 const SCHEDULE_KEY = 'screendimmer_schedule';
+const TINT_KEY = 'screendimmer_global_tint';
 const RESTRICTED_PAGE_MESSAGE = "Chrome prevents extensions from running on this page.";
 const SCHEDULE_RULE_TYPES = Object.freeze({
   FIXED: 'fixed',

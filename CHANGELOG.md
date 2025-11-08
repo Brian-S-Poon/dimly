@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed custom schedule rule labels in favor of automatic names derived from rule settings.
 - Simplified rule creation to default to fixed-time triggers and hide sunrise/sunset controls behind a feature flag.
 - Simplified schedule rules so they are always active and removed per-rule enable toggles from the editor.
+- Added a global tint picker that syncs across tabs and recolors the overlay alongside your saved dim level.
 
 ## [1.4.0] - 2025-11-02
 

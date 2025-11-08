@@ -4,6 +4,7 @@
   const slider = document.querySelector('#level');
   const pct = document.querySelector('#pct');
   const toggleBtn = document.querySelector('#toggle');
+  const tintSelect = document.querySelector('#tint');
   const globalStatus = document.querySelector('#global-status');
   const globalControls = document.querySelector('.global-controls');
   const siteControls = document.querySelector('#site-controls');
@@ -40,6 +41,14 @@
         ? `Dimmer is on at ${Math.round(val * 100)}%.`
         : 'Dimmer is off.';
     }
+  }
+
+  function updateTint(tint) {
+    if (!tintSelect) return;
+    const options = Array.from(tintSelect.options || []);
+    const normalized = typeof tint === 'string' ? tint.toLowerCase() : DEFAULT_TINT.toLowerCase();
+    const hasOption = options.some((option) => option.value && option.value.toLowerCase() === normalized);
+    tintSelect.value = hasOption ? normalized : DEFAULT_TINT.toLowerCase();
   }
 
   function renderSite({ host, lockedLevel, globalLevel, message, blockedHost }) {
@@ -241,6 +250,7 @@
     onLevelInput,
     onLevelChange,
     onToggleClick,
+    onTintChange,
     onSiteToggleClick,
     onManageOpen,
     onManageClose,
@@ -256,6 +266,11 @@
     }
     if (toggleBtn && onToggleClick) {
       toggleBtn.addEventListener('click', onToggleClick);
+    }
+    if (tintSelect && onTintChange) {
+      tintSelect.addEventListener('change', (event) => {
+        onTintChange(event.target.value);
+      });
     }
     if (siteToggleBtn && onSiteToggleClick) {
       siteToggleBtn.addEventListener('click', onSiteToggleClick);
@@ -301,6 +316,7 @@
   global.ScreenDimmerPopupUI = {
     updateLevel,
     updateGlobal,
+    updateTint,
     renderSite,
     setSiteToggleDisabled,
     updateManageSummary,

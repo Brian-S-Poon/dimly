@@ -12,6 +12,22 @@
   let currentSiteLevel = null;
   let managerVisible = false;
   let blockedHost = null;
+  let currentTint = DEFAULT_TINT;
+
+  function normalizeTint(value) {
+    if (typeof value !== 'string') {
+      return DEFAULT_TINT;
+    }
+    const trimmed = value.trim();
+    if (/^#[0-9a-f]{6}$/i.test(trimmed)) {
+      return trimmed.toLowerCase();
+    }
+    if (/^#[0-9a-f]{3}$/i.test(trimmed)) {
+      const hex = trimmed.slice(1).toLowerCase();
+      return `#${hex[0]}${hex[0]}${hex[1]}${hex[1]}${hex[2]}${hex[2]}`;
+    }
+    return DEFAULT_TINT;
+  }
 
   function openOptionsPage() {
     if (!global.chrome || !chrome.runtime) {
@@ -46,6 +62,11 @@
       globalLevel: lastLevel,
       blockedHost
     });
+  }
+
+  function applyTint(tint) {
+    currentTint = normalizeTint(tint);
+    ui.updateTint(currentTint);
   }
 
   function updateSiteUI(message) {
@@ -85,13 +106,55 @@
     scheduleGlobalWrite(value);
   }
 
+  async function broadcastRefresh() {
+    if (!global.chrome || !chrome.tabs || typeof chrome.tabs.query !== 'function') {
+      return;
+    }
+    try {
+      const tabs = await new Promise((resolve) => {
+        chrome.tabs.query({}, (results) => {
+          if (chrome.runtime && chrome.runtime.lastError) {
+            resolve([]);
+          } else {
+            resolve(results || []);
+          }
+        });
+      });
+      if (!Array.isArray(tabs)) return;
+      tabs.forEach((tab) => {
+        if (!tab || tab.id == null || typeof chrome.tabs.sendMessage !== 'function') {
+          return;
+        }
+        chrome.tabs.sendMessage(tab.id, { type: 'screendimmer:refresh' }, () => {
+          if (chrome.runtime && chrome.runtime.lastError) {
+            // Ignore errors for tabs without the content script.
+          }
+        });
+      });
+    } catch (err) {
+      console.error('Failed to broadcast refresh', err);
+    }
+  }
+
   async function handleToggleClick() {
     const nextLevel = lastLevel > 0 ? 0 : DEFAULT_LEVEL;
     applyLevel(nextLevel);
     try {
       await storage.setGlobalLevel(nextLevel);
+      await broadcastRefresh();
     } catch (err) {
       console.error('Failed to toggle global level', err);
+    }
+  }
+
+  async function handleTintChange(tintValue) {
+    const normalized = normalizeTint(tintValue);
+    applyTint(normalized);
+    try {
+      await storage.setGlobalTint(normalized);
+      await broadcastRefresh();
+    } catch (err) {
+      console.error('Failed to update tint color', err);
     }
   }
 
@@ -210,6 +273,7 @@
       onLevelInput: handleLevelInput,
       onLevelChange: handleLevelChange,
       onToggleClick: handleToggleClick,
+      onTintChange: handleTintChange,
       onSiteToggleClick: handleSiteToggleClick,
       onManageOpen: handleManageOpen,
       onManageClose: handleManageClose,
@@ -235,12 +299,14 @@
       blockedHost = initial.blockedHost || null;
       siteStorage.setCache(initial.siteLevels || {});
       currentSiteLevel = siteStorage.getLevel(currentHost);
+      applyTint(initial.tintColor || DEFAULT_TINT);
       applyLevel(lastLevel);
       updateSiteUI();
       syncManagerUI('');
     } catch (err) {
       console.error('Failed to initialize popup', err);
       applyLevel(DEFAULT_LEVEL);
+      applyTint(DEFAULT_TINT);
       updateSiteUI('Unable to read saved settings.');
     }
   }

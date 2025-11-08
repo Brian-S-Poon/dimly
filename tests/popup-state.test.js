@@ -21,12 +21,13 @@ before(async () => {
     rules: []
   };
   globalThis.DEFAULT_SCHEDULE = defaultSchedule;
-  storageState = { globalLevel: 0, siteLevels: {}, schedule: defaultSchedule };
+  storageState = { globalLevel: 0, siteLevels: {}, schedule: defaultSchedule, tintColor: '#000000' };
   originalGlobals = {
     window: globalThis.window,
     ScreenDimmerMath: globalThis.ScreenDimmerMath,
     ScreenDimmerStorage: globalThis.ScreenDimmerStorage,
-    chrome: globalThis.chrome
+    chrome: globalThis.chrome,
+    DEFAULT_TINT: globalThis.DEFAULT_TINT
   };
 
   windowStub = {
@@ -35,7 +36,8 @@ before(async () => {
       getLevelState: () => Promise.resolve({
         globalLevel: storageState.globalLevel,
         siteLevels: { ...storageState.siteLevels },
-        schedule: storageState.schedule
+        schedule: storageState.schedule,
+        tintColor: storageState.tintColor
       })
     }
   };
@@ -44,6 +46,7 @@ before(async () => {
   globalThis.window = windowStub;
   globalThis.ScreenDimmerMath = windowStub.ScreenDimmerMath;
   globalThis.ScreenDimmerStorage = windowStub.ScreenDimmerStorage;
+  globalThis.DEFAULT_TINT = '#000000';
 
   globalThis.chrome = {
     tabs: {
@@ -68,6 +71,7 @@ beforeEach(() => {
   storageState.globalLevel = 0;
   storageState.siteLevels = {};
   storageState.schedule = JSON.parse(JSON.stringify(defaultSchedule));
+  storageState.tintColor = '#000000';
   globalThis.chrome.runtime.lastError = null;
 });
 
@@ -76,6 +80,11 @@ after(() => {
   globalThis.ScreenDimmerMath = originalGlobals.ScreenDimmerMath;
   globalThis.ScreenDimmerStorage = originalGlobals.ScreenDimmerStorage;
   globalThis.chrome = originalGlobals.chrome;
+  if (typeof originalGlobals.DEFAULT_TINT === 'undefined') {
+    delete globalThis.DEFAULT_TINT;
+  } else {
+    globalThis.DEFAULT_TINT = originalGlobals.DEFAULT_TINT;
+  }
 });
 
 function setStorage(values) {
@@ -83,6 +92,7 @@ function setStorage(values) {
   storageState.siteLevels = values.siteLevels;
   const scheduleValue = values.schedule || defaultSchedule;
   storageState.schedule = JSON.parse(JSON.stringify(scheduleValue));
+  storageState.tintColor = values.tintColor || '#000000';
 }
 
 test('loadInitialData returns host and clamps persisted levels', async () => {
@@ -100,6 +110,7 @@ test('loadInitialData returns host and clamps persisted levels', async () => {
   assert.equal(result.currentSiteLevel, 0.8);
   assert.deepEqual(result.siteLevels, { 'example.com': 0.8 });
   assert.deepEqual(result.schedule, DEFAULT_SCHEDULE);
+  assert.equal(result.tintColor, '#000000');
 });
 
 test('getActiveHost returns null for unsupported protocols', async () => {
@@ -119,6 +130,7 @@ test('getActiveHost returns null for unsupported protocols', async () => {
   assert.equal(data.globalLevel, 0);
   assert.equal(data.currentSiteLevel, null);
   assert.deepEqual(data.schedule, DEFAULT_SCHEDULE);
+  assert.equal(data.tintColor, '#000000');
 });
 
 test('loadInitialData flags Chrome Web Store as restricted', async () => {
@@ -136,4 +148,5 @@ test('loadInitialData flags Chrome Web Store as restricted', async () => {
   assert.equal(data.host, null);
   assert.equal(data.blockedHost, 'Chrome Web Store');
   assert.equal(data.currentSiteLevel, null);
+  assert.equal(data.tintColor, '#000000');
 });

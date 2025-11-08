@@ -97,7 +97,8 @@ before(async () => {
   storageState = {
     globalLevel: 0.6,
     siteLevels: {},
-    schedule: JSON.parse(JSON.stringify(defaultSchedule))
+    schedule: JSON.parse(JSON.stringify(defaultSchedule)),
+    tintColor: '#000000'
   };
   originalGlobals = {
     window: globalThis.window,
@@ -147,6 +148,12 @@ before(async () => {
       onChanged: {
         addListener: () => {}
       }
+    },
+    runtime: {
+      onMessage: {
+        addListener: () => {}
+      },
+      lastError: null
     }
   };
   windowStub.document = globalThis.document;
@@ -159,7 +166,8 @@ beforeEach(() => {
   storageState = {
     globalLevel: 0.6,
     siteLevels: {},
-    schedule: JSON.parse(JSON.stringify(defaultSchedule))
+    schedule: JSON.parse(JSON.stringify(defaultSchedule)),
+    tintColor: '#000000'
   };
   lastMutationObserver = null;
   const doc = createDocument();
@@ -190,7 +198,8 @@ test('applies site override level for current host', async () => {
   storageState = {
     globalLevel: 0.4,
     siteLevels: { 'example.com': 0.7 },
-    schedule: JSON.parse(JSON.stringify(defaultSchedule))
+    schedule: JSON.parse(JSON.stringify(defaultSchedule)),
+    tintColor: '#000000'
   };
 
   await windowStub.ScreenDimmerOverlay.loadLevel();
@@ -204,7 +213,8 @@ test('recreates overlay with previous level when removed', async () => {
   storageState = {
     globalLevel: 0.55,
     siteLevels: {},
-    schedule: JSON.parse(JSON.stringify(defaultSchedule))
+    schedule: JSON.parse(JSON.stringify(defaultSchedule)),
+    tintColor: '#000000'
   };
 
   await windowStub.ScreenDimmerOverlay.loadLevel();
@@ -229,7 +239,8 @@ test('falls back to global level when no site override exists', async () => {
   storageState = {
     globalLevel: 0.33,
     siteLevels: { 'other.com': 0.9 },
-    schedule: Object.assign(JSON.parse(JSON.stringify(defaultSchedule)), { transitionMs: 1200 })
+    schedule: Object.assign(JSON.parse(JSON.stringify(defaultSchedule)), { transitionMs: 1200 }),
+    tintColor: '#000000'
   };
 
   await windowStub.ScreenDimmerOverlay.loadLevel();
@@ -237,4 +248,18 @@ test('falls back to global level when no site override exists', async () => {
   assert.ok(overlay, 'expected overlay to be created');
   assert.equal(overlay.style.background, 'rgba(0,0,0,0.33)');
   assert.ok(overlay.style.transition.includes('1.2'), 'transition should reflect schedule ms');
+});
+
+test('applies stored tint color', async () => {
+  storageState = {
+    globalLevel: 0.5,
+    siteLevels: {},
+    schedule: JSON.parse(JSON.stringify(defaultSchedule)),
+    tintColor: '#ff8800'
+  };
+
+  await windowStub.ScreenDimmerOverlay.loadLevel();
+  const overlay = getOverlay();
+  assert.ok(overlay, 'expected overlay to be created');
+  assert.equal(overlay.style.background, 'rgba(255,136,0,0.5)');
 });
