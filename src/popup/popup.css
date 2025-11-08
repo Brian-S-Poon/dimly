@@ -13,9 +13,44 @@
 body {
   font: 14px/1.4 'Inter', sans-serif;
   margin: 12px;
-  width: 260px;
   background-color: var(--brand-bg-dark);
   color: var(--brand-text-dark);
+}
+
+body,
+body.manager-open {
+  width: 320px;
+}
+
+.popup-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+body.manager-open .popup-content {
+  max-height: calc(520px - 24px);
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.site-manager-content {
+  display: flex;
+  flex-direction: column;
+}
+
+body.manager-open .site-manager {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+body.manager-open .site-manager-content {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding-right: 4px;
+  min-height: 0;
 }
 
 .popup-top-bar {
@@ -80,12 +115,6 @@ body {
 .settings-button span[aria-hidden="true"] {
   font-size: 18px;
   line-height: 1;
-}
-
-body.manager-open {
-  width: 320px;
-  max-height: 520px;
-  overflow-y: auto;
 }
 
 .controls-section {
