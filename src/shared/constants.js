@@ -3,14 +3,6 @@ const GLOBAL_KEY = 'screendimmer_global_level';
 const SITE_KEY = 'screendimmer_site_levels';
 const SCHEDULE_KEY = 'screendimmer_schedule';
 const RESTRICTED_PAGE_MESSAGE = "Chrome prevents extensions from running on this page.";
-const SCHEDULE_RULE_TYPES = Object.freeze({
-  FIXED: 'fixed',
-  SOLAR: 'solar'
-});
-const SCHEDULE_SOLAR_EVENTS = Object.freeze({
-  SUNRISE: 'sunrise',
-  SUNSET: 'sunset'
-});
 const DEFAULT_SCHEDULE_TRANSITION_MS = 800;
 const DEFAULT_SCHEDULE = Object.freeze({
   enabled: false,

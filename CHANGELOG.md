@@ -12,7 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix schedule retrieval so local data is used when sync storage runs out of quota.
 - Removed manual sunrise/sunset coordinate inputs from scheduling and simplified schedule storage.
 - Removed custom schedule rule labels in favor of automatic names derived from rule settings.
-- Simplified rule creation to default to fixed-time triggers and hide sunrise/sunset controls behind a feature flag.
+- Simplified rule creation to default to fixed-time triggers and removed sunrise/sunset scheduling controls.
+- Removed sunrise/sunset scheduling options from the editor so only custom times are available for MVP.
 - Simplified schedule rules so they are always active and removed per-rule enable toggles from the editor.
 - Removed sunrise/sunset offset controls so solar rules always trigger exactly at the selected event time.
 

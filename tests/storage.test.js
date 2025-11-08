@@ -22,8 +22,6 @@ before(async () => {
     GLOBAL_KEY: globalThis.GLOBAL_KEY,
     SITE_KEY: globalThis.SITE_KEY,
     SCHEDULE_KEY: globalThis.SCHEDULE_KEY,
-    SCHEDULE_RULE_TYPES: globalThis.SCHEDULE_RULE_TYPES,
-    SCHEDULE_SOLAR_EVENTS: globalThis.SCHEDULE_SOLAR_EVENTS,
     chrome: globalThis.chrome,
     ScreenDimmerStorage: globalThis.ScreenDimmerStorage
   };
@@ -51,9 +49,6 @@ before(async () => {
   globalThis.GLOBAL_KEY = 'test_global_key';
   globalThis.SITE_KEY = 'test_site_key';
   globalThis.SCHEDULE_KEY = 'test_schedule_key';
-  globalThis.SCHEDULE_RULE_TYPES = { FIXED: 'fixed', SOLAR: 'solar' };
-  globalThis.SCHEDULE_SOLAR_EVENTS = { SUNRISE: 'sunrise', SUNSET: 'sunset' };
-
   nextResult = { sync: undefined, local: undefined };
   nextError = { sync: null, local: null };
 
