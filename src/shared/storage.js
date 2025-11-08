@@ -3,8 +3,6 @@
   const clamp01 = global.ScreenDimmerMath && typeof global.ScreenDimmerMath.clamp01 === 'function'
     ? global.ScreenDimmerMath.clamp01
     : (value) => Math.max(0, Math.min(1, Number(value || 0)));
-  const SOLAR_SCHEDULE_ENABLED = Boolean(global.SCREEN_DIMMER_SOLAR_SCHEDULE_ENABLED);
-
   function cloneDefaults(defaults) {
     if (!defaults || typeof defaults !== 'object') {
       return defaults;
@@ -97,27 +95,11 @@
       const fallbackTime = fallbackRule && typeof fallbackRule.time === 'string'
         ? fallbackRule.time
         : '19:00';
-      const isSolarRule = SOLAR_SCHEDULE_ENABLED && safeRule.type === SCHEDULE_RULE_TYPES.SOLAR;
-
-      if (isSolarRule) {
-        safeRule.type = SCHEDULE_RULE_TYPES.SOLAR;
-        const event = safeRule.event === SCHEDULE_SOLAR_EVENTS.SUNRISE
-          ? SCHEDULE_SOLAR_EVENTS.SUNRISE
-          : SCHEDULE_SOLAR_EVENTS.SUNSET;
-        safeRule.event = event;
-        safeRule.time = null;
-      } else {
-        const time = typeof safeRule.time === 'string' ? safeRule.time.trim() : '';
-        const match = /^([0-1]?\d|2[0-3]):([0-5]\d)$/.exec(time);
-        safeRule.time = match ? `${match[1].padStart(2, '0')}:${match[2]}` : fallbackTime;
-        if (SOLAR_SCHEDULE_ENABLED) {
-          safeRule.type = SCHEDULE_RULE_TYPES.FIXED;
-          safeRule.event = SCHEDULE_SOLAR_EVENTS.SUNSET;
-        } else {
-          delete safeRule.type;
-          delete safeRule.event;
-        }
-      }
+      const time = typeof safeRule.time === 'string' ? safeRule.time.trim() : '';
+      const match = /^([0-1]?\d|2[0-3]):([0-5]\d)$/.exec(time);
+      safeRule.time = match ? `${match[1].padStart(2, '0')}:${match[2]}` : fallbackTime;
+      delete safeRule.type;
+      delete safeRule.event;
 
       return safeRule;
     });

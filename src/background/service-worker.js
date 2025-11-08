@@ -1,16 +1,11 @@
-/* global DEFAULT_LEVEL, DEFAULT_SCHEDULE, DEFAULT_SCHEDULE_TRANSITION_MS, GLOBAL_KEY, SCHEDULE_KEY, SCHEDULE_RULE_TYPES, SCHEDULE_SOLAR_EVENTS */
+/* global DEFAULT_LEVEL, DEFAULT_SCHEDULE, DEFAULT_SCHEDULE_TRANSITION_MS, GLOBAL_KEY, SCHEDULE_KEY */
 /* global ScreenDimmerStorage, ScreenDimmerMath */
 
 importScripts('../shared/constants.js', '../shared/math.js', '../shared/storage.js');
 
 const storage = self.ScreenDimmerStorage;
 const { clamp01 } = self.ScreenDimmerMath;
-const SOLAR_SCHEDULE_ENABLED = Boolean(self.SCREEN_DIMMER_SOLAR_SCHEDULE_ENABLED);
 const ALARM_NAME = 'screendimmer_schedule_tick';
-const FALLBACK_SOLAR_TIMES = {
-  [SCHEDULE_SOLAR_EVENTS.SUNRISE]: '06:00',
-  [SCHEDULE_SOLAR_EVENTS.SUNSET]: '18:00'
-};
 
 let currentSchedule = null;
 let currentRuleId = null;
@@ -49,73 +44,8 @@ function buildDateWithTime(baseDate, timeString) {
   return value;
 }
 
-function dayOfYear(date) {
-  const start = new Date(date.getFullYear(), 0, 0);
-  const diff = date - start + ((start.getTimezoneOffset() - date.getTimezoneOffset()) * 60 * 1000);
-  return Math.floor(diff / 86400000);
-}
-
-function calculateSolarEvent(baseDate, location, event) {
-  if (!location || !Number.isFinite(location.latitude) || !Number.isFinite(location.longitude)) {
-    return buildDateWithTime(baseDate, FALLBACK_SOLAR_TIMES[event]);
-  }
-
-  const zenith = 90.8333; // official sunrise/sunset
-  const d2r = Math.PI / 180;
-  const r2d = 180 / Math.PI;
-
-  const day = dayOfYear(baseDate);
-  const lngHour = location.longitude / 15;
-  const approx = event === SCHEDULE_SOLAR_EVENTS.SUNRISE
-    ? day + ((6 - lngHour) / 24)
-    : day + ((18 - lngHour) / 24);
-
-  const M = (0.9856 * approx) - 3.289;
-  let L = M + (1.916 * Math.sin(d2r * M)) + (0.020 * Math.sin(2 * d2r * M)) + 282.634;
-  L = (L + 360) % 360;
-
-  let RA = r2d * Math.atan(0.91764 * Math.tan(d2r * L));
-  RA = (RA + 360) % 360;
-  const Lquadrant = Math.floor(L / 90) * 90;
-  const RAquadrant = Math.floor(RA / 90) * 90;
-  RA = (RA + (Lquadrant - RAquadrant)) / 15;
-
-  const sinDec = 0.39782 * Math.sin(d2r * L);
-  const cosDec = Math.cos(Math.asin(sinDec));
-  const cosH = (Math.cos(d2r * zenith) - (sinDec * Math.sin(d2r * location.latitude))) /
-    (cosDec * Math.cos(d2r * location.latitude));
-
-  if (cosH > 1 || cosH < -1) {
-    return buildDateWithTime(baseDate, FALLBACK_SOLAR_TIMES[event]);
-  }
-
-  let H = event === SCHEDULE_SOLAR_EVENTS.SUNRISE
-    ? 360 - r2d * Math.acos(cosH)
-    : r2d * Math.acos(cosH);
-  H /= 15;
-
-  const T = H + RA - (0.06571 * approx) - 6.622;
-  let UT = T - lngHour;
-  UT = (UT % 24 + 24) % 24;
-  const offsetHours = -baseDate.getTimezoneOffset() / 60;
-  const localT = (UT + offsetHours + 24) % 24;
-
-  const result = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate(), 0, 0, 0, 0);
-  result.setMinutes(Math.round(localT * 60));
-  return result;
-}
-
-function isSolarRule(rule) {
-  return SOLAR_SCHEDULE_ENABLED && rule && rule.type === SCHEDULE_RULE_TYPES.SOLAR;
-}
-
-function resolveRuleTime(rule, schedule, referenceDate) {
+function resolveRuleTime(rule, referenceDate) {
   if (!rule) return null;
-  if (isSolarRule(rule)) {
-    const base = calculateSolarEvent(referenceDate, schedule.location, rule.event);
-    if (!base) return null;
-    return base;
-  }
   return buildDateWithTime(referenceDate, rule.time);
 }
 
@@ -131,9 +61,9 @@ function computePlan(schedule, now = new Date()) {
   const occurrences = [];
 
   availableRules.forEach((rule) => {
-    const today = resolveRuleTime(rule, schedule, now);
-    const tomorrow = resolveRuleTime(rule, schedule, addDays(now, 1));
-    const yesterday = resolveRuleTime(rule, schedule, addDays(now, -1));
+    const today = resolveRuleTime(rule, now);
+    const tomorrow = resolveRuleTime(rule, addDays(now, 1));
+    const yesterday = resolveRuleTime(rule, addDays(now, -1));
     if (today) occurrences.push({ rule, time: today });
     if (tomorrow) occurrences.push({ rule, time: tomorrow });
     if (yesterday) occurrences.push({ rule, time: yesterday });
