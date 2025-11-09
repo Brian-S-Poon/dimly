@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Simplified schedule rules so they are always active and removed per-rule enable toggles from the editor.
 - Removed sunrise/sunset offset controls so solar rules always trigger exactly at the selected event time.
 - Added consistent spacing above muted helper copy on the options page so live status messages line up after layout tweaks.
+- Added breathing room between the "Time" label and its picker in schedule rules for a clearer layout.
 
 ## [1.4.0] - 2025-11-02
 
