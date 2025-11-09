@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed sunrise/sunset scheduling options from the editor so only custom times are available for MVP.
 - Simplified schedule rules so they are always active and removed per-rule enable toggles from the editor.
 - Removed sunrise/sunset offset controls so solar rules always trigger exactly at the selected event time.
+- Added consistent spacing above muted helper copy on the options page so live status messages line up after layout tweaks.
 
 ## [1.4.0] - 2025-11-02
 
