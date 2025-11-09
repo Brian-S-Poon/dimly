@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Rebalanced the options card layout by removing the nested schedule border, adjusting padding, and tightening mobile spacing
+  so the editor reads as a single surface.
 - Refined the disabled schedule editor styling with a tinted, dashed treatment so the inactive state is obvious at a glance.
 - Increased the default popup width to match the 320px manager layout and moved manager scrolling into an inner container to prevent clipped site lists.
 - Handle storage retrieval failures by falling back to default dimmer settings.
