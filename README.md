@@ -1,6 +1,6 @@
 # Dimly – Screen dimmer for bright pages
 
-Dimly is a lightweight browser extension that lets you dim any website to a comfortable brightness level. Whether you're browsing late at night or working in bright daylight, Dimly gives you fine-grained control over every page’s brightness without changing your monitor settings.
+Dimly is a lightweight browser extension that lets you dim any website to a comfortable brightness level. Whether you're browsing late at night or working in bright daylight, Dimly gives you fine-grained control over every page’s brightness without changing your monitor settings. 
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
 ![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-blue.svg)
