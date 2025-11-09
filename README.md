@@ -54,7 +54,7 @@ This project is licensed under the **MIT License**.
 
 ## Privacy
 
-Dimly stores only what it needs to function — brightness levels, per-site locks, and schedule rules — using Chrome’s storage APIs.  
+Dimly stores only what it needs to function: brightness levels, per-site locks, and schedule rules, using Chrome’s storage APIs.
 It never sends data anywhere. See [PRIVACY.md](./PRIVACY.md) for details.
 
 ---
