@@ -7,20 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Rebalanced the options card layout by removing the nested schedule border, adjusting padding, and tightening mobile spacing
-  so the editor reads as a single surface.
+## [1.5.0] - 2025-11-09
+
+### Changed
+- Rebalanced the options card layout by removing the nested schedule border, adjusting padding, and tightening mobile spacing so the editor reads as a single surface.
 - Refined the disabled schedule editor styling with a tinted, dashed treatment so the inactive state is obvious at a glance.
 - Increased the default popup width to match the 320px manager layout and moved manager scrolling into an inner container to prevent clipped site lists.
-- Handle storage retrieval failures by falling back to default dimmer settings.
-- Fix schedule retrieval so local data is used when sync storage runs out of quota.
-- Removed manual sunrise/sunset coordinate inputs from scheduling and simplified schedule storage.
-- Removed custom schedule rule labels in favor of automatic names derived from rule settings.
-- Simplified rule creation to default to fixed-time triggers and removed sunrise/sunset scheduling controls.
-- Removed sunrise/sunset scheduling options from the editor so only custom times are available for MVP.
-- Simplified schedule rules so they are always active and removed per-rule enable toggles from the editor.
-- Removed sunrise/sunset offset controls so solar rules always trigger exactly at the selected event time.
+- Simplified rule creation to default to fixed-time triggers, keep rules always active, and drop per-rule enable toggles so the editor is easier to use.
+- Simplified schedule storage by removing manual sunrise/sunset coordinate inputs and generating automatic rule names from their settings.
 - Added consistent spacing above muted helper copy on the options page so live status messages line up after layout tweaks.
 - Added breathing room between the "Time" label and its picker in schedule rules for a clearer layout.
+
+### Fixed
+- Handled storage retrieval failures by falling back to default dimmer settings.
+- Fixed schedule retrieval so local data is used when sync storage runs out of quota.
+
+### Removed
+- Removed sunrise/sunset scheduling controls, options, and offsets from the editor so only custom times are available for the MVP.
 
 ## [1.4.0] - 2025-11-02
 

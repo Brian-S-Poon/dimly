@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Dimly — Screen dimmer for bright pages",
   "short_name": "Dimly",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Dim any site with a global slider or per-site levels. Quick lock, scheduling, smooth fade.",
   
   "action": {
