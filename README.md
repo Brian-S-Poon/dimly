@@ -11,11 +11,13 @@ Dimly is a lightweight browser extension that lets you dim any website to a comf
 ## Table of contents
 - [Features](#features)
 - [Install (unpacked)](#install-unpacked)
-- [Tech Stack](#tech-stack)
+- [Repository structure](#repository-structure)
+- [Tech stack](#tech-stack)
 - [Contributing](#contributing)
 - [License](#license)
 - [Privacy](#privacy)
-- [Support & Sponsorship](#support--sponsorship)
+- [Security](#security)
+- [Support & sponsorship](#support--sponsorship)
 
 ---
 
@@ -48,16 +50,22 @@ For a full history of updates, see [CHANGELOG.md](./CHANGELOG.md).
 ## Repository structure
 
 ```text
-├── src/                 # Popup, options, and background scripts  
+├── src/                 
+│   ├── popup/           # Popup UI for global and per-site brightness control  
+│   ├── options/         # Options page for scheduling and advanced settings  
+│   ├── background/      # Background service worker handling storage and events  
+│   ├── content/         # Content scripts that inject and adjust the dimming overlay  
+│   ├── shared/          # Shared utilities and constants used across components  
+│   └── styles/          # Common CSS variables and themes  
+│
 ├── icons/               # Extension icons for manifest and store listing  
 ├── manifest.json        # Chrome Extension manifest (MV3)  
-├── README.md            # Project overview  
-├── CHANGELOG.md         # Version history  
-├── CONTRIBUTING.md      # Development and PR guidelines  
-├── PRIVACY.md           # Data handling policy  
-└── manifest-notes.md    # Internal notes about manifest updates
-```
-
+├── README.md            # Project overview and usage guide  
+├── CHANGELOG.md         # Version history of user-visible updates  
+├── CONTRIBUTING.md      # Development setup and pull request guidelines  
+├── PRIVACY.md           # Data handling and storage policy  
+├── SECURITY.md          # Responsible disclosure and vulnerability reporting policy  
+└── manifest-notes.md    # Internal notes about manifest changes and permissions
 
 ---
 
