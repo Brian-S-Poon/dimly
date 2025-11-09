@@ -2,6 +2,23 @@
 
 Dimly is a lightweight browser extension that lets you dim any website to a comfortable brightness level. Whether you're browsing late at night or working in bright daylight, Dimly gives you fine-grained control over every page’s brightness without changing your monitor settings.
 
+![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
+![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-blue.svg)
+![Manifest V3](https://img.shields.io/badge/Manifest-V3-orange.svg)
+
+---
+
+## Table of contents
+- [Features](#features)
+- [Install (unpacked)](#install-unpacked)
+- [Tech Stack](#tech-stack)
+- [Contributing](#contributing)
+- [License](#license)
+- [Privacy](#privacy)
+- [Support & Sponsorship](#support--sponsorship)
+
+---
+
 ## Features
 
 - **Global dimming** — A simple slider controls brightness for all pages.  
@@ -23,16 +40,30 @@ For a full history of updates, see [CHANGELOG.md](./CHANGELOG.md).
 3. Enable **Developer mode** (top right).  
 4. Click **Load unpacked** and select the repository folder.
 
-Dimly is also available on the Chrome Web Store.
+> 🧩 **Note:** These steps are for development or testing.  
+> For everyday use, install the published version from the Chrome Web Store.
+
+---
+
+## Repository structure
+
+├── src/ # Popup, options, and background scripts
+├── icons/ # Extension icons for manifest and store listing
+├── manifest.json # Chrome Extension manifest (MV3)
+├── README.md # Project overview
+├── CHANGELOG.md # Version history
+├── CONTRIBUTING.md # Development and PR guidelines
+├── PRIVACY.md # Data handling policy
+└── manifest-notes.md # Internal notes about manifest updates
 
 ---
 
 ## Tech Stack
 
-- **Framework:** Chrome Extension (Manifest V3) with a background service worker, popup, options page, and content scripts.  
-- **Build:** Authored directly in JavaScript, HTML, and CSS without external build tools.  
-- **Styling:** Uses CSS custom properties for theming and a fixed `color-scheme: dark` across all UI components.  
-- **Storage:** Persists settings using the Chrome Storage API (`chrome.storage.sync` with fallbacks to `chrome.storage.local`).
+- **Framework:** Chrome Extension (Manifest V3) using a background service worker, popup, options page, and content scripts  
+- **Languages:** Plain JavaScript, HTML, and CSS (no bundler or transpiler)
+- **Styling:** CSS custom properties and a consistent `color-scheme: dark` 
+- **Storage:** Chrome Storage API (`chrome.storage.sync` with local fallback)
 
 ---
 
