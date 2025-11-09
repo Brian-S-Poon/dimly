@@ -304,6 +304,12 @@ button.link-button:disabled {
   align-items: center;
 }
 
+.schedule-rule-row [data-role="time-container"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .schedule-rule-row select,
 .schedule-rule-row input[type="number"],
 .schedule-rule-row input[type="text"] {
