@@ -47,14 +47,17 @@ For a full history of updates, see [CHANGELOG.md](./CHANGELOG.md).
 
 ## Repository structure
 
-├── src/ # Popup, options, and background scripts
-├── icons/ # Extension icons for manifest and store listing
-├── manifest.json # Chrome Extension manifest (MV3)
-├── README.md # Project overview
-├── CHANGELOG.md # Version history
-├── CONTRIBUTING.md # Development and PR guidelines
-├── PRIVACY.md # Data handling policy
-└── manifest-notes.md # Internal notes about manifest updates
+```text
+├── src/                 # Popup, options, and background scripts  
+├── icons/               # Extension icons for manifest and store listing  
+├── manifest.json        # Chrome Extension manifest (MV3)  
+├── README.md            # Project overview  
+├── CHANGELOG.md         # Version history  
+├── CONTRIBUTING.md      # Development and PR guidelines  
+├── PRIVACY.md           # Data handling policy  
+└── manifest-notes.md    # Internal notes about manifest updates
+```
+
 
 ---
 
