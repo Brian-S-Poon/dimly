@@ -66,6 +66,7 @@ For a full history of updates, see [CHANGELOG.md](./CHANGELOG.md).
 ├── PRIVACY.md           # Data handling and storage policy  
 ├── SECURITY.md          # Responsible disclosure and vulnerability reporting policy  
 └── manifest-notes.md    # Internal notes about manifest changes and permissions
+```
 
 ---
 
