@@ -8,10 +8,17 @@
   --brand-primary-hover: #4285f4;
   --brand-disabled: #9e9e9e;
   --brand-lock: #f9ab00;
+  --body-font-size: 15px;
+  --body-line-height: 1.5;
+  --body-font-family: 'Inter', sans-serif;
+  --button-padding-block: 8px;
+  --button-padding-inline: 14px;
 }
 
 body {
-  font: 14px/1.4 'Inter', sans-serif;
+  font-size: var(--body-font-size, 15px);
+  line-height: var(--body-line-height, 1.5);
+  font-family: var(--body-font-family, 'Inter', sans-serif);
   margin: 12px;
   background-color: var(--brand-bg-dark);
   color: var(--brand-text-dark);
@@ -190,7 +197,8 @@ input[type="range"] {
 }
 
 button:not(.settings-button) {
-  padding: 6px 12px;
+  padding-block: var(--button-padding-block);
+  padding-inline: var(--button-padding-inline);
   margin-top: 10px;
   border: 1px solid var(--brand-primary);
   border-radius: 8px;
