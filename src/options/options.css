@@ -218,8 +218,19 @@ button.link-button:disabled {
 }
 
 .schedule-editor:disabled {
-  opacity: 0.5;
+  opacity: 1;
   pointer-events: none;
+  border-color: var(--brand-disabled);
+  border-style: dashed;
+  background-color: rgba(158, 158, 158, 0.08);
+  background-image: repeating-linear-gradient(
+    135deg,
+    transparent,
+    transparent 12px,
+    rgba(158, 158, 158, 0.16) 12px,
+    rgba(158, 158, 158, 0.16) 24px
+  );
+  color: var(--brand-disabled);
 }
 
 .schedule-row {

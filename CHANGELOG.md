@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Improved the disabled state styling for the schedule editor to make the toggle state easier to recognize.
 - Increased the default popup width to match the 320px manager layout and moved manager scrolling into an inner container to prevent clipped site lists.
 - Handle storage retrieval failures by falling back to default dimmer settings.
 - Fix schedule retrieval so local data is used when sync storage runs out of quota.
