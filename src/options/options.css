@@ -215,11 +215,41 @@ button.link-button:disabled {
   border-radius: 12px;
   border: 1px solid var(--brand-primary);
   background-color: var(--brand-text-light);
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .schedule-editor:disabled {
-  opacity: 0.5;
+  opacity: 1;
   pointer-events: none;
+  border-color: var(--brand-disabled);
+  border-style: dashed;
+  background-color: rgba(158, 158, 158, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(158, 158, 158, 0.18);
+  color: var(--brand-disabled);
+}
+
+.schedule-editor:disabled::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(158, 158, 158, 0.18) 0px,
+    rgba(158, 158, 158, 0.18) 12px,
+    transparent 12px,
+    transparent 24px
+  );
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+.schedule-editor:disabled .pill,
+.schedule-editor:disabled .schedule-label,
+.schedule-editor:disabled .schedule-rules-title {
+  color: var(--brand-disabled);
 }
 
 .schedule-row {
