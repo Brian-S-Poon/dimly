@@ -27,22 +27,19 @@ Dimly is also available on the Chrome Web Store.
 
 ---
 
-## Development
-```
-npm install
-npm run build
-```
+## Tech Stack
 
-The build output goes to the `dist/` directory.  
-Load that folder as the unpacked extension during development.
+- **Framework:** Chrome Extension (Manifest V3) with a background service worker, popup, options page, and content scripts.  
+- **Build:** Authored directly in JavaScript, HTML, and CSS without external build tools.  
+- **Styling:** Uses CSS custom properties for theming and a fixed `color-scheme: dark` across all UI components.  
+- **Storage:** Persists settings using the Chrome Storage API (`chrome.storage.sync` with fallbacks to `chrome.storage.local`).
 
 ---
 
-## Repository Guidelines
+## Contributing
 
-If you change permissions or host permissions in `manifest.json`, update `manifest-notes.md` in the same PR.  
-
-All user-visible updates should be added under **Unreleased** in `CHANGELOG.md`.
+Contributions are welcome!  
+Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for setup instructions, coding standards, and pull request guidelines.
 
 ---
 
