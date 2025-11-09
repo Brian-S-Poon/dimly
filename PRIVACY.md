@@ -40,4 +40,4 @@ No information ever leaves your browser.
 
 ---
 
-If you have privacy questions or concerns, please open an issue in the [GitHub repository](https://github.com/Brian-S-Poon/dimly-chrome-extension).
+If you have privacy questions or concerns, please open an issue in the [GitHub repository](https://github.com/Brian-S-Poon/dimly).
