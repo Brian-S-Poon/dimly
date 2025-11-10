@@ -1,14 +1,22 @@
 (function (global) {
   const { clamp01 } = global.ScreenDimmerMath;
   const storage = global.ScreenDimmerStorage;
+  const i18n = global.ScreenDimmerI18n;
+
+  const getMessage = (key) => {
+    if (i18n && typeof i18n.getMessage === 'function') {
+      return i18n.getMessage(key);
+    }
+    return key || '';
+  };
 
   const RESTRICTED_SITES = [
     {
-      label: 'Chrome Web Store',
+      label: getMessage('restrictedSiteChromeWebStore'),
       matches: (url) => url.hostname === 'chrome.google.com' && url.pathname.startsWith('/webstore')
     },
     {
-      label: 'Chrome Web Store',
+      label: getMessage('restrictedSiteChromeWebStore'),
       matches: (url) => url.hostname === 'chromewebstore.google.com'
     }
   ];

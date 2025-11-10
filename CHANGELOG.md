@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Introduced Chrome localization support with default English messages, runtime helpers, and documentation for adding new locales.
+
 ## [1.5.0] - 2025-11-09
 
 ### Changed
