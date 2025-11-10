@@ -1,0 +1,242 @@
+{
+  "extensionName": {
+    "message": "Dimly — Atenuador de pantalla para páginas brillantes"
+  },
+  "extensionShortName": {
+    "message": "Dimly"
+  },
+  "extensionDescription": {
+    "message": "Atenúa cualquier sitio con un control global o niveles por sitio. Bloqueo rápido, programación y desvanecido suave."
+  },
+  "actionDefaultTitle": {
+    "message": "Dimly — Atenuador de pantalla para páginas brillantes"
+  },
+  "popupTitle": {
+    "message": "Dimly"
+  },
+  "popupOptionsAriaLabel": {
+    "message": "Abrir ajustes de programación"
+  },
+  "popupGlobalHeading": {
+    "message": "Todos los sitios"
+  },
+  "popupGlobalDescription": {
+    "message": "Elige tu nivel de atenuación preferido."
+  },
+  "popupDimLevelLabel": {
+    "message": "Nivel de atenuación"
+  },
+  "popupToggleOn": {
+    "message": "Activado"
+  },
+  "popupToggleOff": {
+    "message": "Desactivado"
+  },
+  "popupSiteHeading": {
+    "message": "Solo este sitio"
+  },
+  "popupSiteToggleLock": {
+    "message": "Bloquear sitio"
+  },
+  "popupSiteToggleUnlock": {
+    "message": "Desbloquear sitio"
+  },
+  "popupSiteStatusDefault": {
+    "message": "Los controles del sitio están disponibles en los sitios compatibles."
+  },
+  "popupManageSites": {
+    "message": "Gestionar configuración del sitio"
+  },
+  "popupManagerHeading": {
+    "message": "Configuración del sitio"
+  },
+  "popupManagerBack": {
+    "message": "Volver"
+  },
+  "popupManagerEmpty": {
+    "message": "Todavía no hay configuraciones de sitio guardadas."
+  },
+  "popupManagerReset": {
+    "message": "Restablecer todos los sitios"
+  },
+  "popupManagerRemove": {
+    "message": "Eliminar"
+  },
+  "popupGlobalStatusOn": {
+    "message": "El atenuador está activado al $PERCENT$%.",
+    "placeholders": {
+      "percent": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupGlobalStatusOff": {
+    "message": "El atenuador está desactivado."
+  },
+  "popupSiteLockedStatus": {
+    "message": "Bloqueado al $PERCENT$%.",
+    "placeholders": {
+      "percent": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupSiteUsingGlobalStatus": {
+    "message": "Usando el nivel de atenuación ($PERCENT$%).",
+    "placeholders": {
+      "percent": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupErrorUpdateFailed": {
+    "message": "La actualización falló. Vuelve a intentarlo."
+  },
+  "popupStatusUpdatedHost": {
+    "message": "Se actualizó $HOST$.",
+    "placeholders": {
+      "host": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupStatusRemovedHost": {
+    "message": "Se eliminó $HOST$.",
+    "placeholders": {
+      "host": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupStatusAllCleared": {
+    "message": "Se borró la configuración de todos los sitios."
+  },
+  "popupStatusResetFailed": {
+    "message": "El restablecimiento falló. Vuelve a intentarlo."
+  },
+  "popupErrorReadSettings": {
+    "message": "No se puede leer la configuración guardada."
+  },
+  "commonPercentValue": {
+    "message": "$PERCENT$%",
+    "placeholders": {
+      "percent": {
+        "content": "$1"
+      }
+    }
+  },
+  "restrictedPageMessage": {
+    "message": "Chrome impide que las extensiones se ejecuten en esta página."
+  },
+  "restrictedSiteChromeWebStore": {
+    "message": "Chrome Web Store"
+  },
+  "optionsDocumentTitle": {
+    "message": "Dimly · Configuración de programación"
+  },
+  "optionsHeading": {
+    "message": "Programación"
+  },
+  "optionsIntro": {
+    "message": "Configura reglas automatizadas que cambian entre niveles de atenuación en horarios específicos."
+  },
+  "optionsScheduleHeading": {
+    "message": "Horario"
+  },
+  "optionsEnableScheduling": {
+    "message": "Activar programación"
+  },
+  "optionsAutoDescription": {
+    "message": "Cambia automáticamente los niveles de atenuación según los horarios que elijas."
+  },
+  "optionsLegendScheduling": {
+    "message": "Opciones de programación"
+  },
+  "optionsFallbackLabel": {
+    "message": "Nivel de respaldo"
+  },
+  "optionsTransitionLabel": {
+    "message": "Transición (segundos)"
+  },
+  "optionsRulesTitle": {
+    "message": "Reglas"
+  },
+  "optionsAddRule": {
+    "message": "Agregar regla"
+  },
+  "optionsErrorLoadSchedule": {
+    "message": "No se puede cargar el horario guardado. Se muestran los valores predeterminados."
+  },
+  "scheduleRuleLabel": {
+    "message": "Regla"
+  },
+  "scheduleRuleCustomTime": {
+    "message": "Hora personalizada"
+  },
+  "scheduleRulePeriodAM": {
+    "message": "a. m."
+  },
+  "scheduleRulePeriodPM": {
+    "message": "p. m."
+  },
+  "scheduleRuleTimeFormat": {
+    "message": "$HOURS$:$MINUTES$ $PERIOD$",
+    "placeholders": {
+      "hours": {
+        "content": "$1"
+      },
+      "minutes": {
+        "content": "$2"
+      },
+      "period": {
+        "content": "$3"
+      }
+    }
+  },
+  "scheduleRuleDefaultName": {
+    "message": "Regla $INDEX$",
+    "placeholders": {
+      "index": {
+        "content": "$1"
+      }
+    }
+  },
+  "scheduleTimeLabel": {
+    "message": "Hora"
+  },
+  "scheduleLevelLabel": {
+    "message": "Nivel"
+  },
+  "scheduleRemove": {
+    "message": "Eliminar"
+  },
+  "scheduleRulesEmpty": {
+    "message": "Aún no hay reglas. Agrega una para comenzar a programar."
+  },
+  "scheduleMissingError": {
+    "message": "Falta el horario."
+  },
+  "scheduleAddRuleError": {
+    "message": "Agrega al menos una regla."
+  },
+  "scheduleTimeInvalidError": {
+    "message": "Define una hora válida para $NAME$.",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "scheduleTransitionError": {
+    "message": "La transición debe ser de 60 segundos o menos."
+  },
+  "scheduleSavedStatus": {
+    "message": "Horario guardado."
+  },
+  "scheduleSaveFailed": {
+    "message": "No se pudo guardar el horario. Vuelve a intentarlo."
+  },
+  "scheduleSavingStatus": {
+    "message": "Guardando…"
+  }
+}
