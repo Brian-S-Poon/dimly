@@ -60,6 +60,7 @@ before(async () => {
     }
   };
 
+  await import('../src/shared/i18n.js');
   await import('../src/popup/state.js');
 });
 
