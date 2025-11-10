@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>__MSG_optionsDocumentTitle__</title>
+  <title data-i18n="optionsDocumentTitle"></title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,37 +12,37 @@
 <body>
   <main class="options-container">
     <header class="options-header">
-      <h1 class="options-title">__MSG_optionsHeading__</h1>
-      <p class="muted">__MSG_optionsIntro__</p>
+      <h1 class="options-title" data-i18n="optionsHeading"></h1>
+      <p class="muted" data-i18n="optionsIntro"></p>
     </header>
     <section class="controls-section schedule-controls" id="schedule-controls" aria-labelledby="schedule-controls-heading">
       <div class="schedule-header">
-        <h2 id="schedule-controls-heading" class="section-heading">__MSG_optionsScheduleHeading__</h2>
+        <h2 id="schedule-controls-heading" class="section-heading" data-i18n="optionsScheduleHeading"></h2>
         <label class="schedule-toggle">
           <input id="schedule-enabled" type="checkbox">
-          <span>__MSG_optionsEnableScheduling__</span>
+          <span data-i18n="optionsEnableScheduling"></span>
         </label>
       </div>
-      <p class="muted small-text">__MSG_optionsAutoDescription__</p>
+      <p class="muted small-text" data-i18n="optionsAutoDescription"></p>
       <p id="schedule-status" class="muted small-text" role="status" aria-live="polite" hidden></p>
       <fieldset id="schedule-editor" class="schedule-editor" disabled>
-        <legend class="sr-only">__MSG_optionsLegendScheduling__</legend>
+        <legend class="sr-only" data-i18n="optionsLegendScheduling"></legend>
         <div class="schedule-row">
           <div class="slider-group compact">
             <div class="slider-meta">
-              <label for="schedule-fallback">__MSG_optionsFallbackLabel__</label>
+              <label for="schedule-fallback" data-i18n="optionsFallbackLabel"></label>
               <span id="schedule-fallback-pct" class="pill">25%</span>
             </div>
             <input id="schedule-fallback" type="range" min="0" max="1" step="0.01" value="0.25">
           </div>
         </div>
         <div class="schedule-row">
-          <label for="schedule-transition" class="schedule-label">__MSG_optionsTransitionLabel__</label>
+          <label for="schedule-transition" class="schedule-label" data-i18n="optionsTransitionLabel"></label>
           <input id="schedule-transition" type="number" min="0" max="60" step="0.5" value="0.8" class="schedule-number">
         </div>
         <div class="schedule-rules-header">
-          <h3 class="schedule-rules-title">__MSG_optionsRulesTitle__</h3>
-          <button id="schedule-add-rule" type="button" class="link-button">__MSG_optionsAddRule__</button>
+          <h3 class="schedule-rules-title" data-i18n="optionsRulesTitle"></h3>
+          <button id="schedule-add-rule" type="button" class="link-button" data-i18n="optionsAddRule"></button>
         </div>
         <ul id="schedule-rules" class="schedule-rule-list"></ul>
       </fieldset>
