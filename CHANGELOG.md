@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Replaced popup and options markup with runtime `data-i18n` hooks so translations load via shared helpers instead of inline `__MSG__` tokens.
+- Localized popup and schedule percentage displays and fixed-time labels through shared message helpers.
 
 ## [1.5.0] - 2025-11-09
 

@@ -35,7 +35,10 @@
   function updateLevel(level) {
     const val = clamp01(level);
     if (slider) slider.value = String(val);
-    if (pct) pct.textContent = Math.round(val * 100) + '%';
+    if (pct) {
+      const percent = String(Math.round(val * 100));
+      pct.textContent = getMessage('commonPercentValue', [percent]);
+    }
   }
 
   function updateGlobal(level) {
@@ -134,8 +137,8 @@
     const pillEl = hostItem.querySelector('[data-role="pct"]');
     if (!pillEl) return;
     const raw = parseFloat(sliderEl.value);
-    const percent = Math.round(clamp01(Number.isFinite(raw) ? raw : 0) * 100);
-    pillEl.textContent = `${percent}%`;
+    const percent = String(Math.round(clamp01(Number.isFinite(raw) ? raw : 0) * 100));
+    pillEl.textContent = getMessage('commonPercentValue', [percent]);
   }
 
   function renderManager(levels) {
@@ -190,7 +193,8 @@
       const pill = document.createElement('span');
       pill.className = 'pill';
       pill.dataset.role = 'pct';
-      pill.textContent = `${Math.round(clamp01(value) * 100)}%`;
+      const percent = String(Math.round(clamp01(value) * 100));
+      pill.textContent = getMessage('commonPercentValue', [percent]);
       meta.appendChild(pill);
 
       const sliderEl = document.createElement('input');

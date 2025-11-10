@@ -94,8 +94,8 @@
 
   function updateFallbackDisplay(value) {
     if (fallbackPctEl) {
-      const pct = Math.round(clamp01(value) * 100);
-      fallbackPctEl.textContent = `${pct}%`;
+      const pct = String(Math.round(clamp01(value) * 100));
+      fallbackPctEl.textContent = getMessage('commonPercentValue', [pct]);
     }
   }
 
@@ -123,7 +123,7 @@
       ? getMessage('scheduleRulePeriodPM')
       : getMessage('scheduleRulePeriodAM');
     const hours12 = hours24 % 12 === 0 ? 12 : hours24 % 12;
-    return `${hours12}:${minutes} ${period}`;
+    return getMessage('scheduleRuleTimeFormat', [String(hours12), minutes, period]);
   }
 
   function getRuleName(rule, index) {
@@ -193,7 +193,8 @@
     const pill = document.createElement('span');
     pill.className = 'pill';
     pill.dataset.role = 'pct';
-    pill.textContent = `${Math.round(clamp01(rule.level) * 100)}%`;
+    const percent = String(Math.round(clamp01(rule.level) * 100));
+    pill.textContent = getMessage('commonPercentValue', [percent]);
     sliderMeta.appendChild(pill);
     sliderGroup.appendChild(sliderMeta);
 
@@ -368,7 +369,10 @@
         const value = clamp01(target.value);
         rule.level = value;
         const pill = item.querySelector('[data-role="pct"]');
-        if (pill) pill.textContent = `${Math.round(value * 100)}%`;
+        if (pill) {
+          const percent = String(Math.round(value * 100));
+          pill.textContent = getMessage('commonPercentValue', [percent]);
+        }
         break;
       }
       case 'time':
