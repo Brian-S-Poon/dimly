@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced Chrome localization support with default English messages, runtime helpers, and documentation for adding new locales.
 - Added Spanish (es) localization covering all extension strings.
 - Added Brazilian Portuguese (pt-BR) localization covering all extension strings.
+- Documented the localization workflow for contributors in `CONTRIBUTING.md`.
 
 ### Changed
 - Replaced popup and options markup with runtime `data-i18n` hooks so translations load via shared helpers instead of inline `__MSG__` tokens.

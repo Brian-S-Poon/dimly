@@ -21,17 +21,30 @@ Thank you for helping improve Dimly!
 
 ## Repository Guidelines
 
-- If you change permissions or host permissions in `manifest.json`, update `manifest-notes.md` in the same PR.  
-- Add user-visible updates under **Unreleased** in `CHANGELOG.md`.  
-- Follow existing naming conventions and commit message style (`feat:`, `fix:`, `docs:`).  
+- If you change permissions or host permissions in `manifest.json`, update `manifest-notes.md` in the same PR.
+- Add user-visible updates under **Unreleased** in `CHANGELOG.md`.
+- Follow existing naming conventions and commit message style (`feat:`, `fix:`, `docs:`).
 - Keep commits small and descriptive.
+
+---
+
+## Localization Workflow
+
+- Duplicate `messages.json` from an existing locale when starting a new translation so structure and keys stay aligned. Place the copy under `_locales/<lang>/messages.json`, replacing `<lang>` with the Chrome locale code (for example, `es` or `pt-BR`).
+- Retain placeholder tokens (e.g., `$SITE$`, `$PERCENT$`) exactly as they appear in the source file—only translate the surrounding text.
+- After translating, run the localization sanity checks to catch missing keys or formatting issues:
+  ```
+  npm run test:locales
+  ```
+- Spot-check the new locale in Chrome by launching with the language flag, for example: `chrome --lang=<code>`.
+- When you open a pull request with new translations, tag a fluent speaker or request verification from the localization reviewers so strings can be double-checked before merging.
 
 ---
 
 ## Code Style
 
-- Use consistent indentation and trailing commas per ESLint rules.  
-- Keep features modular under `/src/`.  
+- Use consistent indentation and trailing commas per ESLint rules.
+- Keep features modular under `/src/`.
 - Avoid adding external dependencies unless necessary.  
 - Prefer readable, minimal code over complexity.
 
