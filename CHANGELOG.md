@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Introduced Chrome localization support with default English messages, runtime helpers, and documentation for adding new locales.
 
+### Changed
+- Replaced popup and options markup with runtime `data-i18n` hooks so translations load via shared helpers instead of inline `__MSG__` tokens.
+
 ## [1.5.0] - 2025-11-09
 
 ### Changed

@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>__MSG_popupTitle__</title>
+  <title data-i18n="popupTitle"></title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,48 +14,48 @@
     <header class="popup-top-bar">
       <h1 class="popup-title">
         <img class="popup-logo" src="../../icons/icon128.png" alt="">
-        <span class="popup-title-text">__MSG_popupTitle__</span>
+        <span class="popup-title-text" data-i18n="popupTitle"></span>
       </h1>
-      <button id="open-options" type="button" class="settings-button" aria-label="__MSG_popupOptionsAriaLabel__">
+      <button id="open-options" type="button" class="settings-button" data-i18n-attr="aria-label:popupOptionsAriaLabel">
         <span aria-hidden="true">⚙️</span>
       </button>
     </header>
     <section class="controls-section global-controls" aria-labelledby="global-controls-heading">
-      <h2 id="global-controls-heading" class="section-heading">__MSG_popupGlobalHeading__</h2>
+      <h2 id="global-controls-heading" class="section-heading" data-i18n="popupGlobalHeading"></h2>
       <header class="popup-header">
-        <p class="description">__MSG_popupGlobalDescription__</p>
+        <p class="description" data-i18n="popupGlobalDescription"></p>
       </header>
       <div class="slider-group">
         <div class="slider-meta">
-          <label for="level">__MSG_popupDimLevelLabel__</label>
+          <label for="level" data-i18n="popupDimLevelLabel"></label>
           <span id="pct" class="pill">25%</span>
         </div>
         <input id="level" type="range" min="0" max="1" step="0.01" value="0.25">
       </div>
-      <button id="toggle" type="button">__MSG_popupToggleOn__</button>
+      <button id="toggle" type="button" data-i18n="popupToggleOn"></button>
     </section>
     <section class="controls-section site-controls" id="site-controls" aria-labelledby="site-controls-heading">
-      <h2 id="site-controls-heading" class="section-heading">__MSG_popupSiteHeading__</h2>
+      <h2 id="site-controls-heading" class="section-heading" data-i18n="popupSiteHeading"></h2>
       <div class="site-header">
         <h3 class="site-heading" id="site-host" hidden></h3>
-        <button id="site-toggle" type="button" hidden>__MSG_popupSiteToggleLock__</button>
+        <button id="site-toggle" type="button" hidden data-i18n="popupSiteToggleLock"></button>
       </div>
-      <p class="muted" id="site-status">__MSG_popupSiteStatusDefault__</p>
+      <p class="muted" id="site-status" data-i18n="popupSiteStatusDefault"></p>
       <p class="muted small-text" id="site-hint" hidden></p>
-      <button id="site-manage" type="button" class="link-button">__MSG_popupManageSites__</button>
+      <button id="site-manage" type="button" class="link-button" data-i18n="popupManageSites"></button>
     </section>
     <section class="controls-section site-manager" id="site-manager" aria-labelledby="site-manager-heading" hidden>
       <div class="site-manager-header">
-        <h2 id="site-manager-heading" class="section-heading">__MSG_popupManagerHeading__</h2>
-        <button id="site-manager-close" type="button" class="link-button">__MSG_popupManagerBack__</button>
+        <h2 id="site-manager-heading" class="section-heading" data-i18n="popupManagerHeading"></h2>
+        <button id="site-manager-close" type="button" class="link-button" data-i18n="popupManagerBack"></button>
       </div>
       <div class="site-manager-content">
         <p id="site-manager-status" class="muted small-text" role="status" aria-live="polite" hidden></p>
-        <p id="site-manager-empty" class="muted small-text">__MSG_popupManagerEmpty__</p>
+        <p id="site-manager-empty" class="muted small-text" data-i18n="popupManagerEmpty"></p>
         <ul id="site-manager-list" class="site-manager-list" hidden></ul>
       </div>
       <div class="site-manager-footer">
-        <button id="site-manager-reset" type="button" class="danger">__MSG_popupManagerReset__</button>
+        <button id="site-manager-reset" type="button" class="danger" data-i18n="popupManagerReset"></button>
       </div>
     </section>
   </div>
