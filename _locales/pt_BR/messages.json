@@ -1,0 +1,242 @@
+{
+  "extensionName": {
+    "message": "Dimly — Escurecedor de tela para páginas claras"
+  },
+  "extensionShortName": {
+    "message": "Dimly"
+  },
+  "extensionDescription": {
+    "message": "Escureça qualquer site com um controle global ou níveis por site. Bloqueio rápido, agendamento, transição suave."
+  },
+  "actionDefaultTitle": {
+    "message": "Dimly — Escurecedor de tela para páginas claras"
+  },
+  "popupTitle": {
+    "message": "Dimly"
+  },
+  "popupOptionsAriaLabel": {
+    "message": "Abrir configurações de agendamento"
+  },
+  "popupGlobalHeading": {
+    "message": "Todos os sites"
+  },
+  "popupGlobalDescription": {
+    "message": "Escolha o nível de escurecimento preferido."
+  },
+  "popupDimLevelLabel": {
+    "message": "Nível de escurecimento"
+  },
+  "popupToggleOn": {
+    "message": "Ligado"
+  },
+  "popupToggleOff": {
+    "message": "Desligado"
+  },
+  "popupSiteHeading": {
+    "message": "Somente neste site"
+  },
+  "popupSiteToggleLock": {
+    "message": "Bloquear site"
+  },
+  "popupSiteToggleUnlock": {
+    "message": "Desbloquear site"
+  },
+  "popupSiteStatusDefault": {
+    "message": "Os controles do site ficam disponíveis em sites compatíveis."
+  },
+  "popupManageSites": {
+    "message": "Gerenciar configurações do site"
+  },
+  "popupManagerHeading": {
+    "message": "Configurações do site"
+  },
+  "popupManagerBack": {
+    "message": "Voltar"
+  },
+  "popupManagerEmpty": {
+    "message": "Nenhuma configuração de site salva ainda."
+  },
+  "popupManagerReset": {
+    "message": "Redefinir todos os sites"
+  },
+  "popupManagerRemove": {
+    "message": "Remover"
+  },
+  "popupGlobalStatusOn": {
+    "message": "Escurecedor ligado em $PERCENT$%.",
+    "placeholders": {
+      "percent": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupGlobalStatusOff": {
+    "message": "Escurecedor desligado."
+  },
+  "popupSiteLockedStatus": {
+    "message": "Bloqueado em $PERCENT$%.",
+    "placeholders": {
+      "percent": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupSiteUsingGlobalStatus": {
+    "message": "Usando nível global ($PERCENT$%).",
+    "placeholders": {
+      "percent": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupErrorUpdateFailed": {
+    "message": "Falha na atualização. Tente novamente."
+  },
+  "popupStatusUpdatedHost": {
+    "message": "Atualizado $HOST$.",
+    "placeholders": {
+      "host": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupStatusRemovedHost": {
+    "message": "Removido $HOST$.",
+    "placeholders": {
+      "host": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupStatusAllCleared": {
+    "message": "Todas as configurações de site limpas."
+  },
+  "popupStatusResetFailed": {
+    "message": "Falha na redefinição. Tente novamente."
+  },
+  "popupErrorReadSettings": {
+    "message": "Não foi possível ler as configurações salvas."
+  },
+  "commonPercentValue": {
+    "message": "$PERCENT$%",
+    "placeholders": {
+      "percent": {
+        "content": "$1"
+      }
+    }
+  },
+  "restrictedPageMessage": {
+    "message": "O Chrome impede que extensões sejam executadas nesta página."
+  },
+  "restrictedSiteChromeWebStore": {
+    "message": "Chrome Web Store"
+  },
+  "optionsDocumentTitle": {
+    "message": "Dimly · Configurações de agendamento"
+  },
+  "optionsHeading": {
+    "message": "Agendamento"
+  },
+  "optionsIntro": {
+    "message": "Configure regras automáticas que alternam entre níveis de escurecimento em horários específicos."
+  },
+  "optionsScheduleHeading": {
+    "message": "Agenda"
+  },
+  "optionsEnableScheduling": {
+    "message": "Ativar agendamento"
+  },
+  "optionsAutoDescription": {
+    "message": "Alterne automaticamente os níveis de escurecimento nos horários escolhidos."
+  },
+  "optionsLegendScheduling": {
+    "message": "Opções de agendamento"
+  },
+  "optionsFallbackLabel": {
+    "message": "Nível padrão"
+  },
+  "optionsTransitionLabel": {
+    "message": "Transição (segundos)"
+  },
+  "optionsRulesTitle": {
+    "message": "Regras"
+  },
+  "optionsAddRule": {
+    "message": "Adicionar regra"
+  },
+  "optionsErrorLoadSchedule": {
+    "message": "Não foi possível carregar a agenda salva. Mostrando padrões."
+  },
+  "scheduleRuleLabel": {
+    "message": "Regra"
+  },
+  "scheduleRuleCustomTime": {
+    "message": "Horário personalizado"
+  },
+  "scheduleRulePeriodAM": {
+    "message": "AM"
+  },
+  "scheduleRulePeriodPM": {
+    "message": "PM"
+  },
+  "scheduleRuleTimeFormat": {
+    "message": "$HOURS$:$MINUTES$ $PERIOD$",
+    "placeholders": {
+      "hours": {
+        "content": "$1"
+      },
+      "minutes": {
+        "content": "$2"
+      },
+      "period": {
+        "content": "$3"
+      }
+    }
+  },
+  "scheduleRuleDefaultName": {
+    "message": "Regra $INDEX$",
+    "placeholders": {
+      "index": {
+        "content": "$1"
+      }
+    }
+  },
+  "scheduleTimeLabel": {
+    "message": "Horário"
+  },
+  "scheduleLevelLabel": {
+    "message": "Nível"
+  },
+  "scheduleRemove": {
+    "message": "Remover"
+  },
+  "scheduleRulesEmpty": {
+    "message": "Nenhuma regra ainda. Adicione uma para começar a agendar."
+  },
+  "scheduleMissingError": {
+    "message": "Agenda ausente."
+  },
+  "scheduleAddRuleError": {
+    "message": "Adicione pelo menos uma regra."
+  },
+  "scheduleTimeInvalidError": {
+    "message": "Defina um horário válido para $NAME$.",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "scheduleTransitionError": {
+    "message": "A transição deve ter 60 segundos ou menos."
+  },
+  "scheduleSavedStatus": {
+    "message": "Agenda salva."
+  },
+  "scheduleSaveFailed": {
+    "message": "Falha ao salvar a agenda. Tente novamente."
+  },
+  "scheduleSavingStatus": {
+    "message": "Salvando…"
+  }
+}
