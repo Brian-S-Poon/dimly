@@ -32,6 +32,7 @@
         </div>
         <input id="level" type="range" min="0" max="1" step="0.01" value="0.25">
       </div>
+      <p id="global-status" class="muted small-text" role="status" aria-live="polite" data-i18n="popupGlobalStatusOff"></p>
       <button id="toggle" type="button" data-i18n="popupToggleOn"></button>
     </section>
     <section class="controls-section site-controls" id="site-controls" aria-labelledby="site-controls-heading">
@@ -40,7 +41,7 @@
         <h3 class="site-heading" id="site-host" hidden></h3>
         <button id="site-toggle" type="button" hidden data-i18n="popupSiteToggleLock"></button>
       </div>
-      <p class="muted" id="site-status" data-i18n="popupSiteStatusDefault"></p>
+      <p class="muted" id="site-status" role="status" aria-live="polite" data-i18n="popupSiteStatusDefault"></p>
       <p class="muted small-text" id="site-hint" hidden></p>
       <button id="site-manage" type="button" class="link-button" data-i18n="popupManageSites"></button>
     </section>

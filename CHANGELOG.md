@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Replaced popup and options markup with runtime `data-i18n` hooks so translations load via shared helpers instead of inline `__MSG__` tokens.
 - Localized popup and schedule percentage displays and fixed-time labels through shared message helpers.
+- Tweaked popup and options layouts so localized strings wrap cleanly and added an ARIA live region for the global dimmer status.
 
 ## [1.5.0] - 2025-11-09
 
