@@ -1,6 +1,17 @@
 (function (global) {
   const storage = global.ScreenDimmerStorage;
   const { clamp01 } = global.ScreenDimmerMath;
+  const i18n = global.ScreenDimmerI18n;
+
+  const getMessage = (key, substitutions) => {
+    if (i18n && typeof i18n.getMessage === 'function') {
+      return i18n.getMessage(key, substitutions);
+    }
+    if (Array.isArray(substitutions) && substitutions.length) {
+      return substitutions.join(' ');
+    }
+    return key || '';
+  };
 
   const section = document.querySelector('#schedule-controls');
   if (!section || !storage) {
@@ -101,24 +112,26 @@
   }
 
   function formatFixedRuleName(rule) {
-    if (!rule) return 'Rule';
+    if (!rule) return getMessage('scheduleRuleLabel');
     const match = /^([0-1]?\d|2[0-3]):([0-5]\d)$/.exec(rule.time || '');
     if (!match) {
-      return 'Custom time';
+      return getMessage('scheduleRuleCustomTime');
     }
     const hours24 = Number(match[1]);
     const minutes = match[2];
-    const period = hours24 >= 12 ? 'PM' : 'AM';
+    const period = hours24 >= 12
+      ? getMessage('scheduleRulePeriodPM')
+      : getMessage('scheduleRulePeriodAM');
     const hours12 = hours24 % 12 === 0 ? 12 : hours24 % 12;
     return `${hours12}:${minutes} ${period}`;
   }
 
   function getRuleName(rule, index) {
     if (!rule || typeof rule !== 'object') {
-      return `Rule ${index + 1}`;
+      return getMessage('scheduleRuleDefaultName', [String((index || 0) + 1)]);
     }
     const name = formatFixedRuleName(rule);
-    return name || `Rule ${index + 1}`;
+    return name || getMessage('scheduleRuleDefaultName', [String((index || 0) + 1)]);
   }
 
   function createRuleElement(rule, index) {
@@ -134,7 +147,7 @@
     nameBlock.dataset.role = 'rule-name';
     const nameLabel = document.createElement('span');
     nameLabel.className = 'schedule-label';
-    nameLabel.textContent = 'Rule';
+    nameLabel.textContent = getMessage('scheduleRuleLabel');
     nameBlock.appendChild(nameLabel);
     const nameValue = document.createElement('div');
     nameValue.className = 'schedule-rule-name-value';
@@ -150,7 +163,10 @@
 
     const timeWrap = document.createElement('label');
     timeWrap.dataset.role = 'time-container';
-    timeWrap.innerHTML = `<span class="schedule-label">Time</span>`;
+    const timeLabel = document.createElement('span');
+    timeLabel.className = 'schedule-label';
+    timeLabel.textContent = getMessage('scheduleTimeLabel');
+    timeWrap.appendChild(timeLabel);
     const timeInput = document.createElement('input');
     timeInput.type = 'time';
     timeInput.step = 60;
@@ -172,7 +188,7 @@
     const sliderLabel = document.createElement('label');
     const sliderId = `${rule.id}-slider`;
     sliderLabel.setAttribute('for', sliderId);
-    sliderLabel.textContent = 'Level';
+    sliderLabel.textContent = getMessage('scheduleLevelLabel');
     sliderMeta.appendChild(sliderLabel);
     const pill = document.createElement('span');
     pill.className = 'pill';
@@ -197,7 +213,7 @@
     removeBtn.type = 'button';
     removeBtn.className = 'link-button danger-link';
     removeBtn.dataset.action = 'remove';
-    removeBtn.textContent = 'Remove';
+    removeBtn.textContent = getMessage('scheduleRemove');
     actionsRow.appendChild(removeBtn);
 
     li.appendChild(actionsRow);
@@ -212,7 +228,7 @@
     if (!rules.length) {
       const empty = document.createElement('li');
       empty.className = 'muted small-text';
-      empty.textContent = 'No rules yet. Add one to start scheduling.';
+      empty.textContent = getMessage('scheduleRulesEmpty');
       rulesListEl.appendChild(empty);
       return;
     }
@@ -232,24 +248,24 @@
 
   function validateSchedule(data) {
     const errors = [];
-    if (!data) return ['Schedule missing'];
+    if (!data) return [getMessage('scheduleMissingError')];
     if (data.enabled) {
       const activeRules = (data.rules || []).filter((rule) => Boolean(rule));
       if (!activeRules.length) {
-        errors.push('Add at least one rule.');
+        errors.push(getMessage('scheduleAddRuleError'));
       }
       activeRules.forEach((rule, index) => {
         const allRules = Array.isArray(data.rules) ? data.rules : [];
         const ruleIndex = allRules.indexOf(rule);
         const name = getRuleName(rule, ruleIndex >= 0 ? ruleIndex : index);
         if (!parseTime(rule.time)) {
-          errors.push(`Set a valid time for ${name}.`);
+          errors.push(getMessage('scheduleTimeInvalidError', [name]));
         }
       });
     }
     const seconds = Number(data.transitionMs) / 1000;
     if (Number.isFinite(seconds) && seconds > 60) {
-      errors.push('Transition must be 60 seconds or less.');
+      errors.push(getMessage('scheduleTransitionError'));
     }
     return errors;
   }
@@ -261,10 +277,10 @@
       const normalized = await storage.setSchedule(cloneSchedule(scheduleState));
       scheduleState = cloneSchedule(normalized);
       render();
-      setStatus('Schedule saved.');
+      setStatus(getMessage('scheduleSavedStatus'));
     } catch (error) {
       console.error('Failed to save schedule', error);
-      setStatus('Failed to save schedule. Try again.', true);
+      setStatus(getMessage('scheduleSaveFailed'), true);
     } finally {
       isSaving = false;
     }
@@ -276,7 +292,7 @@
       setStatus(errors[0], true);
       return;
     }
-    setStatus('Saving…');
+    setStatus(getMessage('scheduleSavingStatus'));
     clearTimeout(saveTimer);
     saveTimer = setTimeout(saveSchedule, 300);
   }

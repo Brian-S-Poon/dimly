@@ -1,5 +1,16 @@
 (function (global) {
   const { clamp01 } = global.ScreenDimmerMath;
+  const i18n = global.ScreenDimmerI18n;
+
+  const getMessage = (key, substitutions) => {
+    if (i18n && typeof i18n.getMessage === 'function') {
+      return i18n.getMessage(key, substitutions);
+    }
+    if (Array.isArray(substitutions) && substitutions.length) {
+      return substitutions.join(' ');
+    }
+    return key || '';
+  };
 
   const slider = document.querySelector('#level');
   const pct = document.querySelector('#pct');
@@ -31,14 +42,15 @@
     const val = clamp01(level);
     const isOn = val > 0;
     if (toggleBtn) {
-      toggleBtn.textContent = isOn ? 'On' : 'Off';
+      toggleBtn.textContent = isOn ? getMessage('popupToggleOn') : getMessage('popupToggleOff');
       toggleBtn.setAttribute('aria-pressed', String(isOn));
       toggleBtn.dataset.state = isOn ? 'on' : 'off';
     }
     if (globalStatus) {
+      const percent = String(Math.round(val * 100));
       globalStatus.textContent = isOn
-        ? `Dimmer is on at ${Math.round(val * 100)}%.`
-        : 'Dimmer is off.';
+        ? getMessage('popupGlobalStatusOn', [percent])
+        : getMessage('popupGlobalStatusOff');
     }
   }
 
@@ -75,7 +87,9 @@
 
     if (siteToggleBtn) {
       siteToggleBtn.hidden = false;
-      siteToggleBtn.textContent = isLocked ? 'Unlock site' : 'Lock site';
+      siteToggleBtn.textContent = isLocked
+        ? getMessage('popupSiteToggleUnlock')
+        : getMessage('popupSiteToggleLock');
       siteToggleBtn.dataset.state = isLocked ? 'locked' : 'unlocked';
       siteToggleBtn.setAttribute('aria-pressed', String(isLocked));
     }
@@ -83,9 +97,9 @@
     if (message) {
       siteStatus.textContent = message;
     } else if (isLocked) {
-      siteStatus.textContent = `Locked at ${Math.round(clamp01(lockedLevel) * 100)}%.`;
+      siteStatus.textContent = getMessage('popupSiteLockedStatus', [String(Math.round(clamp01(lockedLevel) * 100))]);
     } else {
-      siteStatus.textContent = `Using dim level (${Math.round(clamp01(globalLevel) * 100)}%).`;
+      siteStatus.textContent = getMessage('popupSiteUsingGlobalStatus', [String(Math.round(clamp01(globalLevel) * 100))]);
     }
 
     if (siteHint) {
@@ -110,7 +124,7 @@
       ? Object.keys(levels).filter((key) => typeof levels[key] === 'number')
       : [];
     const count = entries.length;
-    manageBtn.textContent = 'Manage Site Settings';
+    manageBtn.textContent = getMessage('popupManageSites');
   }
 
   function updateManagerSliderDisplay(sliderEl) {
@@ -158,7 +172,7 @@
       removeBtn.className = 'link-button site-manager-delete';
       removeBtn.dataset.action = 'delete';
       removeBtn.dataset.host = host;
-      removeBtn.textContent = 'Remove';
+      removeBtn.textContent = getMessage('popupManagerRemove');
       header.appendChild(removeBtn);
 
       const sliderGroupEl = document.createElement('div');
@@ -170,7 +184,7 @@
       const sliderId = `site-manager-${index}`;
       const label = document.createElement('label');
       label.setAttribute('for', sliderId);
-      label.textContent = 'Dim level';
+      label.textContent = getMessage('popupDimLevelLabel');
       meta.appendChild(label);
 
       const pill = document.createElement('span');

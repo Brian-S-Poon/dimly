@@ -4,7 +4,18 @@
   const siteStorage = global.ScreenDimmerSiteStorage;
   const ui = global.ScreenDimmerPopupUI;
   const state = global.ScreenDimmerPopupState;
+  const i18n = global.ScreenDimmerI18n;
   const optionsButton = document.querySelector('#open-options');
+
+  const getMessage = (key, substitutions) => {
+    if (i18n && typeof i18n.getMessage === 'function') {
+      return i18n.getMessage(key, substitutions);
+    }
+    if (Array.isArray(substitutions) && substitutions.length) {
+      return substitutions.join(' ');
+    }
+    return key || '';
+  };
 
   let writeTimer = null;
   let lastLevel = DEFAULT_LEVEL;
@@ -121,8 +132,8 @@
       } else {
         currentSiteLevel = null;
       }
-      updateSiteUI('Update failed. Try again.');
-      syncManagerUI('Update failed. Try again.');
+      updateSiteUI(getMessage('popupErrorUpdateFailed'));
+      syncManagerUI(getMessage('popupErrorUpdateFailed'));
     } finally {
       ui.setSiteToggleDisabled(false);
     }
@@ -152,15 +163,15 @@
         currentSiteLevel = level;
         updateSiteUI();
       }
-      syncManagerUI(`Updated ${host}.`);
+      syncManagerUI(getMessage('popupStatusUpdatedHost', [host]));
     } catch (err) {
       console.error('Failed to update site override', err);
       siteStorage.setCache(previousLevels);
       if (host === currentHost) {
         currentSiteLevel = siteStorage.getLevel(currentHost);
-        updateSiteUI('Update failed. Try again.');
+        updateSiteUI(getMessage('popupErrorUpdateFailed'));
       }
-      syncManagerUI('Update failed. Try again.');
+      syncManagerUI(getMessage('popupErrorUpdateFailed'));
     }
   }
 
@@ -173,15 +184,15 @@
         currentSiteLevel = null;
         updateSiteUI();
       }
-      syncManagerUI(`Removed ${host}.`);
+      syncManagerUI(getMessage('popupStatusRemovedHost', [host]));
     } catch (err) {
       console.error('Failed to remove site override', err);
       siteStorage.setCache(previousLevels);
       if (host === currentHost) {
         currentSiteLevel = siteStorage.getLevel(currentHost);
-        updateSiteUI('Update failed. Try again.');
+        updateSiteUI(getMessage('popupErrorUpdateFailed'));
       }
-      syncManagerUI('Update failed. Try again.');
+      syncManagerUI(getMessage('popupErrorUpdateFailed'));
     }
   }
 
@@ -193,15 +204,15 @@
         currentSiteLevel = null;
         updateSiteUI();
       }
-      syncManagerUI('All site settings cleared.');
+      syncManagerUI(getMessage('popupStatusAllCleared'));
     } catch (err) {
       console.error('Failed to reset site overrides', err);
       siteStorage.setCache(previousLevels);
       if (currentHost) {
         currentSiteLevel = siteStorage.getLevel(currentHost);
-        updateSiteUI('Update failed. Try again.');
+        updateSiteUI(getMessage('popupErrorUpdateFailed'));
       }
-      syncManagerUI('Reset failed. Try again.');
+      syncManagerUI(getMessage('popupStatusResetFailed'));
     }
   }
 
@@ -241,7 +252,7 @@
     } catch (err) {
       console.error('Failed to initialize popup', err);
       applyLevel(DEFAULT_LEVEL);
-      updateSiteUI('Unable to read saved settings.');
+      updateSiteUI(getMessage('popupErrorReadSettings'));
     }
   }
 

@@ -1,7 +1,7 @@
 /* global DEFAULT_LEVEL, DEFAULT_SCHEDULE, DEFAULT_SCHEDULE_TRANSITION_MS, GLOBAL_KEY, SCHEDULE_KEY */
 /* global ScreenDimmerStorage, ScreenDimmerMath */
 
-importScripts('../shared/constants.js', '../shared/math.js', '../shared/storage.js');
+importScripts('../shared/i18n.js', '../shared/constants.js', '../shared/math.js', '../shared/storage.js');
 
 const storage = self.ScreenDimmerStorage;
 const { clamp01 } = self.ScreenDimmerMath;

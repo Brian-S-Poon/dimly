@@ -81,8 +81,18 @@ For a full history of updates, see [CHANGELOG.md](./CHANGELOG.md).
 
 ## Contributing
 
-Contributions are welcome!  
+Contributions are welcome!
 Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for setup instructions, coding standards, and pull request guidelines.
+
+### Localization
+
+Dimly now supports Chrome’s localization system. To add or update a translation:
+
+1. Copy `_locales/en/messages.json` to a new locale folder (for example, `_locales/es/messages.json`).
+2. Translate the `message` values while keeping every key and placeholder (`$1`, `$PERCENT$`, etc.) intact.
+3. Update any locale-specific proper nouns as needed (for example, the Chrome Web Store label used on restricted pages).
+
+All UI strings, status messages, and manifest metadata reference these keys. Dynamic copy is resolved through `ScreenDimmerI18n.getMessage` in `src/shared/i18n.js`, so no code changes are required when adding new languages as long as the key set stays consistent.
 
 ---
 

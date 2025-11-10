@@ -1,6 +1,14 @@
 (function (global) {
   const storage = global.ScreenDimmerStorage;
   const scheduleUI = global.ScreenDimmerSchedule;
+  const i18n = global.ScreenDimmerI18n;
+
+  const getMessage = (key) => {
+    if (i18n && typeof i18n.getMessage === 'function') {
+      return i18n.getMessage(key);
+    }
+    return key || '';
+  };
 
   async function init() {
     if (!storage || !scheduleUI || typeof scheduleUI.init !== 'function') {
@@ -15,7 +23,7 @@
       console.error('Failed to load scheduling settings', error);
       if (statusEl) {
         statusEl.hidden = false;
-        statusEl.textContent = 'Unable to load saved schedule. Showing defaults.';
+        statusEl.textContent = getMessage('optionsErrorLoadSchedule');
         statusEl.classList.add('schedule-status-error');
       }
       scheduleUI.init(DEFAULT_SCHEDULE);

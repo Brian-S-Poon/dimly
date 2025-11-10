@@ -1,0 +1,220 @@
+{
+  "extensionName": {
+    "message": "Dimly — Screen dimmer for bright pages"
+  },
+  "extensionShortName": {
+    "message": "Dimly"
+  },
+  "extensionDescription": {
+    "message": "Dim any site with a global slider or per-site levels. Quick lock, scheduling, smooth fade."
+  },
+  "actionDefaultTitle": {
+    "message": "Dimly — Screen dimmer for bright pages"
+  },
+  "popupTitle": {
+    "message": "Dimly"
+  },
+  "popupOptionsAriaLabel": {
+    "message": "Open scheduling settings"
+  },
+  "popupGlobalHeading": {
+    "message": "All Sites"
+  },
+  "popupGlobalDescription": {
+    "message": "Choose your preferred dim level."
+  },
+  "popupDimLevelLabel": {
+    "message": "Dim level"
+  },
+  "popupToggleOn": {
+    "message": "On"
+  },
+  "popupToggleOff": {
+    "message": "Off"
+  },
+  "popupSiteHeading": {
+    "message": "This Site Only"
+  },
+  "popupSiteToggleLock": {
+    "message": "Lock site"
+  },
+  "popupSiteToggleUnlock": {
+    "message": "Unlock site"
+  },
+  "popupSiteStatusDefault": {
+    "message": "Site controls are available on supported websites."
+  },
+  "popupManageSites": {
+    "message": "Manage Site Settings"
+  },
+  "popupManagerHeading": {
+    "message": "Site settings"
+  },
+  "popupManagerBack": {
+    "message": "Back"
+  },
+  "popupManagerEmpty": {
+    "message": "No site settings saved yet."
+  },
+  "popupManagerReset": {
+    "message": "Reset all sites"
+  },
+  "popupManagerRemove": {
+    "message": "Remove"
+  },
+  "popupGlobalStatusOn": {
+    "message": "Dimmer is on at $PERCENT$%.",
+    "placeholders": {
+      "percent": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupGlobalStatusOff": {
+    "message": "Dimmer is off."
+  },
+  "popupSiteLockedStatus": {
+    "message": "Locked at $PERCENT$%.",
+    "placeholders": {
+      "percent": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupSiteUsingGlobalStatus": {
+    "message": "Using dim level ($PERCENT$%).",
+    "placeholders": {
+      "percent": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupErrorUpdateFailed": {
+    "message": "Update failed. Try again."
+  },
+  "popupStatusUpdatedHost": {
+    "message": "Updated $HOST$.",
+    "placeholders": {
+      "host": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupStatusRemovedHost": {
+    "message": "Removed $HOST$.",
+    "placeholders": {
+      "host": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupStatusAllCleared": {
+    "message": "All site settings cleared."
+  },
+  "popupStatusResetFailed": {
+    "message": "Reset failed. Try again."
+  },
+  "popupErrorReadSettings": {
+    "message": "Unable to read saved settings."
+  },
+  "restrictedPageMessage": {
+    "message": "Chrome prevents extensions from running on this page."
+  },
+  "restrictedSiteChromeWebStore": {
+    "message": "Chrome Web Store"
+  },
+  "optionsDocumentTitle": {
+    "message": "Dimly · Scheduling settings"
+  },
+  "optionsHeading": {
+    "message": "Scheduling"
+  },
+  "optionsIntro": {
+    "message": "Configure automation rules that flip between dimming levels at specific times."
+  },
+  "optionsScheduleHeading": {
+    "message": "Schedule"
+  },
+  "optionsEnableScheduling": {
+    "message": "Enable scheduling"
+  },
+  "optionsAutoDescription": {
+    "message": "Automatically flip dimming levels based on the times you choose."
+  },
+  "optionsLegendScheduling": {
+    "message": "Scheduling options"
+  },
+  "optionsFallbackLabel": {
+    "message": "Fallback level"
+  },
+  "optionsTransitionLabel": {
+    "message": "Transition (seconds)"
+  },
+  "optionsRulesTitle": {
+    "message": "Rules"
+  },
+  "optionsAddRule": {
+    "message": "Add rule"
+  },
+  "optionsErrorLoadSchedule": {
+    "message": "Unable to load saved schedule. Showing defaults."
+  },
+  "scheduleRuleLabel": {
+    "message": "Rule"
+  },
+  "scheduleRuleCustomTime": {
+    "message": "Custom time"
+  },
+  "scheduleRulePeriodAM": {
+    "message": "AM"
+  },
+  "scheduleRulePeriodPM": {
+    "message": "PM"
+  },
+  "scheduleRuleDefaultName": {
+    "message": "Rule $INDEX$",
+    "placeholders": {
+      "index": {
+        "content": "$1"
+      }
+    }
+  },
+  "scheduleTimeLabel": {
+    "message": "Time"
+  },
+  "scheduleLevelLabel": {
+    "message": "Level"
+  },
+  "scheduleRemove": {
+    "message": "Remove"
+  },
+  "scheduleRulesEmpty": {
+    "message": "No rules yet. Add one to start scheduling."
+  },
+  "scheduleMissingError": {
+    "message": "Schedule missing."
+  },
+  "scheduleAddRuleError": {
+    "message": "Add at least one rule."
+  },
+  "scheduleTimeInvalidError": {
+    "message": "Set a valid time for $NAME$.",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "scheduleTransitionError": {
+    "message": "Transition must be 60 seconds or less."
+  },
+  "scheduleSavedStatus": {
+    "message": "Schedule saved."
+  },
+  "scheduleSaveFailed": {
+    "message": "Failed to save schedule. Try again."
+  },
+  "scheduleSavingStatus": {
+    "message": "Saving…"
+  }
+}
