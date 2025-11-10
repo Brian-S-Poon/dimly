@@ -24,6 +24,13 @@ body {
   color: var(--brand-text-dark);
 }
 
+button {
+  font: inherit;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.35;
+}
+
 body,
 body.manager-open {
   width: 320px;
@@ -172,6 +179,16 @@ body.manager-open .site-manager-content {
   align-items: baseline;
   justify-content: space-between;
   gap: 12px;
+  flex-wrap: wrap;
+}
+
+.slider-meta label {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.slider-meta .pill {
+  flex-shrink: 0;
 }
 
 label {
@@ -313,6 +330,9 @@ button.link-button {
   align-items: center;
   gap: 4px;
   cursor: pointer;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  text-align: left;
 }
 
 button.link-button:hover,
@@ -363,6 +383,7 @@ button.danger:disabled {
 .muted {
   color: var(--brand-disabled);
   margin-top: 10px;
+  overflow-wrap: anywhere;
 }
 
 .small-text {
@@ -415,15 +436,18 @@ button.danger:disabled {
 
 .site-manager-row-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .site-manager-host {
   font-weight: 600;
   color: var(--brand-text-dark);
   word-break: break-word;
+  flex: 1 1 160px;
+  min-width: 0;
 }
 
 .slider-group.compact {
