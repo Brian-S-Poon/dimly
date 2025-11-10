@@ -1,0 +1,242 @@
+{
+  "extensionName": {
+    "message": "Dimly — Atténuateur d'écran pour pages lumineuses"
+  },
+  "extensionShortName": {
+    "message": "Dimly"
+  },
+  "extensionDescription": {
+    "message": "Atténuez n'importe quel site avec un curseur global ou des niveaux par site. Verrouillage rapide, planification, fondu fluide."
+  },
+  "actionDefaultTitle": {
+    "message": "Dimly — Atténuateur d'écran pour pages lumineuses"
+  },
+  "popupTitle": {
+    "message": "Dimly"
+  },
+  "popupOptionsAriaLabel": {
+    "message": "Ouvrir les paramètres de planification"
+  },
+  "popupGlobalHeading": {
+    "message": "Tous les sites"
+  },
+  "popupGlobalDescription": {
+    "message": "Choisissez votre niveau d'atténuation préféré."
+  },
+  "popupDimLevelLabel": {
+    "message": "Niveau d'atténuation"
+  },
+  "popupToggleOn": {
+    "message": "Activé"
+  },
+  "popupToggleOff": {
+    "message": "Désactivé"
+  },
+  "popupSiteHeading": {
+    "message": "Ce site uniquement"
+  },
+  "popupSiteToggleLock": {
+    "message": "Verrouiller le site"
+  },
+  "popupSiteToggleUnlock": {
+    "message": "Déverrouiller le site"
+  },
+  "popupSiteStatusDefault": {
+    "message": "Les contrôles de site sont disponibles sur les sites compatibles."
+  },
+  "popupManageSites": {
+    "message": "Gérer les paramètres de site"
+  },
+  "popupManagerHeading": {
+    "message": "Paramètres du site"
+  },
+  "popupManagerBack": {
+    "message": "Retour"
+  },
+  "popupManagerEmpty": {
+    "message": "Aucun paramètre de site enregistré pour le moment."
+  },
+  "popupManagerReset": {
+    "message": "Réinitialiser tous les sites"
+  },
+  "popupManagerRemove": {
+    "message": "Supprimer"
+  },
+  "popupGlobalStatusOn": {
+    "message": "L'atténuateur est activé à $PERCENT$ %.",
+    "placeholders": {
+      "percent": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupGlobalStatusOff": {
+    "message": "L'atténuateur est désactivé."
+  },
+  "popupSiteLockedStatus": {
+    "message": "Verrouillé à $PERCENT$ %.",
+    "placeholders": {
+      "percent": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupSiteUsingGlobalStatus": {
+    "message": "Utilisation du niveau d'atténuation ($PERCENT$ %).",
+    "placeholders": {
+      "percent": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupErrorUpdateFailed": {
+    "message": "La mise à jour a échoué. Réessayez."
+  },
+  "popupStatusUpdatedHost": {
+    "message": "Mise à jour de $HOST$.",
+    "placeholders": {
+      "host": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupStatusRemovedHost": {
+    "message": "Suppression de $HOST$.",
+    "placeholders": {
+      "host": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupStatusAllCleared": {
+    "message": "Tous les paramètres de site ont été effacés."
+  },
+  "popupStatusResetFailed": {
+    "message": "La réinitialisation a échoué. Réessayez."
+  },
+  "popupErrorReadSettings": {
+    "message": "Impossible de lire les paramètres enregistrés."
+  },
+  "commonPercentValue": {
+    "message": "$PERCENT$ %",
+    "placeholders": {
+      "percent": {
+        "content": "$1"
+      }
+    }
+  },
+  "restrictedPageMessage": {
+    "message": "Chrome empêche les extensions de s'exécuter sur cette page."
+  },
+  "restrictedSiteChromeWebStore": {
+    "message": "Chrome Web Store"
+  },
+  "optionsDocumentTitle": {
+    "message": "Dimly · Paramètres de planification"
+  },
+  "optionsHeading": {
+    "message": "Planification"
+  },
+  "optionsIntro": {
+    "message": "Configurez des règles automatiques qui basculent entre les niveaux d'atténuation à des heures précises."
+  },
+  "optionsScheduleHeading": {
+    "message": "Planification"
+  },
+  "optionsEnableScheduling": {
+    "message": "Activer la planification"
+  },
+  "optionsAutoDescription": {
+    "message": "Bascule automatiquement les niveaux d'atténuation selon les heures que vous choisissez."
+  },
+  "optionsLegendScheduling": {
+    "message": "Options de planification"
+  },
+  "optionsFallbackLabel": {
+    "message": "Niveau de secours"
+  },
+  "optionsTransitionLabel": {
+    "message": "Transition (secondes)"
+  },
+  "optionsRulesTitle": {
+    "message": "Règles"
+  },
+  "optionsAddRule": {
+    "message": "Ajouter une règle"
+  },
+  "optionsErrorLoadSchedule": {
+    "message": "Impossible de charger la planification enregistrée. Affichage des valeurs par défaut."
+  },
+  "scheduleRuleLabel": {
+    "message": "Règle"
+  },
+  "scheduleRuleCustomTime": {
+    "message": "Heure personnalisée"
+  },
+  "scheduleRulePeriodAM": {
+    "message": "AM"
+  },
+  "scheduleRulePeriodPM": {
+    "message": "PM"
+  },
+  "scheduleRuleTimeFormat": {
+    "message": "$HOURS$:$MINUTES$ $PERIOD$",
+    "placeholders": {
+      "hours": {
+        "content": "$1"
+      },
+      "minutes": {
+        "content": "$2"
+      },
+      "period": {
+        "content": "$3"
+      }
+    }
+  },
+  "scheduleRuleDefaultName": {
+    "message": "Règle $INDEX$",
+    "placeholders": {
+      "index": {
+        "content": "$1"
+      }
+    }
+  },
+  "scheduleTimeLabel": {
+    "message": "Heure"
+  },
+  "scheduleLevelLabel": {
+    "message": "Niveau"
+  },
+  "scheduleRemove": {
+    "message": "Supprimer"
+  },
+  "scheduleRulesEmpty": {
+    "message": "Aucune règle pour le moment. Ajoutez-en une pour commencer la planification."
+  },
+  "scheduleMissingError": {
+    "message": "Planification manquante."
+  },
+  "scheduleAddRuleError": {
+    "message": "Ajoutez au moins une règle."
+  },
+  "scheduleTimeInvalidError": {
+    "message": "Définissez une heure valide pour $NAME$.",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "scheduleTransitionError": {
+    "message": "La transition doit durer 60 secondes ou moins."
+  },
+  "scheduleSavedStatus": {
+    "message": "Planification enregistrée."
+  },
+  "scheduleSaveFailed": {
+    "message": "Échec de l'enregistrement de la planification. Réessayez."
+  },
+  "scheduleSavingStatus": {
+    "message": "Enregistrement…"
+  }
+}
