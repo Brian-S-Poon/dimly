@@ -35,7 +35,8 @@ before(async () => {
       getLevelState: () => Promise.resolve({
         globalLevel: storageState.globalLevel,
         siteLevels: { ...storageState.siteLevels },
-        schedule: storageState.schedule
+        schedule: storageState.schedule,
+        scheduleEnabled: Boolean(storageState.schedule && storageState.schedule.enabled)
       })
     }
   };
@@ -101,6 +102,7 @@ test('loadInitialData returns host and clamps persisted levels', async () => {
   assert.equal(result.currentSiteLevel, 0.8);
   assert.deepEqual(result.siteLevels, { 'example.com': 0.8 });
   assert.deepEqual(result.schedule, DEFAULT_SCHEDULE);
+  assert.equal(result.scheduleEnabled, false);
 });
 
 test('getActiveHost returns null for unsupported protocols', async () => {
@@ -120,6 +122,7 @@ test('getActiveHost returns null for unsupported protocols', async () => {
   assert.equal(data.globalLevel, 0);
   assert.equal(data.currentSiteLevel, null);
   assert.deepEqual(data.schedule, DEFAULT_SCHEDULE);
+  assert.equal(data.scheduleEnabled, false);
 });
 
 test('loadInitialData flags Chrome Web Store as restricted', async () => {
@@ -137,4 +140,18 @@ test('loadInitialData flags Chrome Web Store as restricted', async () => {
   assert.equal(data.host, null);
   assert.equal(data.blockedHost, 'Chrome Web Store');
   assert.equal(data.currentSiteLevel, null);
+});
+
+test('loadInitialData reports when schedule is enabled', async () => {
+  const state = windowStub.ScreenDimmerPopupState;
+  setStorage({
+    globalLevel: 0.25,
+    siteLevels: {},
+    schedule: { ...defaultSchedule, enabled: true }
+  });
+  tabsResult = [{ url: 'https://example.com/page' }];
+
+  const data = await state.loadInitialData();
+  assert.equal(data.scheduleEnabled, true);
+  assert.equal(data.schedule.enabled, true);
 });

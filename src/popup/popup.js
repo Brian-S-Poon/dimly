@@ -23,6 +23,7 @@
   let currentSiteLevel = null;
   let managerVisible = false;
   let blockedHost = null;
+  let scheduleLocked = false;
 
   function openOptionsPage() {
     if (!global.chrome || !chrome.runtime) {
@@ -59,6 +60,11 @@
     });
   }
 
+  function applyScheduleLock(enabled) {
+    scheduleLocked = Boolean(enabled);
+    ui.setScheduleLock(scheduleLocked);
+  }
+
   function updateSiteUI(message) {
     let finalMessage = message;
     if (!finalMessage && blockedHost) {
@@ -85,18 +91,21 @@
   }
 
   function handleLevelInput(event) {
+    if (scheduleLocked) return;
     const value = clamp01(event.target.value);
     applyLevel(value);
     scheduleGlobalWrite(value);
   }
 
   function handleLevelChange(event) {
+    if (scheduleLocked) return;
     const value = clamp01(event.target.value);
     applyLevel(value);
     scheduleGlobalWrite(value);
   }
 
   async function handleToggleClick() {
+    if (scheduleLocked) return;
     const nextLevel = lastLevel > 0 ? 0 : DEFAULT_LEVEL;
     applyLevel(nextLevel);
     try {
@@ -246,6 +255,7 @@
       blockedHost = initial.blockedHost || null;
       siteStorage.setCache(initial.siteLevels || {});
       currentSiteLevel = siteStorage.getLevel(currentHost);
+      applyScheduleLock(initial.scheduleEnabled);
       applyLevel(lastLevel);
       updateSiteUI();
       syncManagerUI('');

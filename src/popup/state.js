@@ -77,6 +77,11 @@
     const currentSiteLevel = host && typeof siteLevels[host] === 'number'
       ? clamp01(siteLevels[host])
       : null;
+    const scheduleEnabled = Boolean(
+      Object.prototype.hasOwnProperty.call(levelState, 'scheduleEnabled')
+        ? levelState.scheduleEnabled
+        : levelState.schedule && levelState.schedule.enabled
+    );
 
     return {
       host,
@@ -84,7 +89,8 @@
       siteLevels,
       globalLevel: normalizedGlobal,
       currentSiteLevel,
-      schedule: levelState.schedule
+      schedule: levelState.schedule,
+      scheduleEnabled
     };
   }
 

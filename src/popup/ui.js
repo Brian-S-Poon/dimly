@@ -17,6 +17,7 @@
   const toggleBtn = document.querySelector('#toggle');
   const globalStatus = document.querySelector('#global-status');
   const globalControls = document.querySelector('.global-controls');
+  const scheduleNotice = document.querySelector('#schedule-notice');
   const siteControls = document.querySelector('#site-controls');
   const siteHostLabel = document.querySelector('#site-host');
   const siteStatus = document.querySelector('#site-status');
@@ -118,6 +119,46 @@
   function setSiteToggleDisabled(disabled) {
     if (siteToggleBtn) {
       siteToggleBtn.disabled = disabled;
+    }
+  }
+
+  function setScheduleLock(enabled) {
+    const isLocked = Boolean(enabled);
+    const ariaValue = String(isLocked);
+    const noticeId = scheduleNotice && scheduleNotice.id ? scheduleNotice.id : null;
+
+    if (slider) {
+      slider.disabled = isLocked;
+      slider.setAttribute('aria-disabled', ariaValue);
+      if (isLocked && noticeId) {
+        slider.setAttribute('aria-describedby', noticeId);
+      } else {
+        slider.removeAttribute('aria-describedby');
+      }
+    }
+
+    if (toggleBtn) {
+      toggleBtn.disabled = isLocked;
+      toggleBtn.setAttribute('aria-disabled', ariaValue);
+      if (isLocked && noticeId) {
+        toggleBtn.setAttribute('aria-describedby', noticeId);
+      } else {
+        toggleBtn.removeAttribute('aria-describedby');
+      }
+    }
+
+    if (globalControls) {
+      globalControls.classList.toggle('schedule-locked', isLocked);
+    }
+
+    if (scheduleNotice) {
+      if (isLocked) {
+        scheduleNotice.hidden = false;
+        scheduleNotice.textContent = getMessage('popupScheduleLockNotice');
+      } else {
+        scheduleNotice.hidden = true;
+        scheduleNotice.textContent = '';
+      }
     }
   }
 
@@ -321,6 +362,7 @@
     updateGlobal,
     renderSite,
     setSiteToggleDisabled,
+    setScheduleLock,
     updateManageSummary,
     renderManager,
     setManagerVisible,

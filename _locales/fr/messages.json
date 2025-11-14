@@ -73,6 +73,9 @@
   "popupGlobalStatusOff": {
     "message": "L'atténuateur est désactivé."
   },
+  "popupScheduleLockNotice": {
+    "message": "La planification est activée. Les commandes globales suivent votre programme et ne peuvent pas être ajustées ici."
+  },
   "popupSiteLockedStatus": {
     "message": "Verrouillé à $PERCENT$ %.",
     "placeholders": {
