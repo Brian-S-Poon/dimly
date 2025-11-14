@@ -196,8 +196,9 @@
 
     const scheduleRaw = syncValues[SCHEDULE_KEY] != null ? syncValues[SCHEDULE_KEY] : localValues[SCHEDULE_KEY];
     const schedule = normalizeSchedule(scheduleRaw);
+    const scheduleEnabled = Boolean(schedule && schedule.enabled);
 
-    return { globalLevel, siteLevels, schedule };
+    return { globalLevel, siteLevels, schedule, scheduleEnabled };
   }
 
   global.ScreenDimmerStorage = {

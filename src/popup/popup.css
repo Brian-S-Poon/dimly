@@ -143,6 +143,14 @@ body.manager-open .site-manager-content {
   margin-bottom: 0;
 }
 
+.controls-section.global-controls.schedule-locked {
+  opacity: 0.6;
+}
+
+.controls-section.global-controls.schedule-locked button:not(.settings-button) {
+  cursor: not-allowed;
+}
+
 .section-heading {
   margin: 0 0 8px;
   font-size: 12px;

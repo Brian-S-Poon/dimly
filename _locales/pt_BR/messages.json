@@ -73,6 +73,9 @@
   "popupGlobalStatusOff": {
     "message": "Escurecedor desligado."
   },
+  "popupScheduleLockNotice": {
+    "message": "O agendamento está ativado. Os controles globais seguem sua programação e não podem ser ajustados aqui."
+  },
   "popupSiteLockedStatus": {
     "message": "Bloqueado em $PERCENT$%.",
     "placeholders": {

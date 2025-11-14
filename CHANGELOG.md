@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Disabled popup global controls when scheduling is active and added inline guidance
+  so users know adjustments are driven by their schedule.
+
 ## [1.6.0] - 2025-11-16
 
 ### Added

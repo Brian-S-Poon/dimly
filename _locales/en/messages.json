@@ -73,6 +73,9 @@
   "popupGlobalStatusOff": {
     "message": "Dimmer is off."
   },
+  "popupScheduleLockNotice": {
+    "message": "Scheduling is on. Global controls follow your schedule and can't be adjusted here."
+  },
   "popupSiteLockedStatus": {
     "message": "Locked at $PERCENT$%.",
     "placeholders": {

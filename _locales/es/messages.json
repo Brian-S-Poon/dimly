@@ -73,6 +73,9 @@
   "popupGlobalStatusOff": {
     "message": "El atenuador está desactivado."
   },
+  "popupScheduleLockNotice": {
+    "message": "La programación está activada. Los controles globales siguen tu horario y no se pueden ajustar aquí."
+  },
   "popupSiteLockedStatus": {
     "message": "Bloqueado al $PERCENT$%.",
     "placeholders": {
