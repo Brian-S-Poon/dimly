@@ -4,6 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test"
+    "lint:locales": "node scripts/validate-locales.mjs",
+    "test": "npm run lint:locales && node --test"
+  },
+  "devDependencies": {
+    "@babel/parser": "^7.25.0",
+    "@formatjs/icu-messageformat-parser": "^2.6.0"
   }
 }
