@@ -1,0 +1,242 @@
+{
+  "extensionName": {
+    "message": "Dimly – Bildschirmdimmer für helle Seiten"
+  },
+  "extensionShortName": {
+    "message": "Dimly"
+  },
+  "extensionDescription": {
+    "message": "Dimmen Sie jede Website mit einem globalen Regler oder individuellen Stufen. Schnelles Sperren, Zeitpläne, sanfte Übergänge."
+  },
+  "actionDefaultTitle": {
+    "message": "Dimly – Bildschirmdimmer für helle Seiten"
+  },
+  "popupTitle": {
+    "message": "Dimly"
+  },
+  "popupOptionsAriaLabel": {
+    "message": "Planungseinstellungen öffnen"
+  },
+  "popupGlobalHeading": {
+    "message": "Alle Websites"
+  },
+  "popupGlobalDescription": {
+    "message": "Wählen Sie Ihre bevorzugte Dimmstufe."
+  },
+  "popupDimLevelLabel": {
+    "message": "Dimmstufe"
+  },
+  "popupToggleOn": {
+    "message": "Ein"
+  },
+  "popupToggleOff": {
+    "message": "Aus"
+  },
+  "popupSiteHeading": {
+    "message": "Nur diese Website"
+  },
+  "popupSiteToggleLock": {
+    "message": "Website sperren"
+  },
+  "popupSiteToggleUnlock": {
+    "message": "Website entsperren"
+  },
+  "popupSiteStatusDefault": {
+    "message": "Website-Steuerungen sind auf unterstützten Websites verfügbar."
+  },
+  "popupManageSites": {
+    "message": "Website-Einstellungen verwalten"
+  },
+  "popupManagerHeading": {
+    "message": "Website-Einstellungen"
+  },
+  "popupManagerBack": {
+    "message": "Zurück"
+  },
+  "popupManagerEmpty": {
+    "message": "Keine Website-Einstellungen gespeichert."
+  },
+  "popupManagerReset": {
+    "message": "Alle Websites zurücksetzen"
+  },
+  "popupManagerRemove": {
+    "message": "Entfernen"
+  },
+  "popupGlobalStatusOn": {
+    "message": "Dimmer ist mit $PERCENT$% aktiv.",
+    "placeholders": {
+      "percent": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupGlobalStatusOff": {
+    "message": "Dimmer ist ausgeschaltet."
+  },
+  "popupSiteLockedStatus": {
+    "message": "Auf $PERCENT$% gesperrt.",
+    "placeholders": {
+      "percent": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupSiteUsingGlobalStatus": {
+    "message": "Verwendet Dimmstufe ($PERCENT$%).",
+    "placeholders": {
+      "percent": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupErrorUpdateFailed": {
+    "message": "Aktualisierung fehlgeschlagen. Versuchen Sie es erneut."
+  },
+  "popupStatusUpdatedHost": {
+    "message": "$HOST$ aktualisiert.",
+    "placeholders": {
+      "host": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupStatusRemovedHost": {
+    "message": "$HOST$ entfernt.",
+    "placeholders": {
+      "host": {
+        "content": "$1"
+      }
+    }
+  },
+  "popupStatusAllCleared": {
+    "message": "Alle Website-Einstellungen gelöscht."
+  },
+  "popupStatusResetFailed": {
+    "message": "Zurücksetzen fehlgeschlagen. Versuchen Sie es erneut."
+  },
+  "popupErrorReadSettings": {
+    "message": "Gespeicherte Einstellungen können nicht gelesen werden."
+  },
+  "commonPercentValue": {
+    "message": "$PERCENT$%",
+    "placeholders": {
+      "percent": {
+        "content": "$1"
+      }
+    }
+  },
+  "restrictedPageMessage": {
+    "message": "Chrome verhindert, dass Erweiterungen auf dieser Seite ausgeführt werden."
+  },
+  "restrictedSiteChromeWebStore": {
+    "message": "Chrome Web Store"
+  },
+  "optionsDocumentTitle": {
+    "message": "Dimly · Planungseinstellungen"
+  },
+  "optionsHeading": {
+    "message": "Planung"
+  },
+  "optionsIntro": {
+    "message": "Konfigurieren Sie Automatisierungsregeln, die zu bestimmten Zeiten zwischen Dimmstufen wechseln."
+  },
+  "optionsScheduleHeading": {
+    "message": "Zeitplan"
+  },
+  "optionsEnableScheduling": {
+    "message": "Planung aktivieren"
+  },
+  "optionsAutoDescription": {
+    "message": "Wechselt Dimmstufen automatisch zu den von Ihnen gewählten Zeiten."
+  },
+  "optionsLegendScheduling": {
+    "message": "Planungsoptionen"
+  },
+  "optionsFallbackLabel": {
+    "message": "Ausweichstufe"
+  },
+  "optionsTransitionLabel": {
+    "message": "Übergang (Sekunden)"
+  },
+  "optionsRulesTitle": {
+    "message": "Regeln"
+  },
+  "optionsAddRule": {
+    "message": "Regel hinzufügen"
+  },
+  "optionsErrorLoadSchedule": {
+    "message": "Gespeicherten Zeitplan konnte nicht geladen werden. Es werden Standardwerte angezeigt."
+  },
+  "scheduleRuleLabel": {
+    "message": "Regel"
+  },
+  "scheduleRuleCustomTime": {
+    "message": "Benutzerdefinierte Zeit"
+  },
+  "scheduleRulePeriodAM": {
+    "message": "AM"
+  },
+  "scheduleRulePeriodPM": {
+    "message": "PM"
+  },
+  "scheduleRuleTimeFormat": {
+    "message": "$HOURS$:$MINUTES$ $PERIOD$",
+    "placeholders": {
+      "hours": {
+        "content": "$1"
+      },
+      "minutes": {
+        "content": "$2"
+      },
+      "period": {
+        "content": "$3"
+      }
+    }
+  },
+  "scheduleRuleDefaultName": {
+    "message": "Regel $INDEX$",
+    "placeholders": {
+      "index": {
+        "content": "$1"
+      }
+    }
+  },
+  "scheduleTimeLabel": {
+    "message": "Zeit"
+  },
+  "scheduleLevelLabel": {
+    "message": "Stufe"
+  },
+  "scheduleRemove": {
+    "message": "Entfernen"
+  },
+  "scheduleRulesEmpty": {
+    "message": "Noch keine Regeln. Fügen Sie eine hinzu, um die Planung zu starten."
+  },
+  "scheduleMissingError": {
+    "message": "Zeitplan fehlt."
+  },
+  "scheduleAddRuleError": {
+    "message": "Fügen Sie mindestens eine Regel hinzu."
+  },
+  "scheduleTimeInvalidError": {
+    "message": "Legen Sie eine gültige Zeit für $NAME$ fest.",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "scheduleTransitionError": {
+    "message": "Der Übergang darf höchstens 60 Sekunden betragen."
+  },
+  "scheduleSavedStatus": {
+    "message": "Zeitplan gespeichert."
+  },
+  "scheduleSaveFailed": {
+    "message": "Zeitplan konnte nicht gespeichert werden. Versuchen Sie es erneut."
+  },
+  "scheduleSavingStatus": {
+    "message": "Speichern …"
+  }
+}
