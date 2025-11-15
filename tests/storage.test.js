@@ -6,6 +6,8 @@ let storageGet;
 let nextResult;
 let nextError;
 let windowStub;
+let siteStorage;
+const noopSetSiteLevels = async () => {};
 
 function clone(obj) {
   if (typeof obj === 'undefined') {
@@ -23,7 +25,8 @@ before(async () => {
     SITE_KEY: globalThis.SITE_KEY,
     SCHEDULE_KEY: globalThis.SCHEDULE_KEY,
     chrome: globalThis.chrome,
-    ScreenDimmerStorage: globalThis.ScreenDimmerStorage
+    ScreenDimmerStorage: globalThis.ScreenDimmerStorage,
+    ScreenDimmerSiteStorage: globalThis.ScreenDimmerSiteStorage
   };
 
   windowStub = {
@@ -78,11 +81,21 @@ before(async () => {
   await import('../src/shared/storage.js');
   storageGet = globalThis.window.ScreenDimmerStorage.storageGet;
   globalThis.ScreenDimmerStorage = globalThis.window.ScreenDimmerStorage;
+
+  await import('../src/popup/site-storage.js');
+  siteStorage = globalThis.window.ScreenDimmerSiteStorage;
+  globalThis.ScreenDimmerSiteStorage = siteStorage;
 });
 
 beforeEach(() => {
   nextResult = { sync: undefined, local: undefined };
   nextError = { sync: null, local: null };
+  if (siteStorage) {
+    siteStorage.setCache({});
+  }
+  if (globalThis.ScreenDimmerStorage) {
+    globalThis.ScreenDimmerStorage.setSiteLevels = noopSetSiteLevels;
+  }
 });
 
 after(() => {
@@ -148,4 +161,40 @@ test('getSchedule falls back to local copy when sync is missing', async () => {
   assert.equal(result.rules[0].level, 0.7);
   assert.equal('enabled' in result.rules[0], false);
   assert.equal('location' in result, false);
+});
+
+test('site storage cache updates only after persistence succeeds', async () => {
+  siteStorage.setCache({ 'example.com': 0.2 });
+
+  let resolvePersist;
+  const pending = new Promise((resolve) => {
+    resolvePersist = resolve;
+  });
+  const capturedLevels = [];
+
+  globalThis.ScreenDimmerStorage.setSiteLevels = async (levels) => {
+    capturedLevels.push(levels);
+    return pending;
+  };
+
+  const persistPromise = siteStorage.upsert('new.example.com', 0.6);
+
+  assert.deepEqual(siteStorage.getCache(), { 'example.com': 0.2 });
+  resolvePersist();
+  await persistPromise;
+
+  assert.deepEqual(capturedLevels, [{ 'example.com': 0.2, 'new.example.com': 0.6 }]);
+  assert.deepEqual(siteStorage.getCache(), { 'example.com': 0.2, 'new.example.com': 0.6 });
+});
+
+test('site storage restores previous cache when persistence fails', async () => {
+  siteStorage.setCache({ 'existing.com': 0.4 });
+  const error = new Error('persist failed');
+
+  globalThis.ScreenDimmerStorage.setSiteLevels = async () => {
+    throw error;
+  };
+
+  await assert.rejects(siteStorage.remove('existing.com'), /persist failed/);
+  assert.deepEqual(siteStorage.getCache(), { 'existing.com': 0.4 });
 });
