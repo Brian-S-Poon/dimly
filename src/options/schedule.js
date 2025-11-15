@@ -15,7 +15,7 @@
 
   const section = document.querySelector('#schedule-controls');
   if (!section || !storage) {
-    global.ScreenDimmerSchedule = { init: () => {} };
+    global.ScreenDimmerSchedule = { init: () => {}, destroy: () => {} };
     return;
   }
 
@@ -447,11 +447,23 @@
     eventsBound = true;
   }
 
+  function destroy() {
+    if (saveTimer) {
+      clearTimeout(saveTimer);
+      saveTimer = null;
+    }
+    if (statusTimer) {
+      clearTimeout(statusTimer);
+      statusTimer = null;
+    }
+  }
+
   function init(initialSchedule) {
+    destroy();
     scheduleState = cloneSchedule(initialSchedule);
     render();
     bindEvents();
   }
 
-  global.ScreenDimmerSchedule = { init };
+  global.ScreenDimmerSchedule = { init, destroy };
 })(typeof window !== 'undefined' ? window : this);
