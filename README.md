@@ -50,23 +50,32 @@ For a full history of updates, see [CHANGELOG.md](./CHANGELOG.md).
 ## Repository structure
 
 ```text
-├── src/                 
-│   ├── popup/           # Popup UI for global and per-site brightness control  
-│   ├── options/         # Options page for scheduling and advanced settings  
-│   ├── background/      # Background service worker handling storage and events  
-│   ├── content/         # Content scripts that inject and adjust the dimming overlay  
-│   ├── shared/          # Shared utilities and constants used across components  
-│   └── styles/          # Common CSS variables and themes  
+├── src/
+│   ├── popup/           # Popup UI for global and per-site brightness control
+│   ├── options/         # Options page for scheduling and advanced settings
+│   ├── background/      # Background service worker handling storage and events
+│   ├── content/         # Content scripts that inject and adjust the dimming overlay
+│   └── shared/          # Shared utilities and constants used across components
 │
-├── icons/               # Extension icons for manifest and store listing  
-├── manifest.json        # Chrome Extension manifest (MV3)  
-├── README.md            # Project overview and usage guide  
-├── CHANGELOG.md         # Version history of user-visible updates  
-├── CONTRIBUTING.md      # Development setup and pull request guidelines  
-├── PRIVACY.md           # Data handling and storage policy  
-├── SECURITY.md          # Responsible disclosure and vulnerability reporting policy  
+├── _locales/            # Chrome localization message bundles for all supported languages
+├── icons/               # Extension icons for manifest and store listing
+├── images/              # Marketing and documentation assets (store listing, README, etc.)
+├── scripts/             # Developer utilities (for example, the popup preview capture script)
+├── tests/               # Node-based unit tests for shared logic and UI state
+├── .github/
+│   └── workflows/       # CI pipelines for automated tests and preview captures
+│
+├── manifest.json        # Chrome Extension manifest (MV3)
+├── package.json         # npm metadata and test runner configuration
+├── README.md            # Project overview and usage guide
+├── CHANGELOG.md         # Version history of user-visible updates
+├── CONTRIBUTING.md      # Development setup and pull request guidelines
+├── PRIVACY.md           # Data handling and storage policy
+├── SECURITY.md          # Responsible disclosure and vulnerability reporting policy
 └── manifest-notes.md    # Internal notes about manifest changes and permissions
 ```
+
+The diagram focuses on directories contributors interact with regularly, including `_locales/` so translation contributors know where to add new languages. Support folders such as `tests/`, `scripts/`, and `.github/workflows/` are also listed to highlight the automation and quality checks that accompany the extension.
 
 ---
 

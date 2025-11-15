@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Disabled popup global controls when scheduling is active and added inline guidance
   so users know adjustments are driven by their schedule.
+- Updated the README repository structure diagram to reflect current source folders,
+  localization bundles, automated tests, developer scripts, and CI workflows.
 
 ## [1.6.0] - 2025-11-16
 
