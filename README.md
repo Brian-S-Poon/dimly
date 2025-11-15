@@ -120,8 +120,8 @@ It never sends data anywhere. See [PRIVACY.md](./PRIVACY.md) for details.
 
 ## Security
 
-If you discover a potential vulnerability or security issue, please do **not** open a public GitHub issue.  
-Instead, report it privately by emailing **security@brianpoon.com** or through the  
+If you discover a potential vulnerability or security issue, please do **not** open a public GitHub issue.
+Instead, report it privately by emailing **dimly@brianpoon.com** or through the
 [GitHub Security Advisories](https://github.com/Brian-S-Poon/dimly/security/advisories/new) page.
 
 See [SECURITY.md](./SECURITY.md) for details on supported versions and reporting guidelines.
