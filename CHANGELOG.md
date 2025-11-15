@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated the README repository structure diagram to reflect current source folders,
   localization bundles, automated tests, developer scripts, and CI workflows.
 - Updated the README security contact to point to dimly@brianpoon.com.
+- Updated the SECURITY policy contact to dimly@brianpoon.com for consistency with the README.
 
 ## [1.6.0] - 2025-11-16
 
