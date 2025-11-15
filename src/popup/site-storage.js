@@ -36,9 +36,15 @@
 
   async function persist(nextLevels) {
     const normalized = normalizeLevels(nextLevels);
-    await storage.setSiteLevels(normalized);
-    cache = normalized;
-    return getCache();
+    const previousCache = cache;
+    try {
+      await storage.setSiteLevels(normalized);
+      cache = normalized;
+      return getCache();
+    } catch (error) {
+      cache = previousCache;
+      throw error;
+    }
   }
 
   async function upsert(host, level) {
