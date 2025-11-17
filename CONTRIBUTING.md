@@ -31,13 +31,24 @@ Thank you for helping improve Dimly!
 ## Localization Workflow
 
 - Duplicate `messages.json` from an existing locale when starting a new translation so structure and keys stay aligned. Place the copy under `_locales/<lang>/messages.json`, replacing `<lang>` with the Chrome locale code (for example, `es` or `pt-BR`).
-- Retain placeholder tokens (e.g., `$SITE$`, `$PERCENT$`) exactly as they appear in the source file—only translate the surrounding text.
-- After translating, run the localization sanity checks to catch missing keys or formatting issues:
+- Retain placeholder tokens exactly as they appear in the source file—only translate the surrounding text. Both Chrome-style
+  tokens (such as `$SITE$` or `$PERCENT$`) and ICU placeholders (for example `{count}`) must remain unchanged.
+- Run the localization sanity checks to catch missing keys, malformed ICU segments, or placeholder mismatches:
   ```
-  npm run test:locales
+  npm run lint:locales
   ```
 - Spot-check the new locale in Chrome by launching with the language flag, for example: `chrome --lang=<code>`.
 - When you open a pull request with new translations, tag a fluent speaker or request verification from the localization reviewers so strings can be double-checked before merging.
+
+### Placeholder validation rule
+
+- `npm run lint:locales` parses every `_locales/*/messages.json` file and the UI source (`src/` and templates) to ensure placeholders are valid.
+- The rule fails when:
+  - ICU syntax cannot be parsed.
+  - Chrome-style placeholder metadata (`placeholders` sections) are missing or out of sync with the tokens referenced in `message` strings.
+  - Source usage (for example, `getMessage('key', [value])`) expects a different number or set of placeholders than the translations provide.
+  - Locales disagree on the placeholder set for a key.
+- Run this command before committing so CI stays green.
 
 ---
 
