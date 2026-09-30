@@ -33,9 +33,17 @@
 
   const body = document.body || document.querySelector('body');
 
+  function updateSliderProgress(sliderEl, level) {
+    if (!sliderEl) return;
+    sliderEl.style.setProperty('--slider-progress', `${clamp01(level) * 100}%`);
+  }
+
   function updateLevel(level) {
     const val = clamp01(level);
-    if (slider) slider.value = String(val);
+    if (slider) {
+      slider.value = String(val);
+      updateSliderProgress(slider, val);
+    }
     if (pct) {
       const percent = String(Math.round(val * 100));
       pct.textContent = getMessage('commonPercentValue', [percent]);
@@ -178,8 +186,10 @@
     const pillEl = hostItem.querySelector('[data-role="pct"]');
     if (!pillEl) return;
     const raw = parseFloat(sliderEl.value);
-    const percent = String(Math.round(clamp01(Number.isFinite(raw) ? raw : 0) * 100));
+    const level = clamp01(Number.isFinite(raw) ? raw : 0);
+    const percent = String(Math.round(level * 100));
     pillEl.textContent = getMessage('commonPercentValue', [percent]);
+    updateSliderProgress(sliderEl, level);
   }
 
   function renderManager(levels) {
@@ -247,6 +257,7 @@
       sliderEl.id = sliderId;
       sliderEl.dataset.action = 'level';
       sliderEl.dataset.host = host;
+      updateSliderProgress(sliderEl, value);
 
       sliderGroupEl.appendChild(meta);
       sliderGroupEl.appendChild(sliderEl);
