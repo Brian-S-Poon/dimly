@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Upgraded popup sliders with a high-contrast filled track, larger thumb, and
+  clearer keyboard focus treatment so the selected dim level is easier to see.
 - Disabled popup global controls when scheduling is active and added inline guidance
   so users know adjustments are driven by their schedule.
 - Updated the README repository structure diagram to reflect current source folders,
