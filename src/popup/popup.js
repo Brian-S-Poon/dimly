@@ -31,10 +31,6 @@
 
   function openExternalTab(url) {
     return new Promise((resolve, reject) => {
-      if (!url || url === 'REPLACE_WITH_FINAL_FEEDBACK_SURVEY_URL') {
-        reject(new Error('Engagement destination is not configured'));
-        return;
-      }
       chrome.tabs.create({ url }, () => {
         const error = chrome.runtime && chrome.runtime.lastError;
         if (error) reject(error);
@@ -73,10 +69,15 @@
 
   async function handleEngagementPrimary() {
     const prompt = activeEngagementPrompt;
+    const destination = engagement.getDestination(prompt);
+    if (!destination) {
+      ui.setEngagementError(getMessage('engagementExternalError'));
+      return;
+    }
     const persisted = await runEngagementUpdate((type) => engagement.action(type));
     if (!persisted) return;
     try {
-      await openExternalTab(engagement.getUrl(prompt));
+      await openExternalTab(destination);
     } catch (err) {
       console.error('Failed to open engagement destination', err);
       engagementHandled = false;

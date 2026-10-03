@@ -101,24 +101,25 @@ test('popup opens count only after the rapid-open interval', async () => {
 
 test('eligibility enforces age, open counts, cooldown, snooze, and priority', () => {
   const engagement = windowStub.ScreenDimmerEngagement;
+  const destinations = { feedback: 'https://feedback.example', review: 'https://review.example' };
   const now = 100 * 24 * 60 * 60 * 1000;
   const state = engagement.createState(0);
   state.popupOpenCount = 10;
-  assert.equal(engagement.selectEligiblePrompt(state, now), 'feedback');
+  assert.equal(engagement.selectEligiblePrompt(state, now, destinations), 'feedback');
   state.feedback.snoozedUntil = now + engagement.CONFIG.snoozeMs;
-  assert.equal(engagement.selectEligiblePrompt(state, now), 'review');
+  assert.equal(engagement.selectEligiblePrompt(state, now, destinations), 'review');
   state.lastPromptAt = now - engagement.CONFIG.globalCooldownMs + 1;
-  assert.equal(engagement.selectEligiblePrompt(state, now), null);
+  assert.equal(engagement.selectEligiblePrompt(state, now, destinations), null);
   state.lastPromptAt = null;
   state.feedback.snoozedUntil = null;
   state.popupOpenCount = 4;
-  assert.equal(engagement.selectEligiblePrompt(state, 7 * 24 * 60 * 60 * 1000), null);
+  assert.equal(engagement.selectEligiblePrompt(state, 7 * 24 * 60 * 60 * 1000, destinations), null);
   state.popupOpenCount = 5;
-  assert.equal(engagement.selectEligiblePrompt(state, 7 * 24 * 60 * 60 * 1000), 'feedback');
+  assert.equal(engagement.selectEligiblePrompt(state, 7 * 24 * 60 * 60 * 1000, destinations), 'feedback');
   state.feedback.status = 'dismissed';
   state.popupOpenCount = 10;
-  assert.equal(engagement.selectEligiblePrompt(state, 21 * 24 * 60 * 60 * 1000 - 1), null);
-  assert.equal(engagement.selectEligiblePrompt(state, 21 * 24 * 60 * 60 * 1000), 'review');
+  assert.equal(engagement.selectEligiblePrompt(state, 21 * 24 * 60 * 60 * 1000 - 1, destinations), null);
+  assert.equal(engagement.selectEligiblePrompt(state, 21 * 24 * 60 * 60 * 1000, destinations), 'review');
 });
 
 test('eligible prompt impression is persisted before it is returned', async () => {
@@ -128,9 +129,31 @@ test('eligible prompt impression is persisted before it is returned', async () =
   stored.popupOpenCount = 10;
   stored.lastCountedOpenAt = now;
   const result = await engagement.initializeOpen(now);
-  assert.deepEqual(result, { prompt: 'feedback' });
+  assert.deepEqual(result, { prompt: 'review' });
   assert.equal(stored.lastPromptAt, now);
   assert.equal(writes.length, 2);
+});
+
+test('destination validation rejects placeholders and non-HTTPS URLs', () => {
+  const engagement = windowStub.ScreenDimmerEngagement;
+  assert.equal(engagement.getDestination('feedback'), null);
+  assert.equal(engagement.isValidDestination('REPLACE_WITH_SURVEY'), false);
+  assert.equal(engagement.isValidDestination('http://example.com'), false);
+  assert.equal(engagement.isValidDestination('not a url'), false);
+  assert.equal(engagement.isValidDestination('https://example.com/survey'), true);
+
+  const state = engagement.createState(0);
+  state.popupOpenCount = 10;
+  assert.equal(engagement.selectEligiblePrompt(state, 30 * 24 * 60 * 60 * 1000), 'review');
+});
+
+test('future schema versions fail closed without overwriting stored state', async () => {
+  const engagement = windowStub.ScreenDimmerEngagement;
+  stored = { version: 2, futureField: true };
+  assert.equal(engagement.normalizeState(stored, 100), null);
+  assert.deepEqual(await engagement.initializeOpen(100), { prompt: null });
+  assert.equal(writes.length, 0);
+  assert.deepEqual(stored, { version: 2, futureField: true });
 });
 
 test('snooze, dismiss, and action update only the selected prompt', async () => {

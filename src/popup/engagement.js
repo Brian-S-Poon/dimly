@@ -13,6 +13,21 @@
     reviewUrl: 'https://chromewebstore.google.com/detail/dimly-%E2%80%94-screen-dimmer-for/elkdfophogmfbiffkgjpomjajihklnmk/reviews'
   });
   const STATUSES = new Set(['pending', 'actioned', 'dismissed']);
+  const PLACEHOLDER_RE = /^(?:REPLACE_WITH_|YOUR_|TODO)/i;
+
+  function isValidDestination(value) {
+    if (typeof value !== 'string' || PLACEHOLDER_RE.test(value)) return false;
+    try {
+      return new URL(value).protocol === 'https:';
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function getDestination(type) {
+    const value = type === 'feedback' ? CONFIG.feedbackUrl : type === 'review' ? CONFIG.reviewUrl : null;
+    return isValidDestination(value) ? value : null;
+  }
 
   function timestamp(value, fallback = null) {
     return Number.isFinite(value) && value >= 0 ? Math.floor(value) : fallback;
@@ -40,6 +55,7 @@
 
   function normalizeState(value, now = Date.now()) {
     if (!value || typeof value !== 'object' || Array.isArray(value)) return createState(now);
+    if (Number.isInteger(value.version) && value.version > 1) return null;
     return {
       version: 1,
       firstSeenAt: timestamp(value.firstSeenAt, now),
@@ -72,7 +88,12 @@
     });
   }
 
-  function selectEligiblePrompt(state, now = Date.now()) {
+  function selectEligiblePrompt(state, now = Date.now(), destinations = null) {
+    if (!state) return null;
+    const available = destinations || {
+      feedback: getDestination('feedback'),
+      review: getDestination('review')
+    };
     if (state.lastPromptAt != null && now - state.lastPromptAt < CONFIG.globalCooldownMs) return null;
     const eligible = (type, minAge, minOpens) => {
       const prompt = state[type];
@@ -81,8 +102,8 @@
         && now - state.firstSeenAt >= minAge
         && state.popupOpenCount >= minOpens;
     };
-    if (eligible('feedback', CONFIG.feedbackMinAgeMs, CONFIG.feedbackMinOpens)) return 'feedback';
-    if (eligible('review', CONFIG.reviewMinAgeMs, CONFIG.reviewMinOpens)) return 'review';
+    if (available.feedback && eligible('feedback', CONFIG.feedbackMinAgeMs, CONFIG.feedbackMinOpens)) return 'feedback';
+    if (available.review && eligible('review', CONFIG.reviewMinAgeMs, CONFIG.reviewMinOpens)) return 'review';
     return null;
   }
 
@@ -93,6 +114,7 @@
       return { prompt: null };
     }
     const state = normalizeState(stored, now);
+    if (!state) return { prompt: null };
     if (state.lastCountedOpenAt == null || now - state.lastCountedOpenAt >= CONFIG.popupOpenIntervalMs) {
       state.popupOpenCount += 1;
       state.lastCountedOpenAt = now;
@@ -108,6 +130,7 @@
   async function updatePrompt(type, transform, now = Date.now()) {
     if (type !== 'feedback' && type !== 'review') throw new Error('Unknown engagement prompt');
     const state = normalizeState(await localGet(), now);
+    if (!state) throw new Error('Unsupported engagement state version');
     transform(state[type]);
     await localSet(state);
     return state;
@@ -125,12 +148,8 @@
     return updatePrompt(type, (prompt) => { prompt.status = 'actioned'; prompt.snoozedUntil = null; }, now);
   }
 
-  function getUrl(type) {
-    return type === 'feedback' ? CONFIG.feedbackUrl : type === 'review' ? CONFIG.reviewUrl : null;
-  }
-
   global.ScreenDimmerEngagement = {
     CONFIG, createState, normalizeState, selectEligiblePrompt,
-    initializeOpen, snooze, dismiss, action, getUrl
+    initializeOpen, snooze, dismiss, action, isValidDestination, getDestination
   };
 })(typeof window !== 'undefined' ? window : this);
