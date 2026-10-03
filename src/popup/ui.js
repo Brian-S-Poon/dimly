@@ -30,8 +30,46 @@
   const managerStatus = document.querySelector('#site-manager-status');
   const managerResetBtn = document.querySelector('#site-manager-reset');
   const managerCloseBtn = document.querySelector('#site-manager-close');
+  const engagementCard = document.querySelector('#engagement-prompt');
+  const engagementHeading = document.querySelector('#engagement-heading');
+  const engagementDescription = document.querySelector('#engagement-description');
+  const engagementPrimary = document.querySelector('#engagement-primary');
+  const engagementSnooze = document.querySelector('#engagement-snooze');
+  const engagementDismiss = document.querySelector('#engagement-dismiss');
+  const engagementError = document.querySelector('#engagement-error');
 
   const body = document.body || document.querySelector('body');
+  let engagementActive = false;
+
+  function renderEngagementPrompt(type) {
+    if (!engagementCard || !engagementHeading || !engagementDescription || !engagementPrimary) return;
+    const prefix = type === 'feedback' ? 'engagementFeedback' : 'engagementReview';
+    engagementHeading.textContent = getMessage(`${prefix}Heading`);
+    engagementDescription.textContent = getMessage(`${prefix}Description`);
+    engagementPrimary.textContent = getMessage(`${prefix}Action`);
+    engagementCard.dataset.promptType = type;
+    engagementActive = true;
+    setEngagementError('');
+    setEngagementBusy(false);
+    if (!body || !body.classList.contains('manager-open')) engagementCard.hidden = false;
+  }
+
+  function hideEngagementPrompt(handled = true) {
+    if (engagementCard) engagementCard.hidden = true;
+    if (handled) engagementActive = false;
+  }
+
+  function setEngagementBusy(busy) {
+    [engagementPrimary, engagementSnooze, engagementDismiss].forEach((button) => {
+      if (button) button.disabled = Boolean(busy);
+    });
+  }
+
+  function setEngagementError(message) {
+    if (!engagementError) return;
+    engagementError.textContent = message || '';
+    engagementError.hidden = !message;
+  }
 
   function updateLevel(level) {
     const val = clamp01(level);
@@ -265,11 +303,13 @@
       if (globalControls) globalControls.hidden = true;
       if (siteControls) siteControls.hidden = true;
       if (managerSection) managerSection.hidden = false;
+      if (engagementCard) engagementCard.hidden = true;
     } else {
       body.classList.remove('manager-open');
       if (globalControls) globalControls.hidden = false;
       if (siteControls) siteControls.hidden = false;
       if (managerSection) managerSection.hidden = true;
+      if (engagementCard && engagementActive) engagementCard.hidden = false;
     }
   }
 
@@ -305,7 +345,10 @@
     onManageClose,
     onManagerLevelChange,
     onManagerDelete,
-    onManagerReset
+    onManagerReset,
+    onEngagementPrimary,
+    onEngagementSnooze,
+    onEngagementDismiss
   }) {
     if (slider && onLevelInput) {
       slider.addEventListener('input', onLevelInput);
@@ -328,6 +371,9 @@
     if (managerResetBtn && onManagerReset) {
       managerResetBtn.addEventListener('click', onManagerReset);
     }
+    if (engagementPrimary && onEngagementPrimary) engagementPrimary.addEventListener('click', onEngagementPrimary);
+    if (engagementSnooze && onEngagementSnooze) engagementSnooze.addEventListener('click', onEngagementSnooze);
+    if (engagementDismiss && onEngagementDismiss) engagementDismiss.addEventListener('click', onEngagementDismiss);
     if (managerList) {
       managerList.addEventListener('input', (event) => {
         const sliderTarget = event.target.closest('input[type="range"][data-action="level"]');
@@ -369,6 +415,10 @@
     setManagerStatus,
     focusManagerClose,
     focusManageButton,
+    renderEngagementPrompt,
+    hideEngagementPrompt,
+    setEngagementBusy,
+    setEngagementError,
     bindEvents
   };
 })(typeof window !== 'undefined' ? window : this);

@@ -12,6 +12,9 @@ Dimly uses Chrome’s `storage` APIs to keep your preferences local to your devi
 - **Per-site brightness and locks** — Custom dimming preferences for individual domains.  
 - **Schedule rules** — Fixed times to automatically adjust brightness.  
 - **UI preferences** — Such as dark mode or layout options, when available.
+- **Engagement prompt state** — An approximate popup-open count, prompt timing,
+  and whether feedback or review prompts were snoozed, dismissed, or actioned.
+  This limited UI state is kept only in `chrome.storage.local` on your device.
 
 ---
 
@@ -35,8 +38,10 @@ Dimly does **not**:
 - Perform telemetry or usage tracking.  
 - Include third-party SDKs or analytics frameworks.  
 
-All functionality runs locally on your device.  
-No information ever leaves your browser.
+Dimly does not transmit engagement state or automatically contact a survey,
+store, or analytics service. The feedback survey and Chrome Web Store page open
+only when you explicitly select the corresponding action. Once you navigate to
+an external destination, that site's own privacy policy applies.
 
 ---
 

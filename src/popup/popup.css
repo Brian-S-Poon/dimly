@@ -143,6 +143,51 @@ body.manager-open .site-manager-content {
   margin-bottom: 0;
 }
 
+.engagement-card {
+  padding: 10px 12px;
+  margin-top: 0;
+  margin-bottom: 12px;
+  border: 1px solid rgba(158, 158, 158, 0.55);
+  border-radius: 10px;
+  background-color: rgba(32, 33, 36, 0.65);
+}
+
+.engagement-heading {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--brand-text-dark);
+}
+
+.engagement-description {
+  margin: 0;
+  color: var(--brand-disabled);
+  overflow-wrap: anywhere;
+}
+
+.engagement-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.engagement-actions button,
+.engagement-actions button.link-button {
+  margin-top: 0;
+}
+
+.engagement-actions button:focus-visible {
+  outline: 2px solid var(--brand-primary-hover);
+  outline-offset: 2px;
+}
+
+.engagement-error {
+  margin: 8px 0 0;
+  color: var(--brand-lock);
+}
+
 .controls-section.global-controls.schedule-locked {
   opacity: 0.6;
 }
@@ -478,7 +523,8 @@ button.danger:disabled {
 }
 
 body.manager-open .controls-section.global-controls,
-body.manager-open .controls-section.site-controls {
+body.manager-open .controls-section.site-controls,
+body.manager-open .engagement-card {
   display: none;
 }
 
