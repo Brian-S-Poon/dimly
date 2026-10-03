@@ -4,6 +4,7 @@
   const siteStorage = global.ScreenDimmerSiteStorage;
   const ui = global.ScreenDimmerPopupUI;
   const state = global.ScreenDimmerPopupState;
+  const engagement = global.ScreenDimmerEngagement;
   const i18n = global.ScreenDimmerI18n;
   const optionsButton = document.querySelector('#open-options');
 
@@ -24,6 +25,75 @@
   let managerVisible = false;
   let blockedHost = null;
   let scheduleLocked = false;
+  let activeEngagementPrompt = null;
+  let engagementHandled = false;
+  let engagementBusy = false;
+
+  function openExternalTab(url) {
+    return new Promise((resolve, reject) => {
+      chrome.tabs.create({ url }, () => {
+        const error = chrome.runtime && chrome.runtime.lastError;
+        if (error) reject(error);
+        else resolve();
+      });
+    });
+  }
+
+  async function initEngagement() {
+    if (!engagement || engagementHandled || activeEngagementPrompt) return;
+    const result = await engagement.initializeOpen();
+    if (!result || !result.prompt || engagementHandled) return;
+    activeEngagementPrompt = result.prompt;
+    ui.renderEngagementPrompt(activeEngagementPrompt);
+  }
+
+  async function runEngagementUpdate(operation) {
+    if (!activeEngagementPrompt || engagementBusy || engagementHandled) return false;
+    engagementBusy = true;
+    ui.setEngagementBusy(true);
+    ui.setEngagementError('');
+    try {
+      await operation(activeEngagementPrompt);
+      engagementHandled = true;
+      ui.hideEngagementPrompt();
+      return true;
+    } catch (err) {
+      console.error('Failed to persist engagement preference', err);
+      ui.setEngagementError(getMessage('engagementPersistenceError'));
+      return false;
+    } finally {
+      engagementBusy = false;
+      ui.setEngagementBusy(false);
+    }
+  }
+
+  async function handleEngagementPrimary() {
+    const prompt = activeEngagementPrompt;
+    const destination = engagement.getDestination(prompt);
+    if (!destination) {
+      ui.setEngagementError(getMessage('engagementExternalError'));
+      return;
+    }
+    const persisted = await runEngagementUpdate((type) => engagement.action(type));
+    if (!persisted) return;
+    try {
+      await openExternalTab(destination);
+    } catch (err) {
+      console.error('Failed to open engagement destination', err);
+      engagementHandled = false;
+      ui.renderEngagementPrompt(prompt);
+      ui.setEngagementError(getMessage('engagementExternalError'));
+      ui.setEngagementBusy(false);
+    }
+  }
+
+  function handleEngagementSnooze() {
+    return runEngagementUpdate((type) => engagement.snooze(type));
+  }
+
+  function handleEngagementDismiss() {
+    return runEngagementUpdate((type) => engagement.dismiss(type));
+  }
 
   function openOptionsPage() {
     if (!global.chrome || !chrome.runtime) {
@@ -235,7 +305,10 @@
       onManageClose: handleManageClose,
       onManagerLevelChange: handleManagerLevelChange,
       onManagerDelete: handleManagerDelete,
-      onManagerReset: handleManagerReset
+      onManagerReset: handleManagerReset,
+      onEngagementPrimary: handleEngagementPrimary,
+      onEngagementSnooze: handleEngagementSnooze,
+      onEngagementDismiss: handleEngagementDismiss
     });
 
     if (optionsButton) {
@@ -264,6 +337,11 @@
       applyLevel(DEFAULT_LEVEL);
       updateSiteUI(getMessage('popupErrorReadSettings'));
     }
+
+    initEngagement().catch((err) => {
+      console.error('Failed to initialize engagement prompt', err);
+      ui.hideEngagementPrompt();
+    });
   }
 
   init();

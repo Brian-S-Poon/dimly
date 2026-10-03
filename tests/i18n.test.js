@@ -9,6 +9,18 @@ const projectRoot = path.resolve(__dirname, '..');
 const srcDir = path.join(projectRoot, 'src');
 const localesDir = path.join(projectRoot, '_locales');
 const SUPPORTED_EXTENSIONS = new Set(['.html', '.js']);
+const ENGAGEMENT_KEYS = [
+  'engagementFeedbackHeading',
+  'engagementFeedbackDescription',
+  'engagementFeedbackAction',
+  'engagementReviewHeading',
+  'engagementReviewDescription',
+  'engagementReviewAction',
+  'engagementNotNow',
+  'engagementDismiss',
+  'engagementPersistenceError',
+  'engagementExternalError'
+];
 
 async function walkFiles(dir) {
   const entries = await readdir(dir, { withFileTypes: true });
@@ -80,6 +92,7 @@ test('all referenced i18n keys exist for each locale', async () => {
   }
 
   assert.ok(referencedKeys.size > 0, 'expected to discover localized message keys');
+  ENGAGEMENT_KEYS.forEach((key) => referencedKeys.add(key));
 
   const localeEntries = await readdir(localesDir, { withFileTypes: true });
   const localeDirs = localeEntries.filter((entry) => entry.isDirectory());

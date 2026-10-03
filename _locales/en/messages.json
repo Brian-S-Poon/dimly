@@ -241,5 +241,35 @@
   },
   "scheduleSavingStatus": {
     "message": "Saving…"
+  },
+  "engagementFeedbackHeading": {
+    "message": "Help improve Dimly"
+  },
+  "engagementFeedbackDescription": {
+    "message": "What should we make better?"
+  },
+  "engagementFeedbackAction": {
+    "message": "Give feedback"
+  },
+  "engagementReviewHeading": {
+    "message": "Using Dimly regularly?"
+  },
+  "engagementReviewDescription": {
+    "message": "A Chrome Web Store review helps others find it."
+  },
+  "engagementReviewAction": {
+    "message": "Leave a review"
+  },
+  "engagementNotNow": {
+    "message": "Not now"
+  },
+  "engagementDismiss": {
+    "message": "Don't ask again"
+  },
+  "engagementPersistenceError": {
+    "message": "Could not save your choice. Try again."
+  },
+  "engagementExternalError": {
+    "message": "Could not open the page. Try again."
   }
 }
