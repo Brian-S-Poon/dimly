@@ -46,6 +46,16 @@
       <p class="muted small-text" id="site-hint" hidden></p>
       <button id="site-manage" type="button" class="link-button" data-i18n="popupManageSites"></button>
     </section>
+    <section class="engagement-card" id="engagement-prompt" aria-labelledby="engagement-heading" hidden>
+      <h2 id="engagement-heading" class="engagement-heading"></h2>
+      <p id="engagement-description" class="engagement-description"></p>
+      <div class="engagement-actions">
+        <button id="engagement-primary" type="button"></button>
+        <button id="engagement-snooze" type="button" class="link-button" data-i18n="engagementNotNow"></button>
+        <button id="engagement-dismiss" type="button" class="link-button" data-i18n="engagementDismiss"></button>
+      </div>
+      <p id="engagement-error" class="engagement-error small-text" role="status" aria-live="polite" hidden></p>
+    </section>
     <section class="controls-section site-manager" id="site-manager" aria-labelledby="site-manager-heading" hidden>
       <div class="site-manager-header">
         <h2 id="site-manager-heading" class="section-heading" data-i18n="popupManagerHeading"></h2>
@@ -68,6 +78,7 @@
   <script src="state.js"></script>
   <script src="ui.js"></script>
   <script src="site-storage.js"></script>
+  <script src="engagement.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>
