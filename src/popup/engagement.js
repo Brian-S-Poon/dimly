@@ -9,7 +9,7 @@
     globalCooldownMs: 14 * DAY_MS,
     snoozeMs: 28 * DAY_MS,
     popupOpenIntervalMs: 30 * 60 * 1000,
-    feedbackUrl: 'REPLACE_WITH_FINAL_FEEDBACK_SURVEY_URL',
+    feedbackUrl: 'https://form.jotform.com/262756756954071',
     reviewUrl: 'https://chromewebstore.google.com/detail/dimly-%E2%80%94-screen-dimmer-for/elkdfophogmfbiffkgjpomjajihklnmk/reviews'
   });
   const STATUSES = new Set(['pending', 'actioned', 'dismissed']);

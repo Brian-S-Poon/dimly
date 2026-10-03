@@ -129,14 +129,14 @@ test('eligible prompt impression is persisted before it is returned', async () =
   stored.popupOpenCount = 10;
   stored.lastCountedOpenAt = now;
   const result = await engagement.initializeOpen(now);
-  assert.deepEqual(result, { prompt: 'review' });
+  assert.deepEqual(result, { prompt: 'feedback' });
   assert.equal(stored.lastPromptAt, now);
   assert.equal(writes.length, 2);
 });
 
 test('destination validation rejects placeholders and non-HTTPS URLs', () => {
   const engagement = windowStub.ScreenDimmerEngagement;
-  assert.equal(engagement.getDestination('feedback'), null);
+  assert.equal(engagement.getDestination('feedback'), 'https://form.jotform.com/262756756954071');
   assert.equal(engagement.isValidDestination('REPLACE_WITH_SURVEY'), false);
   assert.equal(engagement.isValidDestination('http://example.com'), false);
   assert.equal(engagement.isValidDestination('not a url'), false);
@@ -144,7 +144,7 @@ test('destination validation rejects placeholders and non-HTTPS URLs', () => {
 
   const state = engagement.createState(0);
   state.popupOpenCount = 10;
-  assert.equal(engagement.selectEligiblePrompt(state, 30 * 24 * 60 * 60 * 1000), 'review');
+  assert.equal(engagement.selectEligiblePrompt(state, 30 * 24 * 60 * 60 * 1000), 'feedback');
 });
 
 test('future schema versions fail closed without overwriting stored state', async () => {
